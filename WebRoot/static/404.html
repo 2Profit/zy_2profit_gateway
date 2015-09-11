@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>404</title>
+    <style type="text/css">
+        * { margin: 0; padding: 0; }
+        body { font-family: "微软雅黑"; }
+        .J_error { width: 1000px; height: 288px; margin: 100px auto; background-image: url(../images/404.jpg); }
+            .J_error .e_right { padding-left: 400px; padding-top: 100px; }
+                .J_error .e_right h1 { text-align: center; color: #de6026; }
+                .J_error .e_right h3 { text-align: center; line-height: 50px; color: #333; }
+                    .J_error .e_right h3 span { color: #de6026; }
+                    .J_error .e_right h3 a { color: #de6026; text-decoration: none; }
+    </style>
+    <script type="text/javascript">
+        window.onload = function () {
+            var oError = document.getElementById("error");
+            var oSpan = oError.getElementsByTagName("span")[0];
+            var oA = oError.getElementsByTagName("a")[0];
+
+            var timer = setInterval(function () {
+                var i = parseInt(oSpan.innerHTML);
+                if (i == 1) {
+                    clearInterval(timer);
+                    window.location.href = oA.href;
+                }
+                oSpan.innerHTML = (i - 1);
+            }, 1000);
+        }
+
+    </script>
+</head>
+<body>
+    <div id="error" class="J_error">
+        <div class="e_right">
+            <h1>抱歉，页面没有找到 T_T</h1>
+            <h3><span>5</span> 秒之后带你进入 <a href="#">首页</a></h3>
+        </div>
+    </div>
+</body>
+</html>
