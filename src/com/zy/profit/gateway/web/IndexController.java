@@ -1,14 +1,33 @@
 package com.zy.profit.gateway.web;
 
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.zy.common.util.AjaxResult;
+import com.zy.member.entity.Member;
+import com.zy.member.entity.MemberUser;
+import com.zy.member.service.MemberService;
+import com.zy.member.service.MemberUserService;
+import com.zy.profit.gateway.util.HttpUtils;
+import com.zy.profit.gateway.util.WebHelper;
+import com.zy.util.Md5Util;
 
 
 /**
@@ -19,9 +38,115 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class IndexController {
 
+	@Autowired
+	private MemberService memberService;
+	
+	@Autowired
+	private MemberUserService memberUserService;
+	
 	@RequestMapping("/index")
 	public String index(){
 		return "/index";
+	}
+	
+	@RequestMapping("/register")
+	public String register(HttpServletRequest request, Model model){
+		model.addAttribute("msg", request.getParameter("msg"));
+		return "/register";
+	}
+	
+	@RequestMapping("/register/agree")
+	public String registerAgree(HttpServletRequest request){
+		return "/register_agree";
+	}
+	
+	@RequestMapping(value="/register/vaild_mobile")
+	@ResponseBody
+	public AjaxResult validMobile(HttpServletRequest request){
+		
+		AjaxResult ajaxResult = new AjaxResult();
+		
+		String retMsg = "";
+		
+		String mobile = request.getParameter("mobile");
+		
+		int ret = memberService.vaildUserByMobile(mobile);
+		if(ret > 0){
+			retMsg = "该手机号已经被注册";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(StringUtils.isNotBlank(retMsg)){
+			map.put("error", retMsg);
+		}else{
+			map.put("ok", "");
+		}
+		ajaxResult.setData(map);
+		
+		return ajaxResult;
+	}
+	
+	@RequestMapping("/register/vaild_nick_name")
+	@ResponseBody
+	public AjaxResult vaildNickName(HttpServletRequest request){
+		
+		AjaxResult ajaxResult = new AjaxResult();
+		
+		String retMsg = "";
+		
+		String nickName = request.getParameter("nickName");
+		
+		int ret = memberService.vaildUserByNickName(nickName);
+		if(ret > 0){
+			retMsg = "该昵称已经被使用";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(StringUtils.isNotBlank(retMsg)){
+			map.put("error", retMsg);
+		}else{
+			map.put("ok", "");
+		}
+		ajaxResult.setData(map);
+		
+		return ajaxResult;
+	}
+	
+	@RequestMapping("/register/save")
+	public String registerSave(Member member, RedirectAttributes redirectAttributes){
+		
+		String msg = "";
+		
+		member.setMobile(member.getMobile().trim());
+		member.setNickName(member.getNickName().trim());
+		
+		//判断短信验证码
+		
+		int ret = memberService.vaildUserByMobile(member.getMobile());
+		if(ret > 0){
+			msg = "注册失败，请重新再试";
+			redirectAttributes.addAttribute("msg", msg);
+			return "redirect:/register";
+		}
+		
+		ret = memberService.vaildUserByNickName(member.getNickName());
+		if(ret > 0){
+			msg = "注册失败，请重新再试";
+			redirectAttributes.addAttribute("msg", msg);
+			return "redirect:/register";
+		}
+		
+		member.setPwd(Md5Util.generatePassword(member.getPwd().trim()));
+		memberService.save(member);
+		redirectAttributes.addAttribute("msg", "注册成功，马上登陆");
+		
+		return "redirect:/login";
+	}
+	
+	@RequestMapping("/login")
+	public String login(HttpServletRequest request, Model model){
+		model.addAttribute("msg", request.getParameter("msg"));
+		return "/login";
 	}
 	
 	/**
@@ -31,22 +156,45 @@ public class IndexController {
 	 * @return
 	 */
 	@RequestMapping(value="/dologin", method=RequestMethod.POST)
-	public String doLogin(Model model){
-//		Subject subject = SecurityUtils.getSubject();
-//		
-//		UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassword());
-//		
-//		try {
-//			subject.login(token);
-//			return "redirect:/main";
-//		} catch (DisabledAccountException dae) {
-//			model.addAttribute("msg", "账号已被删除");
-//		} catch (AuthenticationException e) {
-//			LOG.error("登录失败:" + e.getMessage());
-//			model.addAttribute("msg", "账号或密码错误");
-//		}
-//		token.clear();
-		return "forward:/index";
+	@ResponseBody
+	public AjaxResult doLogin(HttpServletRequest request){
+		
+		AjaxResult ajaxResult = new AjaxResult();
+		ajaxResult.setSuccess(false);
+		
+		Subject subject = SecurityUtils.getSubject();
+		
+		String username = request.getParameter("username").trim();
+		String pwd = request.getParameter("pwd").trim();
+		
+		String autoChk = request.getParameter("autoChk");
+		boolean rememberMe = false;
+		if(StringUtils.isNotBlank(autoChk) && "1".equals(autoChk)){
+			rememberMe = true;
+		}
+		
+		UsernamePasswordToken token = new UsernamePasswordToken(username, Md5Util.generatePassword(pwd), rememberMe);
+		
+		try {
+			subject.login(token);
+			
+			//
+			Member member = HttpUtils.getMember(request);
+			member.setLastLoginDate(new Date());
+			member.setLastLoginIp(request.getRemoteAddr());
+			memberService.update(member);
+			
+			ajaxResult.setSuccess(true);
+		} catch (DisabledAccountException dae) {
+			dae.printStackTrace();
+			ajaxResult.setMsg("账号已被删除");
+		} catch (AuthenticationException e) {
+			e.printStackTrace();
+			ajaxResult.setMsg("账号或密码错误");
+		}
+		token.clear();
+		
+		return ajaxResult;
 		
 	}
 	
@@ -55,7 +203,11 @@ public class IndexController {
 	 * @return
 	 */
 	@RequestMapping("/login_out")
-	public String loginOut(){
-		return "redirect:/index";
+	public String loginOut(HttpServletRequest request){
+		
+		Subject subject = SecurityUtils.getSubject();
+		subject.logout();
+		
+		return "redirect:/login";
 	}
 }

@@ -672,6 +672,9 @@
             	if(elBorder){
             		if(elBorder.show){
             			var $llp = $(el).parent('div');
+            			if($llp.length == 0){
+            				$llp = $(el).parent().parent('div');
+            			}
             			if($llp.length != 0){
             				$llp.removeClass(isValid ? elBorder.invalidClass : elBorder.validClass)
             					.addClass(isValid ? elBorder.validClass : elBorder.invalidClass);

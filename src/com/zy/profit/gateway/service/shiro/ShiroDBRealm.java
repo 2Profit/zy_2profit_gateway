@@ -1,26 +1,21 @@
 package com.zy.profit.gateway.service.shiro;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.DisabledAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.zy.member.entity.Member;
+import com.zy.member.service.MemberService;
 import com.zy.profit.gateway.util.WebHelper;
 
 /** 
@@ -30,6 +25,9 @@ import com.zy.profit.gateway.util.WebHelper;
  */
 public class ShiroDBRealm extends AuthorizingRealm {
 
+	@Autowired
+	private MemberService memberService;
+	
 	/**
 	 * 当前登录的subject授予角色、权限
 	 */
@@ -63,23 +61,18 @@ public class ShiroDBRealm extends AuthorizingRealm {
         	return null;
         }
         
-//        InsUser user = insUserService.getInsUser(token.getUsername());
-//        if(user != null){
-////        	AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user.getUserName(), user.getPassword(), user.getId());
-//        	AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(user, user.getPassword(), getName());
-//        	
-//        	setUserToSession(user);
-//        	user.setLastLoginDate(new Date());
-//        	
-//        	user.setRoles(getRole(user));
-//        	
-//        	insUserService.save(user);
-//        	
-//        	return authcInfo;
-//        }else{
-//        	return null;
-//        }
-        return null;
+        Member member = memberService.findMemberByLogin(token.getUsername());
+        
+        if(member != null){
+        	AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(token.getUsername(), member.getPwd(), getName());
+        	
+        	Subject subject = SecurityUtils.getSubject();
+        	subject.getSession().setAttribute(WebHelper.SESSION_LOGIN_USER, member);
+        	
+        	return authcInfo;
+        }else{
+        	return null;
+        }
 	}
 
 //	private Set<InsRole> getRole(InsUser user){
@@ -112,20 +105,5 @@ public class ShiroDBRealm extends AuthorizingRealm {
 //		return roles;
 //	}
 	
-	
-	/**
-	 * 
-	 * @param key
-	 * @param value
-	 */
-	private void setSession(Object key, Object value){
-		Subject subject = SecurityUtils.getSubject();
-		if(subject != null){
-			Session session = subject.getSession();
-			if(session != null){
-				session.setAttribute(key, value);
-			}
-		}
-	}
 	
 }

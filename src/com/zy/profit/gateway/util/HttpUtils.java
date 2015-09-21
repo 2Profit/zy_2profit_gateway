@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
+import com.zy.member.entity.Member;
+
 
 /** 
  * 
@@ -52,9 +54,9 @@ public class HttpUtils {
 	 * @param request
 	 * @return
 	 */
-//	public static InsUser getInsUser(HttpServletRequest request){
-//		return (InsUser) request.getSession().getAttribute(WebHelper.SESSION_LOGIN_USER);
-//	}
+	public static Member getMember(HttpServletRequest request){
+		return (Member) request.getSession().getAttribute(WebHelper.SESSION_LOGIN_USER);
+	}
 	
 	
 	/**

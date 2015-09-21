@@ -4,11 +4,25 @@ $(function () {
     $("select").change(function () {
         var $a = $(this).prev();
         if ($a.is("a")) {
-            $a.html($(this).val());
+            $a.html($(this).find('option:selected').text());
 
         }
     });
 });
+
+
+jc.uiExtend("newsList", {
+    init: function () {
+        this.$element.on("click", ".t_txt a", function () {
+            var $item = $(this).parents(".n_item");
+            $item.addClass("current").siblings().removeClass("current");
+
+            
+        });
+    }
+
+});
+
 
 jc.uiExtend("silder", {
     timer: null,

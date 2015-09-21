@@ -59,7 +59,7 @@
 			return html;
 		},
 		invalid : function(form, errors){
-			jc.alert(errors);
+			//jc.alert(errors);
 		}
 	});
 	
@@ -87,7 +87,7 @@
             ,postcode: [/^[1-9]\d{5}$/, "邮政编码格式不正确"]
             ,chinese: [/^[\u0391-\uFFE5]+$/, "请输入中文"]
             ,username: [/^\w{6,20}$/, "请输入6-20位数字、字母、下划线"]
-            ,password: [/^[0-9a-zA-Z]{6,16}$/, "密码由6-16位数字、字母组成"]
+            ,password: [/^[0-9a-zA-Z]{8,16}$/, "密码由8-16位数字、字母组成"]
             ,accept: function (element, params){
                 if (!params) return true;
                 var ext = params[0];

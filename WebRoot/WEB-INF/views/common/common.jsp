@@ -15,8 +15,9 @@
 
 <link href="${ctx }/static/css/desktop.css" rel="stylesheet" />
 <script src="${ctx }/static/js/jquery-1.8.3.min.js" type="text/javascript"></script>
-<script src="${ctx }/static/js/jquery.nicescroll.min.js" type="text/javascript"></script>
+<%-- <script src="${ctx }/static/js/jquery.nicescroll.min.js" type="text/javascript"></script> --%>
 <script src="${ctx }/static/js/common.js" type="text/javascript"></script>
+<script src="${ctx }/static/js/uiExtend.js" type="text/javascript"></script>
 <script src="${ctx }/static/plugins/jquery/jquery.form.js"></script>
 <script src="${ctx }/static/plugins/jquery/jquery.formatDateTime.js"></script>
 <script src="${ctx }/static/plugins/base.js"></script>
