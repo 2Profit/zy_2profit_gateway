@@ -44,7 +44,7 @@ $(function(){
 	                    </label>
 	                </div>
 	                <div class="ml10 t_button">
-	                    <a class="abtn red" href="javascript:myLoginSubmit();">登录</a>
+	                    <a class="abtn red" href="javascript:myLoginSubmit('/main');">登录</a>
 	                </div>
 	
 	                <div class="ml20 t_label">社交帐号登录</div>

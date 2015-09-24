@@ -4,7 +4,7 @@
 
 var PAGESIZE = 10;
 
-function myLoginSubmit(){
+function myLoginSubmit(url){
 	var $form = $('#loginForm');
 	var username = $.trim($form.find('input[name="username"]').val());
 	var pwd = $.trim($form.find('input[name="pwd"]').val());
@@ -29,7 +29,12 @@ function myLoginSubmit(){
 		async : false,
 		success : function(result){
 			if(result.success){
-				window.location.reload();
+				if(url){
+					window.location.href = ctx + url;
+				}else{
+					window.location.reload();
+				}
+				
 			}else{
 				jc.alert(result.msg);
 			}

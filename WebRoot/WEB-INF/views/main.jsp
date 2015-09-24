@@ -17,11 +17,8 @@
 
 	<div class="J_wrap">
 
-        <%@ include file="common/timeZone.jsp" %>
-
-        <div class="J_content mt20 bgfff bg1 hasShadow">
-            
-            <%@ include file="common/leftMenu.jsp" %>
+        <%@ include file="common/time.jsp" %>
+            <%@ include file="common/menu.jsp" %>
             
             <div class="fr c_1000">
 
@@ -33,7 +30,7 @@
                 <div class="plrb20">
                     <div class="J_miniTitle">
                         <div class="m_token"></div>
-                        <div class="m_txt">帳戶信息</div>
+                        <div class="m_txt">账户信息</div>
                     </div>
 
                     <div class="J_userInfoTable">
@@ -41,15 +38,15 @@
                             <tbody>
                                 <tr>
                                     <td>姓名：</td>
-                                    <td>张生</td>
+                                    <td>${loginUser.cnName }</td>
                                 </tr>
                                 <tr>
                                     <td>帐号：</td>
-                                    <td>4028263</td>
+                                    <td></td>
                                 </tr>
                                 <tr>
                                     <td>用户名：</td>
-                                    <td>abc123</td>
+                                    <td>${loginUser.userName }</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -81,42 +78,6 @@
                                     <td>高级</td>
                                     <td><span class="cOrange">￥300,000,00</span> USD</td>
                                 </tr>
-                                <tr>
-                                    <td>MT4</td>
-                                    <td>Member_78adwa1baa</td>
-                                    <td>阿里巴巴网络技术有限公司</td>
-                                    <td>高级</td>
-                                    <td><span class="cOrange">￥842,000,00</span> USD</td>
-                                </tr>
-                                <tr>
-                                    <td>MT4</td>
-                                    <td>Member_awd1212317</td>
-                                    <td>深圳市迅雷网络技术有限公司</td>
-                                    <td>高级</td>
-                                    <td><span class="cOrange">￥420,000,00</span> USD</td>
-                                </tr>
-                                <tr>
-                                    <td>MT4</td>
-                                    <td>Member_515af12121</td>
-                                    <td>北京小米科技有限责任公司</td>
-                                    <td>高级</td>
-                                    <td><span class="cOrange">￥542,000,00</span> USD</td>
-                                </tr>
-                                <tr>
-                                    <td>MT4</td>
-                                    <td>Member_12adwaaw21</td>
-                                    <td>北京小米科技有限责任公司</td>
-                                    <td>高级</td>
-                                    <td><span class="cOrange">￥384,000,00</span> USD</td>
-                                </tr>
-                                <tr>
-                                    <td>MT4</td>
-                                    <td>Member_131cf1c121</td>
-                                    <td>魅族科技有限公司</td>
-                                    <td>高级</td>
-                                    <td><span class="cOrange">￥246,000,00</span> USD</td>
-                                </tr>
-
                             </tbody>
                         </table>
                     </div>
