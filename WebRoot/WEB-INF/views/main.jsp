@@ -17,86 +17,12 @@
 
 	<div class="J_wrap">
 
-        <div class="J_content mt20 bgfff hasShadow">
-            <div class="J_time clearfix">
-                <div class="t_item">
-                    <div class="i_icon"><img height="24" src="${ctx }/static/images/flag_xg.png" /></div>
-                    <div class="i_txt">00:00:00</div>
-                </div>
-                <div class="t_item">
-                    <div class="i_icon"><img height="24" src="${ctx }/static/images/flag_xxl.png" /></div>
-                    <div class="i_txt">00:00:00</div>
-                </div>
-                <div class="t_item">
-                    <div class="i_icon"><img height="24" src="${ctx }/static/images/flag_rb.png" /></div>
-                    <div class="i_txt">00:00:00</div>
-                </div>
-                <div class="t_item">
-                    <div class="i_icon"><img height="24" src="${ctx }/static/images/flag_yg.png" /></div>
-                    <div class="i_txt">00:00:00</div>
-                </div>
-                <div class="t_item">
-                    <div class="i_icon"><img height="24" src="${ctx }/static/images/flag_mg.png" /></div>
-                    <div class="i_txt">00:00:00</div>
-                </div>
-
-            </div>
-        </div>
+        <%@ include file="common/timeZone.jsp" %>
 
         <div class="J_content mt20 bgfff bg1 hasShadow">
-            <div class="fl c_180">
-
-                <div class="J_leftMenu">
-                    <div class="l_item current">
-                        <div class="i_default"><a href="#"><i class="icon">󰃌</i>账户管理</a></div>
-                        <div class="i_menu">
-                            <div class="m_txt current"><a href="#"><i class="icon">󰂻</i>账户资料</a></div>
-                            <div class="m_txt"><a href="#"><i class="icon">󰃔</i>个人资料</a></div>
-                            <div class="m_txt"><a href="#"><i class="icon">󰃉</i>修改密码</a></div>
-                        </div>
-                    </div>
-                    <div class="l_item">
-                        <div class="i_default"><a href="#"><i class="icon">󰇸</i>资金管理</a></div>
-                        <div class="i_menu">
-                            <div class="m_txt"><a href="#"><i class="icon">󰀥</i>额度明細</a></div>
-                            <div class="m_txt"><a href="#"><i class="icon">󰀵</i>存款</a></div>
-                        </div>
-                    </div>
-                    <div class="l_item">
-                        <div class="i_default"><a href="#"><i class="icon">󰃵</i>交易资料</a></div>
-                        <div class="i_menu">
-                            <div class="m_txt"><a href="#"><i class="icon">󰄁</i>交易记录</a></div>
-                        </div>
-                    </div>
-                    <div class="l_item">
-                        <div class="i_default"><a href="#"><i class="icon">󰄎</i>服务管理</a></div>
-                        <div class="i_menu">
-                            <div class="m_txt"><a href="#"><i class="icon">󰃾</i>消息订阅</a></div>
-                            <div class="m_txt"><a href="#"><i class="icon">󰇫</i>微信服务</a></div>
-                            <div class="m_txt"><a href="#"><i class="icon">󰊛</i>问题回馈</a></div>
-                        </div>
-                    </div>
-                    <div class="l_item">
-                        <div class="i_default"><a href="#"><i class="icon">󰄊</i>我的活动</a></div>
-                    </div>
-                    <div class="l_item">
-                        <div class="i_default"><a href="#"><i class="icon">󰇀</i>投票功能</a></div>
-                    </div>
-                    <div class="l_item">
-                        <div class="i_default"><a href="#"><i class="icon">󰊑</i>公告</a></div>
-                    </div>
-                    <div class="l_item">
-                        <div class="i_default"><a href="#"><i class="icon">󰃕</i>老师专区</a></div>
-                        <div class="i_menu">
-                            <div class="m_txt"><a href="#"><i class="icon">󰂰</i>银行资料</a></div>
-                            <div class="m_txt"><a href="#"><i class="icon">󰅐</i>取款</a></div>
-                        </div>
-                    </div>
-
-                </div>
-
-
-            </div>
+            
+            <%@ include file="common/leftMenu.jsp" %>
+            
             <div class="fr c_1000">
 
                 <div class="J_title less">
@@ -217,21 +143,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>好消息!e桶金网上线了,千万好礼等着你来领取!</td>
-                                    <td>2015-09-11</td>
-                                </tr>
-                                <tr>
-                                    <td>好消息!e桶金网上线了,千万好礼等着你来领取!</td>
-                                    <td>2015-09-11</td>
-                                </tr>
+                            	<c:forEach items="${notices }" var="notice" varStatus="loop">
+                            		<c:if test="${loop.index <= 5}">
+		                            	<tr>
+		                                    <td>${notice.title }</td>
+		                                    <td><fmt:formatDate value="${notice.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+		                                </tr>
+	                                </c:if>
+                            	</c:forEach>
                             </tbody>
                         </table>
                     </div>
-
                 </div>
-
-
             </div>
         </div>
     </div>

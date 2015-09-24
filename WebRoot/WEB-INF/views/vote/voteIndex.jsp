@@ -7,95 +7,146 @@
 
 <script type="text/javascript">
 
+var globalPostId = '';
 $(function(){
 	$('a[name="doVote_href"]').bind('click',function(event){
 		event.preventDefault();
 		var optionId = $('input:radio[name=currentTopic_radio]:checked').val();
-		if(optionId == null || optionId == '')
-			jc.alert('请选择投票选项');return false;
-		$.ajax({                                                 
-	        type: "POST",                                     
-	        url: "${ctx}/vote/doVote",                                      
-	        data:{"voteTopic.id":$('#currentTopicId').val(),"id":optionId},
-	        dataType :"json",
-	        success: function(data){   
-	          	if(data.sucess){
-	          		jc.alert('投票成功'); 
-   		    		window.location.href="${ctx}/vote/index";
-	          	}else{
-	          		jc.alert('投票失败'); 
-	          	}
-	       }   
-	   });
+		if(optionId == null || optionId == ''){
+			jc.alert('请选择投票选项');
+			return false;
+		}
+		$.ajax({
+			type: "POST",
+           	url:"${ctx }/vote/doVote",
+        	data:{'voteTopic.id':$('#currentTopicId').val(),id:optionId},
+        	async: false,
+        	success:function(json) {
+           		if(json.success){
+           			jc.alert('投票成功', function(b){
+           				window.location.replace("${ctx }/vote/index");
+           			});
+           		}else{
+           			jc.alert('失败');
+           		}
+           	}    
+		});					
 	});
 	
 	$('a[name="doPraise_href"]').bind('click',function(event){
 		event.preventDefault();
 		var postId = $(this).children('input').val();
+		return;
 		$.ajax({                                                 
 	        type: "POST",                                     
-	        url: "${ctx}/vote/doPraise",                                      
-	        data:{"id":postId},
-	        dataType :"json",
-	        success: function(data){   
-	          	if(data.sucess){
-	          		jc.alert('点赞成功');
-	          		$(this).empty();
-	          		var html = "<input type='hidden' value='"+postId+"'>举报("+data.model.praiseCount+")";
-	          		$(this).append(html);
+	        url: "${ctx}/vote/doPraise",
+	        async: false,
+	        data:{id:postId},
+	        success: function(json){
+	        	alert('hello');
+	          	/* if(json.success){
+	          		jc.alert('点赞成功', function(b){
+	          			window.location.href="${ctx}/vote/index";
+	          		});
 	          	}else{
 	          		jc.alert('点赞失败'); 
-	          	}
-	       }   
-	   });
+	          	} */
+	        }   
+	   	});
 	});
 	
 	$('a[name="doReport_href"]').bind('click',function(event){
 		event.preventDefault();
 		var postId = $(this).children('input').val();
-		$.ajax({                                                 
-	        type: "POST",                                     
-	        url: "${ctx}/vote/doReport",                                      
-	        data:{"id":postId},
-	        dataType :"json",
-	        success: function(data){   
-	          	if(data.sucess){
-	          		jc.alert('举报成功'); 
-	          		$(this).empty();
-	          		var html = "<input type='hidden' value='"+postId+"'>举报("+data.model.reportCount+")";
-	          		$(this).append(html);
-	          	}else{
-	          		jc.alert('举报失败'); 
-	          	}
-	        }   
-	   });
+		
 	});
 	
 	$('a[name="doPost_href"]').bind('click',function(event){
 		event.preventDefault();
 		$.ajax({                                                 
 	        type: "POST",                                     
-	        url: "${ctx}/vote/doPost",                                      
+	        url: "${ctx}/vote/doPost",
+	        async: false,
 	        data:{"voteTopic.id":$('#currentTopicId').val(),"postContent":$('textarea[name=postContent]').val()},
-	        dataType :"json",
-	        success: function(data){   
-	          	if(data.sucess){
-	          		jc.alert('回复成功');
-	          		window.location.href="${ctx}/vote/index";
+	        success: function(json){   
+	          	if(json.success){
+	          		jc.alert('回复成功', function(b){
+	          			window.location.href="${ctx}/vote/index";
+	          		});
 	          	}else{
 	          		jc.alert('回复失败'); 
 	          	}
 	        }   
-	   });
+	   	});
 	});
 	
 });
 
-function showDialog() {
-    jc.dialog.get("../dialog/回复评论弹窗.html", function (obj) {
-        obj.show();
+function doPraise(postId,obj,numb){
+	$.ajax({
+		type: "POST",
+       	url:"${ctx }/vote/doPraise",
+    	data:{id:postId},
+    	async: false,
+    	success:function(json) {
+       		if(json.success){
+       			jc.alert('点赞成功', function(b){
+       				var number = parseInt(numb)+1;
+	  				$(obj).text("点赞("+number+")");
+       			});
+       		}else{
+       			jc.alert('点赞失败');
+       		}
+       	}    
+	});
+}
 
-    }, "token_21")
+function doReport(postId,obj,numb){
+	$.ajax({
+		type: "POST",
+       	url:"${ctx }/vote/doReport",
+    	data:{id:postId},
+    	async: false,
+    	success:function(json) {
+       		if(json.success){
+       			jc.alert('举报成功', function(b){
+       				var number = parseInt(numb)+1;
+       				$(obj).text("举报("+number+")");
+       			});
+       		}else{
+       			jc.alert('举报失败');
+       		}
+       	}    
+	});
+}
+
+
+function showDialog(postId) {
+	
+	globalPostId = postId;
+	
+    jc.dialog.get("${ctx}/vote/replayDialog", function (obj) {
+        obj.show();
+    }, "token_21");
+}
+
+function postReplay(){
+	$.ajax({
+		type:"POST",
+		url:"${ctx}/vote/doReplay",
+		data:{  
+				'voteTopic.id':$('#currentTopicId').val(),
+				'voteTopicPost.id':globalPostId,
+				'replayContent':$('#replayContent').val()
+			},
+		success:function(json){
+			if(json.success){
+				window.location.href="${ctx}/vote/index";
+			}else{
+				jc.alert('回复失败');
+			}
+		}
+	});
 }
 
 function countWords(){
@@ -159,37 +210,24 @@ function countWords(){
 
                             </div>
                         </div>
+                        
                         <div class="fr w50p">
-
                             <div class="plr10">
-
                                 <div class="J_miniTitle">
                                     <div class="m_token"></div>
                                     <div class="m_txt">下期投票</div>
                                 </div>
 
                                 <div class="J_vote next">
-                                    <div class="v_title">你想下一期投票的題目是?</div>
+                                    <div class="v_title">${nextTopic.titleContent}</div>
                                     <div class="v_content">
-                                        <div class="c_item">
-                                            <a href="javascript:">
-                                                <label>
-                                                    <input disabled="disabled" type="radio" />你認為美元何時加息</label></a>
-                                        </div>
-                                        <div class="c_item">
-                                            <a href="javascript:">
-                                                <label>
-                                                    <input disabled="disabled" type="radio" />你是否認為A股已見底</label></a>
-                                        </div>
-                                        <div class="c_item">
-                                            <a href="javascript:">
-                                                <label>
-                                                    <input disabled="disabled" type="radio" />你認為中央救市已有成效</label></a>
-                                        </div>
-
+                                    	<c:forEach items="${nextTopic.options }" var="option">
+                                            <div class="c_item">
+	                                            <a href="javascript:"><label><input disabled="disabled" type="radio"/>${option.optionContent }</label></a>
+	                                        </div>                               	
+                                    	</c:forEach>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -265,13 +303,14 @@ function countWords(){
 	                            </div>
 	                            <div class="i_right">
 	                            	<div class="r_info clearfix">
-                                    <div class="fl">${post.publisher.userName } 时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd"/></div>
-                                    <div class="fr">
-                                        <a class="i_replyBtn" href='' name="doPraise_href"><i class="icon"></i><input type='hidden' value="${post.id }">赞(${post.praiseCount})</a>
-                                        <span>| </span>
-                                        <a class="i_replyBtn" href='' name="doReplay_href"><input type='hidden' value="${post.id }">回复</a>
-                                        <span>| </span>
-                                        <a class="i_replyBtn" href='' name="doReport_href"><input type='hidden' value="${post.id }">举报(${post.reportCount })</a>
+	                                    <div class="fl">${post.publisher.userName } 时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+	                                    <div class="fr">
+	                                        <a class="i_replyBtn" href="javascript:doPraise('${post.id }',this,'${post.praiseCount}');">赞(${post.praiseCount})</a>
+	                                        <span>| </span>
+	                                        <a class="i_replyBtn" href="javascript:showDialog('${post.id }');">回复</a>
+	                                        <span>| </span>
+	                                        <a class="i_replyBtn" href="javascript:doReport('${post.id }',this,'${post.reportCount }');">举报(${post.reportCount })</a>
+	                                    </div>
                                     </div>
                                     <div class="r_content">${post.postContent }</div>
                                     <div class="r_reply">
@@ -285,7 +324,7 @@ function countWords(){
 		                                        </div>
 	                                            <div class="i_right">
 		                                            <div class="r_info">${replay.replayer.userName } 回复 ${post.publisher.userName } 
-		                                            		时间: <fmt:formatDate value="${replay.createDate}" pattern="yyyy-MM-dd"/></div>
+		                                            		时间: <fmt:formatDate value="${replay.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
 		                                            <div class="r_content">${replay.replayContent }</div>
 		                                        </div>
 		                                    </div>
@@ -350,7 +389,7 @@ function countWords(){
             </div>
         </div>
     </div>
-
+    
 	<%@ include file="../common/help.jsp" %>
 	<%@ include file="../common/foot.jsp" %>
 

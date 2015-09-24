@@ -65,7 +65,7 @@ public class VoteController {
 		if(CollectionUtils.isNotEmpty(currentTopics))
 			model.addAttribute("currentTopic", currentTopics.get(0));
 		if(CollectionUtils.isNotEmpty(nextTopics))
-			model.addAttribute("currentTopic", nextTopics.get(0));
+			model.addAttribute("nextTopic", nextTopics.get(0));
 		
 		model.addAttribute("topics", voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_DEFAULT));
 		
@@ -112,8 +112,6 @@ public class VoteController {
 			VoteTopicPost postEntity = voteTopicPostService.get(dto.getId());
 			postEntity.setPraiseCount(postEntity.getPraiseCount()+1);
 			voteTopicPostService.update(postEntity);
-			
-			result.setModel(postEntity);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -135,8 +133,6 @@ public class VoteController {
 			VoteTopicPost postEntity = voteTopicPostService.get(dto.getId());
 			postEntity.setReportCount(postEntity.getReportCount()+1);
 			voteTopicPostService.update(postEntity);
-			
-			result.setModel(postEntity);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -174,6 +170,12 @@ public class VoteController {
 			result.setSuccess(false);
 		}
 		return result;
+	}
+	
+	@RequestMapping("/replayDialog")
+	public String replayDialog(){
+		
+		return "vote/replayDialog";
 	}
 	
 }
