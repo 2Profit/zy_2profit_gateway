@@ -33,10 +33,10 @@ $(function(){
 
 	<%@ include file="../common/head.jsp" %>
     <div class="J_wrap">
-       <%@ include file="../common/timeZone.jsp" %>
+       <%@ include file="../common/time.jsp" %>
         <div class="J_content mt20 bgfff bg1 hasShadow">
             
-            <%@ include file="../common/leftMenu.jsp" %>
+            <%@ include file="../common/menu.jsp" %>
             <div class="fr c_1000">
 
 
