@@ -33,34 +33,6 @@ $(function(){
 		});					
 	});
 	
-	$('a[name="doPraise_href"]').bind('click',function(event){
-		event.preventDefault();
-		var postId = $(this).children('input').val();
-		return;
-		$.ajax({                                                 
-	        type: "POST",                                     
-	        url: "${ctx}/vote/doPraise",
-	        async: false,
-	        data:{id:postId},
-	        success: function(json){
-	        	alert('hello');
-	          	/* if(json.success){
-	          		jc.alert('点赞成功', function(b){
-	          			window.location.href="${ctx}/vote/index";
-	          		});
-	          	}else{
-	          		jc.alert('点赞失败'); 
-	          	} */
-	        }   
-	   	});
-	});
-	
-	$('a[name="doReport_href"]').bind('click',function(event){
-		event.preventDefault();
-		var postId = $(this).children('input').val();
-		
-	});
-	
 	$('a[name="doPost_href"]').bind('click',function(event){
 		event.preventDefault();
 		$.ajax({                                                 
@@ -82,7 +54,8 @@ $(function(){
 	
 });
 
-function doPraise(postId,obj,numb){
+function doPraise(postId,numb){
+	
 	$.ajax({
 		type: "POST",
        	url:"${ctx }/vote/doPraise",
@@ -91,8 +64,7 @@ function doPraise(postId,obj,numb){
     	success:function(json) {
        		if(json.success){
        			jc.alert('点赞成功', function(b){
-       				var number = parseInt(numb)+1;
-	  				$(obj).text("点赞("+number+")");
+	  				$('#praise_href').text("点赞("+json.message+")");
        			});
        		}else{
        			jc.alert('点赞失败');
@@ -101,7 +73,7 @@ function doPraise(postId,obj,numb){
 	});
 }
 
-function doReport(postId,obj,numb){
+function doReport(postId,numb){
 	$.ajax({
 		type: "POST",
        	url:"${ctx }/vote/doReport",
@@ -110,8 +82,7 @@ function doReport(postId,obj,numb){
     	success:function(json) {
        		if(json.success){
        			jc.alert('举报成功', function(b){
-       				var number = parseInt(numb)+1;
-       				$(obj).text("举报("+number+")");
+       				$('#report_href').text("举报("+json.message+")");
        			});
        		}else{
        			jc.alert('举报失败');
@@ -172,11 +143,11 @@ function countWords(){
 
     <div class="J_wrap">
 
-       <%@ include file="../common/timeZone.jsp" %>
+       <%@ include file="../common/time.jsp" %>
 
         <div class="J_content mt20 bgfff bg1 hasShadow">
             
-            <%@ include file="../common/leftMenu.jsp" %>
+            <%@ include file="../common/menu.jsp" %>
             
             <div class="fr c_1000">
 
@@ -305,11 +276,11 @@ function countWords(){
 	                            	<div class="r_info clearfix">
 	                                    <div class="fl">${post.publisher.userName } 时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
 	                                    <div class="fr">
-	                                        <a class="i_replyBtn" href="javascript:doPraise('${post.id }',this,'${post.praiseCount}');">赞(${post.praiseCount})</a>
+	                                        <a class="i_replyBtn" id="praise_href" href="javascript:doPraise('${post.id }');">赞(${post.praiseCount})</a>
 	                                        <span>| </span>
 	                                        <a class="i_replyBtn" href="javascript:showDialog('${post.id }');">回复</a>
 	                                        <span>| </span>
-	                                        <a class="i_replyBtn" href="javascript:doReport('${post.id }',this,'${post.reportCount }');">举报(${post.reportCount })</a>
+	                                        <a class="i_replyBtn" id="report_href" href="javascript:doReport('${post.id }');">举报(${post.reportCount })</a>
 	                                    </div>
                                     </div>
                                     <div class="r_content">${post.postContent }</div>

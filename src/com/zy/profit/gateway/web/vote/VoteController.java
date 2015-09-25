@@ -112,6 +112,9 @@ public class VoteController {
 			VoteTopicPost postEntity = voteTopicPostService.get(dto.getId());
 			postEntity.setPraiseCount(postEntity.getPraiseCount()+1);
 			voteTopicPostService.update(postEntity);
+			
+			result.setMessage(postEntity.getPraiseCount()+"");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
@@ -133,6 +136,9 @@ public class VoteController {
 			VoteTopicPost postEntity = voteTopicPostService.get(dto.getId());
 			postEntity.setReportCount(postEntity.getReportCount()+1);
 			voteTopicPostService.update(postEntity);
+			
+			result.setMessage(postEntity.getReportCount()+"");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
