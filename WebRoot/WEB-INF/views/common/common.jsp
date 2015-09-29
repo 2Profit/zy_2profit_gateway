@@ -14,9 +14,12 @@
 <title>e桶金</title>
 
 <link href="${ctx }/static/css/desktop.css" rel="stylesheet" />
+<link href="${ctx }/static/css/jquery-ui.min.css" rel="stylesheet" />
+<link href="${ctx }/static/css/jquery-ui-silder.css" rel="stylesheet" />
 
 <script src="${ctx }/static/js/jquery-1.8.3.min.js" type="text/javascript"></script>
-<%-- <script src="${ctx }/static/js/jquery.nicescroll.min.js" type="text/javascript"></script> --%>
+<script src="${ctx }/static/js/jquery-ui.min.js" type="text/javascript"></script>
+<script src="${ctx }/static/js/jquery-ui-slider.js" type="text/javascript"></script>
 <script src="${ctx }/static/js/common.js" type="text/javascript"></script>
 <script src="${ctx }/static/js/uiExtend.js" type="text/javascript"></script>
 <script src="${ctx }/static/plugins/jquery/jquery.form.js"></script>
