@@ -58,7 +58,7 @@
                  <div class="i_menu"></div>
              </div>
              <div class="n_item">
-                 <div class="i_default"><a href="#">为你选经销商</a></div>
+                 <div class="i_default"><a href="${ctx }/bk/indexList">为你选经销商</a></div>
                  <div class="i_menu"></div>
              </div>
              <div class="n_item">
@@ -66,7 +66,7 @@
                  <div class="i_menu"></div>
              </div>
              <div class="n_item">
-                 <div class="i_default"><a href="${ctx }/vote/index">活动</a></div>
+                 <div class="i_default"><a href="#">活动</a></div>
                  <div class="i_menu"></div>
              </div>
          </div>

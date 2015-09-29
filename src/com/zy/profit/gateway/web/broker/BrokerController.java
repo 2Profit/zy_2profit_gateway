@@ -7,11 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.zy.broker.entity.BrokerExtInfo;
 import com.zy.broker.service.BrokerExtInfoService;
 import com.zy.broker.service.BrokerInfoService;
+import com.zy.common.entity.PageModel;
 
 @Controller
-@RequestMapping("bk")
+@RequestMapping("/bk")
 public class BrokerController {
 
 	@Autowired
@@ -19,10 +21,11 @@ public class BrokerController {
 	@Autowired
 	private BrokerExtInfoService brokerExtInfoService;
 	
-	@RequestMapping("bk/list")
-	public String brokerList(Model model,HttpServletRequest request){
+	@RequestMapping("/indexList")
+	public String brokerList(Model model,HttpServletRequest request,BrokerExtInfo queryDto,PageModel<BrokerExtInfo> pageModel){
 		
-		model.addAttribute("brokerExtInfos", null);
+		
+		model.addAttribute("brokerExtInfos", brokerExtInfoService.queryForPage(queryDto, pageModel));
 		
 		return "broker/brokerIndex";
 	}
