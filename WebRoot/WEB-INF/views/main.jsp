@@ -44,7 +44,7 @@
                                 </tr>
                                 <tr>
                                     <td>帐号：</td>
-                                    <td></td>
+                                    <td>${loginUser.mobile }</td>
                                 </tr>
                                 <tr>
                                     <td>用户名：</td>
