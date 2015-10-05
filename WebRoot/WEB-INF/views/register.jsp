@@ -73,6 +73,16 @@ function sendCode(_this){
 			$sendBtn.removeClass('blue').addClass('gray').html("重新获取 ( 60 ) ");
 			$sendBtn.attr('data-status', 'no');
 			//调用短信接口
+			$.ajax({
+				url : '${ctx}/register/send_msg',
+				data : {
+					'mobile' : $('input[name="mobile"]').val()
+				},
+				async : false,
+				success : function(result){
+					
+				}
+			});
 			
 			codeTimer = setInterval(function(){
 				if(seconds < 0){

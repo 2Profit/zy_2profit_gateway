@@ -10,7 +10,7 @@
 
 <%
 Date date = new Date();
-SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy/MM/dd hh:MM:ss");
+SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy/MM/dd HH:MM:ss");
 
 outputFormat.setTimeZone(TimeZone.getTimeZone("Asia/Hong_Kong"));
 String xgStr = outputFormat.format(date);

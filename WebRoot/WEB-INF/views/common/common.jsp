@@ -26,6 +26,7 @@
 <script src="${ctx }/static/plugins/jquery/jquery.formatDateTime.js"></script>
 <script src="${ctx }/static/plugins/base.js"></script>
 <script type="text/javascript" src="${ctx }/static/plugins/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="${ctx }/static/plugins/layer/layer.js"></script>
 
 <script type="text/javascript">
 var ctx = '${ctx}';

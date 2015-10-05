@@ -55,12 +55,35 @@ public class SystemConfig {
 		return properties.getProperty("attachment");
 	}
 	
-	/**
-	 * 门户地址
-	 * @return
-	 */
-	public static String getMemberUrl(){
-		return properties.getProperty("member_url");
+	public static String getSMSSID(){
+		return properties.getProperty("SMS.SID");
 	}
 	
+	public static String getSMSToken(){
+		return properties.getProperty("SMS.TOKEN");
+	}
+	
+	public static String getSMSRestURL(){
+		return properties.getProperty("SMS.REST.URL");
+	}
+	
+	public static String getSMSAPPID(){
+		return properties.getProperty("SMS.APPID");
+	}
+	
+	/**
+	 * 单位分钟
+	 * @return
+	 */
+	public static String getSMSVaildTime(){
+		return properties.getProperty("SMS.valid.time");
+	}
+	
+	public static int getSMSVaildTimeInt(){
+		return Integer.parseInt(getSMSVaildTime());
+	}
+	
+	public static String getSMSModelId(){
+		return properties.getProperty("SMS.modelId");
+	}
 }
