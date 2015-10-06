@@ -5,7 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zy.common.entity.ResultDto;
+import com.zy.member.entity.Member;
 import com.zy.profit.gateway.util.HttpUtils;
 import com.zy.util.AddressUtils;
 import com.zy.vote.entity.VoteMemberLog;
@@ -39,6 +39,10 @@ import com.zy.vote.service.VoteTopicService;
 @Controller
 @RequestMapping("/vote")
 public class VoteController {
+	
+	public static final String RESULT_CODE_VOTE_ERROR = "401";//用户对投票重复投票
+	public static final String RESULT_CODE_PRAISE_ERROR = "402";//用户对帖子重复点赞
+	public static final String RESULT_CODE_REPORT_ERROR = "403";//用户对帖子重复举报
 
 	@Autowired
 	private VoteTopicService voteTopicService;
@@ -77,10 +81,18 @@ public class VoteController {
 	public ResultDto<VoteTopic> doVote(VoteTopicOption dto, HttpServletRequest request){
 		ResultDto<VoteTopic> result = new ResultDto<VoteTopic>();
 		try {
+			Member member = HttpUtils.getMember(request);
+			int logNumb = voteMemberLogService.findMemberTopicLog(member.getId(), dto.getVoteTopic().getId());
+			if(logNumb>0){
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_VOTE_ERROR);
+				return result;
+			}
+			
 			VoteMemberLog voteLog = new VoteMemberLog();
 			voteLog.setVoteTopic(dto.getVoteTopic());
 			voteLog.setVoteTopicOption(dto);
-			voteLog.setMember(HttpUtils.getMember(request));
+			voteLog.setMember(member);
 			voteLog.setIpAddress(AddressUtils.getIp(request));
 			voteMemberLogService.save(voteLog);
 			
@@ -103,9 +115,17 @@ public class VoteController {
 	public ResultDto<VoteTopicPost> praise(VoteTopicPost dto, HttpServletRequest request){
 		ResultDto<VoteTopicPost> result = new ResultDto<VoteTopicPost>();
 		try {
+			Member member = HttpUtils.getMember(request);
+			int memberPostNumb = votePostPraiseService.findMemberPraise(member.getId(), dto.getId());
+			if(memberPostNumb>0){//该帖子用户已经点赞
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_PRAISE_ERROR);
+				return result;
+			}
+			
 			VotePostPraise praise = new VotePostPraise();
 			praise.setVoteTopicPost(dto);
-			praise.setMember(HttpUtils.getMember(request));
+			praise.setMember(member);
 			praise.setIpAddress(AddressUtils.getIp(request));
 			votePostPraiseService.save(praise);
 			
@@ -127,9 +147,17 @@ public class VoteController {
 	public ResultDto<VoteTopicPost> report(VoteTopicPost dto, HttpServletRequest request){
 		ResultDto<VoteTopicPost> result = new ResultDto<VoteTopicPost>();
 		try {
+			Member member = HttpUtils.getMember(request);
+			int memberPostNumb = votePostPraiseService.findMemberPraise(member.getId(), dto.getId());
+			if(memberPostNumb>0){//该帖子用户已经举报
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_REPORT_ERROR);
+				return result;
+			}
+			
 			VotePostReport report = new VotePostReport();
 			report.setVoteTopicPost(dto);
-			report.setMember(HttpUtils.getMember(request));
+			report.setMember(member);
 			report.setIpAddress(AddressUtils.getIp(request));
 			votePostReportService.save(report);
 			
@@ -138,7 +166,6 @@ public class VoteController {
 			voteTopicPostService.update(postEntity);
 			
 			result.setMessage(postEntity.getReportCount()+"");
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);

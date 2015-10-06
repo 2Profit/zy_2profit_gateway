@@ -2,6 +2,7 @@ package com.zy.profit.gateway.web;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,14 +21,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.zy.broker.service.BrokerExtInfoService;
 import com.zy.common.util.AjaxResult;
+import com.zy.common.util.BaseUtils;
+import com.zy.common.util.DateUtils;
 import com.zy.member.entity.Member;
-import com.zy.member.entity.MemberUser;
+import com.zy.member.entity.MemberCode;
+import com.zy.member.service.MemberCodeService;
 import com.zy.member.service.MemberService;
-import com.zy.member.service.MemberUserService;
 import com.zy.profit.gateway.util.HttpUtils;
-import com.zy.profit.gateway.util.WebHelper;
+import com.zy.profit.gateway.util.SystemConfig;
 import com.zy.util.Md5Util;
+import com.zy.vote.service.VoteTopicService;
 
 
 /**
@@ -42,10 +47,19 @@ public class IndexController {
 	private MemberService memberService;
 	
 	@Autowired
-	private MemberUserService memberUserService;
+	private MemberCodeService memberCodeService;
+	@Autowired
+	private VoteTopicService voteTopicService;
+	@Autowired
+	private BrokerExtInfoService brokerExtInfoService;
 	
 	@RequestMapping("/index")
-	public String index(){
+	public String index(Model model){
+		
+		model.addAttribute("currentTopic", voteTopicService.getCurrentTopic());
+		model.addAttribute("topics", voteTopicService.getIndexTopic());
+		model.addAttribute("brokers", brokerExtInfoService.findIndexPageBrokers());
+		
 		return "/index";
 	}
 	
@@ -58,6 +72,61 @@ public class IndexController {
 	@RequestMapping("/register/agree")
 	public String registerAgree(HttpServletRequest request){
 		return "/register_agree";
+	}
+	
+	@RequestMapping("/register/send_msg")
+	@ResponseBody
+	public AjaxResult sendCode(HttpServletRequest request){
+		AjaxResult ajaxResult = new AjaxResult();
+		ajaxResult.setSuccess(false);
+		try {
+			String mobile = request.getParameter("mobile");
+			
+			String code = BaseUtils.getNumr(4);
+			String msg = SMSAPI.sendRegisterCode(mobile, code);
+			if(msg == null){
+				MemberCode memberCode = new MemberCode();
+				memberCode.setMobile(mobile);
+				memberCode.setCode(code);
+				
+				memberCodeService.save(memberCode);
+				
+				ajaxResult.setSuccess(true);
+			}else{
+				ajaxResult.setMsg(msg);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return ajaxResult;
+	}
+
+	@RequestMapping(value="/register/vaild_email")
+	@ResponseBody
+	public AjaxResult validEmail(HttpServletRequest request){
+		
+		AjaxResult ajaxResult = new AjaxResult();
+		
+		String retMsg = "";
+		
+		String email = request.getParameter("email");
+		
+		int ret = memberService.vaildUserByEmail(email);
+		if(ret > 0){
+			retMsg = "该电子邮箱已经被绑定";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(StringUtils.isNotBlank(retMsg)){
+			map.put("error", retMsg);
+		}else{
+			map.put("ok", "");
+		}
+		ajaxResult.setData(map);
+		
+		return ajaxResult;
 	}
 	
 	@RequestMapping(value="/register/vaild_mobile")
@@ -113,7 +182,7 @@ public class IndexController {
 	}
 	
 	@RequestMapping("/register/save")
-	public String registerSave(Member member, RedirectAttributes redirectAttributes){
+	public String registerSave(Member member, RedirectAttributes redirectAttributes, HttpServletRequest request){
 		
 		String msg = "";
 		
@@ -121,23 +190,43 @@ public class IndexController {
 		member.setNickName(member.getNickName().trim());
 		
 		//判断短信验证码
+		List<MemberCode> memberCodes = memberCodeService.findCodesByMobile(member.getMobile());
+		MemberCode memberCode = null;
+		if(memberCodes == null || memberCodes.isEmpty()){
+			msg = "短信验证码错误";
+		}else{
+			
+			memberCode = memberCodes.get(0);
+			Date currentDate = new Date();
+			
+			if(DateUtils.addMinutes(memberCode.getCreateDate(), SystemConfig.getSMSVaildTimeInt()).before(currentDate)){
+				msg = "短信验证码已过期，请重新注册";
+			}else{
+				String code = request.getParameter("code").trim();
+				if(!code.equals(memberCode.getCode())){
+					msg = "短信验证码错误";
+				}
+			}
+			
+		}
 		
 		int ret = memberService.vaildUserByMobile(member.getMobile());
 		if(ret > 0){
 			msg = "注册失败，请重新再试";
-			redirectAttributes.addAttribute("msg", msg);
-			return "redirect:/register";
 		}
 		
 		ret = memberService.vaildUserByNickName(member.getNickName());
 		if(ret > 0){
 			msg = "注册失败，请重新再试";
+		}
+		
+		if(StringUtils.isNotBlank(msg)){
 			redirectAttributes.addAttribute("msg", msg);
 			return "redirect:/register";
 		}
 		
 		member.setPwd(Md5Util.generatePassword(member.getPwd().trim()));
-		memberService.save(member);
+		memberService.saveMember(member, memberCode);
 		redirectAttributes.addAttribute("msg", "注册成功，马上登陆");
 		
 		return "redirect:/login";

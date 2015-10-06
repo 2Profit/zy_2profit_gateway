@@ -27,7 +27,11 @@ $(function(){
            				window.location.replace("${ctx }/vote/index");
            			});
            		}else{
-           			jc.alert('失败');
+           			if(json.code=='401'){
+           				jc.alert('请勿重复投票！')
+           			}else{
+           				jc.alert('失败');
+           			}
            		}
            	}    
 		});					
@@ -67,7 +71,11 @@ function doPraise(postId,numb){
 	  				$('#praise_href').text("点赞("+json.message+")");
        			});
        		}else{
-       			jc.alert('点赞失败');
+       			if(json.code=='402'){
+       				jc.alert('请勿重复点赞！')
+       			}else{
+       				jc.alert('点赞失败');
+       			}
        		}
        	}    
 	});
@@ -85,7 +93,11 @@ function doReport(postId,numb){
        				$('#report_href').text("举报("+json.message+")");
        			});
        		}else{
-       			jc.alert('举报失败');
+       			if(json.code=='403'){
+       				jc.alert('请勿重复举报！')
+       			}else{
+       				jc.alert('举报失败');
+       			}
        		}
        	}    
 	});

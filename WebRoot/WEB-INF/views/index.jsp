@@ -78,141 +78,37 @@ $(function(){
                 <div class="J_jjsList">
                     <div class="j_inner">
                         <div class="i_main">
-                            <div class="m_item">
-                                <div class="i_pic">
-                                    <img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-                                </div>
-                                <div class="i_info">
-                                    <div class="i_name">Barack Hussein Obama</div>
-                                    <div class="i_abstract">
-                                        <div class="a_left">
-                                            <div class="l_txt">评定1</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                            <div class="ml10 l_txt">评定2</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                        </div>
-                                        <div class="a_right">5分钟前</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="m_item">
-                                <div class="i_pic">
-                                    <img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-                                </div>
-                                <div class="i_info">
-                                    <div class="i_name">Barack Hussein Obama</div>
-                                    <div class="i_abstract">
-                                        <div class="a_left">
-                                            <div class="l_txt">评定1</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                            <div class="ml10 l_txt">评定2</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                        </div>
-                                        <div class="a_right">5分钟前</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="m_item">
-                                <div class="i_pic">
-                                    <img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-                                </div>
-                                <div class="i_info">
-                                    <div class="i_name">Barack Hussein Obama</div>
-                                    <div class="i_abstract">
-                                        <div class="a_left">
-                                            <div class="l_txt">评定1</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                            <div class="ml10 l_txt">评定2</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                        </div>
-                                        <div class="a_right">5分钟前</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="m_item">
-                                <div class="i_pic">
-                                    <img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-                                </div>
-                                <div class="i_info">
-                                    <div class="i_name">Barack Hussein Obama</div>
-                                    <div class="i_abstract">
-                                        <div class="a_left">
-                                            <div class="l_txt">评定1</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                            <div class="ml10 l_txt">评定2</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                        </div>
-                                        <div class="a_right">5分钟前</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="m_item">
-                                <div class="i_pic">
-                                    <img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-                                </div>
-                                <div class="i_info">
-                                    <div class="i_name">Barack Hussein Obama</div>
-                                    <div class="i_abstract">
-                                        <div class="a_left">
-                                            <div class="l_txt">评定1</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                            <div class="ml10 l_txt">评定2</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                        </div>
-                                        <div class="a_right">5分钟前</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="m_item">
-                                <div class="i_pic">
-                                    <img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-                                </div>
-                                <div class="i_info">
-                                    <div class="i_name">Barack Hussein Obama</div>
-                                    <div class="i_abstract">
-                                        <div class="a_left">
-                                            <div class="l_txt">评定1</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                            <div class="ml10 l_txt">评定2</div>
-                                            <div class="l_prog">
-                                                <div style="width: 88%;" class="p_bar"></div>
-                                            </div>
-                                        </div>
-                                        <div class="a_right">5分钟前</div>
-                                    </div>
-                                </div>
-                            </div>
-
+                       	 	<c:forEach items="${brokers }" var="broker">
+	                            <div class="m_item">
+	                                <div class="i_pic">
+	                                    <img width="54" height="54" src="/${broker.imageUrl }" />
+	                                </div>
+	                                <div class="i_info">
+	                                    <div class="i_name">${broker.cnName } ${broker.enName }</div>
+	                                    <div class="i_abstract">
+	                                        <div class="a_left">
+	                                            <div class="l_txt">评定1</div>
+	                                            <div class="l_prog">
+	                                                <div style="width: 88%;" class="p_bar"></div>
+	                                            </div>
+	                                            <div class="ml10 l_txt">评定2</div>
+	                                            <div class="l_prog">
+	                                                <div style="width: 88%;" class="p_bar"></div>
+	                                            </div>
+	                                        </div>
+	                                        <div class="a_right">5分钟前</div>
+	                                    </div>
+	                                </div>
+	                            </div>                       	 	
+                       	 	</c:forEach>
                         </div>
                     </div>
-
                 </div>
-
-
+                
             </div>
         </div>
+        
+        
         <div class="fr c_430">
             <div class="pau">
                 <div class="J_title">
@@ -224,6 +120,8 @@ $(function(){
                 <div class="J_sdList">
                     <div class="s_inner">
                         <div class="i_main">
+
+                            
                             <div class="m_item">
                                 <div class="i_pic">
                                     <img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
@@ -368,82 +266,49 @@ $(function(){
                 <div class="J_title">
                     <div class="t_txt">话题社区</div>
                     <div class="t_tips"></div>
-                    <div class="t_more"><a href="#">更多资讯&nbsp;&gt;</a></div>
+                    <div class="t_more"><a href="${ctx }/vote/index">更多投票&nbsp;&gt;</a></div>
                 </div>
 
                 <div class="J_news mt20">
                     <div class="n_left">
                         <a href="#">
-                            <img src="${ctx }/static/tmp/k4.jpg" />
+                            <img src="/${currentTopic.imageUrl }" />
                         </a>
                     </div>
                     <div class="n_right">
                         <div class="r_title">
-                            <a href="#">这是一个图片所写的东西</a>
+                            <a href="#">${currentTopic.titleContent }</a>
                         </div>
                         <div class="r_info">
-                            <div class="i_txt">这里是内容内容内容内容容内容内容这容内容内容内容这里是内容内容内容内容里是内容内容内容内容这里是内容内容内容内容</div>
-                            <div class="i_time"><span>时间:</span>2015-08-09</div>
+                            <div class="i_txt">${currentTopic.titleContent }</div>
+                            <div class="i_time"><span>时间:</span><fmt:formatDate value="${currentTopic.startDate }" type="both" pattern="yyyy-MM-dd"/></div>
                         </div>
 
                     </div>
                 </div>
-
 
                 <div class="J_picHolder middle">
                     <div class="p_main clearfix">
-                        <div class="m_item">
-                            <div class="i_pic">
-                                <a href="#">
-                                    <img src="${ctx }/static/tmp/k1.jpg" />
-                                </a>
-                                <div class="p_title">
-                                    <div class="t_txt">
-                                        <a href="#">这是一个图片所写的东西</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="i_info">
-                                <div class="i_txt"><a href="#">这里是内容内容内容内容</a></div>
-                                <div class="i_time"><span>时间:</span>2015-08-09</div>
-                            </div>
-                        </div>
-                        <div class="m_item">
-                            <div class="i_pic">
-                                <a href="#">
-                                    <img src="${ctx }/static/tmp/k2.jpg" />
-                                </a>
-                                <div class="p_title">
-                                    <div class="t_txt">
-                                        <a href="#">这是一个图片所写的东西</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="i_info">
-                                <div class="i_txt"><a href="#">这里是内容内容内容内容</a></div>
-                                <div class="i_time"><span>时间:</span>2015-08-09</div>
-                            </div>
-                        </div>
-                        <div class="m_item">
-                            <div class="i_pic">
-                                <a href="#">
-                                    <img src="${ctx }/static/tmp/k3.jpg" />
-                                </a>
-                                <div class="p_title">
-                                    <div class="t_txt">
-                                        <a href="#">这是一个图片所写的东西</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="i_info">
-                                <div class="i_txt"><a href="#">这里是内容内容内容内容</a></div>
-                                <div class="i_time"><span>时间:</span>2015-08-09</div>
-                            </div>
-                        </div>
+                        <c:forEach items="${topics }" var="topic">
+	                        <div class="m_item">
+	                            <div class="i_pic">
+	                                <a href="#">
+	                                    <img src="/${topic.imageUrl }" />
+	                                </a>
+	                                <div class="p_title">
+	                                    <div class="t_txt">
+	                                        <a href="#">${topic.titleContent }</a>
+	                                    </div>
+	                                </div>
+	                            </div>
+	                            <div class="i_info">
+	                                <div class="i_txt"><a href="#">${topic.titleContent }</a></div>
+	                                <div class="i_time"><span>时间:</span><fmt:formatDate value="${topic.startDate }" type="both" pattern="yyyy-MM-dd"/></div>
+	                            </div>
+	                        </div>	                        
+	                   	</c:forEach>
                     </div>
-
                 </div>
-
             </div>
 
 
