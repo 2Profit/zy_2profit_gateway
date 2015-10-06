@@ -19,6 +19,10 @@
 		var id = $(this).get(0).id;
 		_options[id] = $.extend({}, $.fn.MyDigitClock.defaults, options);
 		
+		//time
+		var currentDate = new Date(_options[id].time);
+		_options[id].timeInMillis = currentDate.getTime();
+		
 		return this.each(function()
 		{
 			_container[id] = $(this);
@@ -27,7 +31,9 @@
 		
 		function showClock(id)
 		{
+			_options[id].timeInMillis += 1000;
 			var d = new Date();
+			d.setTime(_options[id].timeInMillis);
 			var h = d.getHours();
 			var m = d.getMinutes();
 			var s = d.getSeconds();

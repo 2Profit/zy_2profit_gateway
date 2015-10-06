@@ -31,6 +31,7 @@ import com.zy.member.service.MemberCodeService;
 import com.zy.member.service.MemberService;
 import com.zy.profit.gateway.util.HttpUtils;
 import com.zy.profit.gateway.util.SystemConfig;
+import com.zy.profit.gateway.util.SMSAPI;
 import com.zy.util.Md5Util;
 import com.zy.vote.service.VoteTopicService;
 

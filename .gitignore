@@ -5,4 +5,4 @@
 .classpath
 .mymetadata
 /bin/
-/bin/
+build/*
