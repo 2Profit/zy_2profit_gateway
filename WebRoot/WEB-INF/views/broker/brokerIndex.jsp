@@ -21,7 +21,8 @@
 	    });
 	    $(".slider3").slider({
 	        stop: function (event, ui) {
-	            alert(ui.values[0] + "," + ui.values[1]);
+	            jc.alert('该功能需求不清晰暂未实现');
+	        	//alert(ui.values[0] + "," + ui.values[1]);
 	        }
 	    });
 	    
@@ -204,7 +205,7 @@
                 	
 						<div class="j_item good clearfix">
 	                        <div class="i_left">
-	                            <img style="width: 120px; height: 57px;" src="${ctx}/static/tmp/j1.png" />
+	                            <img style="width: 120px; height: 57px;" src="${ctx}/${broker.imageUrl}" />
 	                        </div>
 	                        <div class="i_center">
 	                            <div class="c_list">
@@ -254,7 +255,8 @@
                 </div>
                 
                 
-                <div class="j_page">这里是分页</div>
+                <div class="j_page">
+                </div>
             </div>
 
 

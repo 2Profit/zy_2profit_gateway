@@ -72,7 +72,7 @@ $(function(){
                 <div class="J_title">
                     <div class="t_txt">经纪商</div>
                     <div class="t_tips">从事经纪商活动的人不能直接进入交易所经营，他们的主要作用是接受投资者的委托</div>
-                    <div class="t_more"><a href="#">更多&nbsp;&gt;</a></div>
+                    <div class="t_more"><a href="${ctx }/bk/indexList">更多&nbsp;&gt;</a></div>
                 </div>
 
                 <div class="J_jjsList">
@@ -271,13 +271,13 @@ $(function(){
 
                 <div class="J_news mt20">
                     <div class="n_left">
-                        <a href="#">
+                        <a href="${ctx }/vote/link?id=${currentTopic.id}">
                             <img src="/${currentTopic.imageUrl }" />
                         </a>
                     </div>
                     <div class="n_right">
                         <div class="r_title">
-                            <a href="#">${currentTopic.titleContent }</a>
+                            <a href="${ctx }/vote/link?id=${currentTopic.id}">${currentTopic.titleContent }</a>
                         </div>
                         <div class="r_info">
                             <div class="i_txt">${currentTopic.titleContent }</div>
@@ -292,17 +292,17 @@ $(function(){
                         <c:forEach items="${topics }" var="topic">
 	                        <div class="m_item">
 	                            <div class="i_pic">
-	                                <a href="#">
+	                                <a href="${ctx }/vote/link?id=${topic.id}">
 	                                    <img src="/${topic.imageUrl }" />
 	                                </a>
 	                                <div class="p_title">
 	                                    <div class="t_txt">
-	                                        <a href="#">${topic.titleContent }</a>
+	                                        <a href="${ctx }/vote/link?id=${topic.id}">${topic.titleContent }</a>
 	                                    </div>
 	                                </div>
 	                            </div>
 	                            <div class="i_info">
-	                                <div class="i_txt"><a href="#">${topic.titleContent }</a></div>
+	                                <div class="i_txt"><a href="${ctx }/vote/link?id=${topic.id}">${topic.titleContent }</a></div>
 	                                <div class="i_time"><span>时间:</span><fmt:formatDate value="${topic.startDate }" type="both" pattern="yyyy-MM-dd"/></div>
 	                            </div>
 	                        </div>	                        

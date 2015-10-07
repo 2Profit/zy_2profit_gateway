@@ -15,6 +15,7 @@ import com.zy.common.entity.ResultDto;
 import com.zy.member.entity.Member;
 import com.zy.profit.gateway.util.HttpUtils;
 import com.zy.util.AddressUtils;
+import com.zy.util.RandomValidateCode;
 import com.zy.vote.entity.VoteMemberLog;
 import com.zy.vote.entity.VotePostPraise;
 import com.zy.vote.entity.VotePostReport;
@@ -43,6 +44,7 @@ public class VoteController {
 	public static final String RESULT_CODE_VOTE_ERROR = "401";//用户对投票重复投票
 	public static final String RESULT_CODE_PRAISE_ERROR = "402";//用户对帖子重复点赞
 	public static final String RESULT_CODE_REPORT_ERROR = "403";//用户对帖子重复举报
+	public static final String RESULT_CODE_RANDOMCODE_ERROR = "404";//验证码错误
 
 	@Autowired
 	private VoteTopicService voteTopicService;
@@ -59,6 +61,37 @@ public class VoteController {
 	@Autowired
 	private VotePostReportService votePostReportService;
 	
+	@RequestMapping("/link")
+	public String link(Model model, VoteTopic qto){
+		
+		model.addAttribute("currentTopic", voteTopicService.get(qto.getId()));
+		if(CollectionUtils.isNotEmpty(voteTopicService.getIndexTopic()))
+			model.addAttribute("nextTopic", voteTopicService.getIndexTopic().get(0));
+		model.addAttribute("topics", voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_NEXT));
+		
+		return "vote/voteIndex"; 
+	}
+	
+	@RequestMapping("/randomValidate")
+	@ResponseBody
+	public ResultDto<Object> randomValidate(HttpServletRequest request){
+		ResultDto<Object> result = new ResultDto<Object>();
+		try {
+			String sessionImgCode = (String)request.getSession().getAttribute(RandomValidateCode.RANDOMCODEKEY);
+			String randomCode = request.getParameter("randomCode");
+			if(randomCode.equalsIgnoreCase(sessionImgCode)){
+				return result;
+			}else{
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_RANDOMCODE_ERROR);
+				return result;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+		}
+		return result;
+	}
 	
 	@RequestMapping("/index")
 	public String index(Model model){
@@ -71,7 +104,7 @@ public class VoteController {
 		if(CollectionUtils.isNotEmpty(nextTopics))
 			model.addAttribute("nextTopic", nextTopics.get(0));
 		
-		model.addAttribute("topics", voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_DEFAULT));
+		model.addAttribute("topics", voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_NEXT));
 		
 		return "vote/voteIndex";
 	}

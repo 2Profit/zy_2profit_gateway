@@ -125,6 +125,7 @@ a.abtn.red:hover { background-color: #f70; }
     .J_header .h_inner { margin: 0 auto; width: 1200px; height: 60px; }
         .J_header .h_inner .i_logo { float: left; height: 60px; line-height: 60px; }
             .J_header .h_inner .i_logo a { font-size: 32px; font-weight: bold; color: #56b30b; }
+                .J_header .h_inner .i_logo a img { width:42px; height:42px; margin-top: 9px; }
         .J_header .h_inner .i_nav { float: right; height: 60px; }
             .J_header .h_inner .i_nav .n_item { float: left; height: 60px; }
                 .J_header .h_inner .i_nav .n_item .i_default { }
@@ -306,9 +307,9 @@ a.abtn.red:hover { background-color: #f70; }
     .J_jjsTable table tbody tr td .t_link { line-height: 24px; }
 
 
-.J_jjsSearch { margin: 0 auto; padding:40px 0; width: 640px; border-radius: 3px; }
+.J_jjsSearch { margin: 0 auto; padding: 40px 0; width: 640px; border-radius: 3px; }
     .J_jjsSearch .j_left { float: left; width: 518px; height: 36px; border: 1px solid #ddd; }
-        .J_jjsSearch .j_left input { width:500px; margin:8px 0 0 8px; border-style:none; }
+        .J_jjsSearch .j_left input { width: 500px; margin: 8px 0 0 8px; border-style: none; }
     .J_jjsSearch .j_right { float: left; width: 120px; height: 38px; }
         .J_jjsSearch .j_right a { display: block; height: 38px; line-height: 38px; text-align: center; border-radius: 0 3px 3px 0; color: #fff; font-size: 18px; }
 
@@ -347,6 +348,40 @@ a.abtn.red:hover { background-color: #f70; }
                             .J_jjsList .j_inner .i_main .m_item .i_info .i_abstract .a_left .l_prog { float: left; margin-left: 10px; width: 80px; height: 30px; background: url(../images/dot_ddd_6.png) repeat-x; }
                                 .J_jjsList .j_inner .i_main .m_item .i_info .i_abstract .a_left .l_prog .p_bar { width: 0; height: 30px; background: url(../images/dot_orange_6.png) repeat-x; overflow: hidden; }
                         .J_jjsList .j_inner .i_main .m_item .i_info .i_abstract .a_right { float: right; height: 30px; line-height: 30px; font-size: 14px; color: #999; }
+
+
+
+
+
+
+
+    .J_jjsList .j_filter { padding: 6px 10px; border: 1px solid #ddd; background-color: #f6f6f6; }
+        .J_jjsList .j_filter .f_txt { float: left; }
+        .J_jjsList .j_filter .f_btn { float: left; margin-left: 40px; }
+            .J_jjsList .j_filter .f_btn ul { margin-top: 2px; }
+            .J_jjsList .j_filter .f_btn li { float: left; border-right: 1px solid #ccc; }
+                .J_jjsList .j_filter .f_btn li a { display: block; padding: 0 10px; font-size: 12px; color: #999; }
+                .J_jjsList .j_filter .f_btn li.active a { color: #f74b1f; }
+
+
+    .J_jjsList .j_list { }
+
+        .J_jjsList .j_list .j_item { margin-top: 20px; border: 1px solid #ddd; background-color: #f6f6f6; }
+
+            .J_jjsList .j_list .j_item .i_left { float: left; width: 221px; height: 222px; border-right: 1px solid #ddd; text-align: center; }
+                .J_jjsList .j_list .j_item .i_left img { margin-top: 86px; vertical-align: top; }
+            .J_jjsList .j_list .j_item .i_center { float: left; width: 701px; height: 222px; border-right: 1px solid #ddd; }
+                .J_jjsList .j_list .j_item .i_center .c_list { padding: 10px 0; }
+                    .J_jjsList .j_list .j_item .i_center .c_list .l_item { position: relative; padding-left: 140px; height: 46px; line-height: 46px; border-bottom: 1px dashed #ccc; }
+                        .J_jjsList .j_list .j_item .i_center .c_list .l_item .i_title { position: absolute; top: 0; left: 0; padding: 0 10px; width: 120px; text-align: right; font-size: 16px; color: #666; }
+                        .J_jjsList .j_list .j_item .i_center .c_list .l_item .i_content { color: #666; }
+            .J_jjsList .j_list .j_item .i_right { float: left; width: 274px; height: 222px; background-color: #fff; text-align: center; }
+                .J_jjsList .j_list .j_item .i_right .r_logo { margin-top: 30px; }
+                .J_jjsList .j_list .j_item .i_right .r_btns { padding: 0 50px; }
+                    .J_jjsList .j_list .j_item .i_right .r_btns a { display: block; margin-top: 10px; line-height: 38px; border-radius: 3px; text-align: center; color: #fff; }
+            .J_jjsList .j_list .j_item.good .i_right { background-image: url(../images/good.png); background-repeat: no-repeat; background-position: right top; }
+
+    .J_jjsList .j_page { margin-top: 20px; padding: 6px 10px; border: 1px solid #ddd; background-color: #fbfbfb; }
 
 
 .J_sdList { }
@@ -589,7 +624,7 @@ a.abtn.red:hover { background-color: #f70; }
 .J_jjsInfo { }
     .J_jjsInfo .j_title { margin-top: 20px; line-height: 80px; font-size: 24px; color: #f60; }
     .J_jjsInfo table { width: 100%; }
-        .J_jjsInfo table td { padding:0 20px; border: 1px dashed #ddd; line-height: 36px; }
+        .J_jjsInfo table td { padding: 0 20px; border: 1px dashed #ddd; line-height: 36px; }
             .J_jjsInfo table td.t_title { text-align: right; background-color: #f6f6f6; color: #999; }
 
 /* 美腿 */

@@ -28,13 +28,13 @@ public class BrokerController {
 	@RequestMapping("/indexList")
 	public String brokerList(Model model,BrokerExtInfoDto queryDto,PageModel<BrokerExtInfo> pageModel){
 		
-		if(StringUtils.isNotBlank(queryDto.getBrokerName())){
+		/*if(StringUtils.isNotBlank(queryDto.getBrokerName())){
 			try {
 				queryDto.setBrokerName(new String(queryDto.getBrokerName().getBytes("ISO-8859-1"),"UTF-8"));
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-		}
+		}*/
 		model.addAttribute("brokerExtInfos", brokerExtInfoService.queryForPage(queryDto, pageModel));
 		model.addAttribute("queryDto", queryDto);
 		

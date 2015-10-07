@@ -29,7 +29,7 @@
                         <img src="../static/images/bg.jpg" />
                     </div>
                     <div class="l_logo">
-                        <img src="../static/tmp/j2.jpg" />
+                        <img src="${ctx }/${brokerExtInfo.imageUrl}" />
                     </div>
                 </div>
                 <div class="j_right">

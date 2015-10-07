@@ -11,34 +11,57 @@ var globalPostId = '';
 $(function(){
 	$('a[name="doVote_href"]').bind('click',function(event){
 		event.preventDefault();
-		var optionId = $('input:radio[name=currentTopic_radio]:checked').val();
-		if(optionId == null || optionId == ''){
-			jc.alert('请选择投票选项');
-			return false;
-		}
-		$.ajax({
-			type: "POST",
-           	url:"${ctx }/vote/doVote",
-        	data:{'voteTopic.id':$('#currentTopicId').val(),id:optionId},
-        	async: false,
-        	success:function(json) {
-           		if(json.success){
-           			jc.alert('投票成功', function(b){
-           				window.location.replace("${ctx }/vote/index");
-           			});
-           		}else{
-           			if(json.code=='401'){
-           				jc.alert('请勿重复投票！')
-           			}else{
-           				jc.alert('失败');
-           			}
-           		}
-           	}    
-		});					
+		
+		$.post(
+	       	"${ctx }/vote/randomValidate",
+	       	{randomCode:$('#randomCode').val()},
+	       	function(json) {
+	       		if(json.success){
+	       			if($('#currentSchedule').val()!='1'){
+	       				jc.alert('当前不是投票有效期，谢谢');
+	       				return false;
+	       			}
+	       			var optionId = $('input:radio[name=currentTopic_radio]:checked').val();
+	       			if(optionId == null || optionId == ''){
+	       				jc.alert('请选择投票选项');
+	       				return false;
+	       			}
+	       			$.ajax({
+	       				type: "POST",
+	       	           	url:"${ctx }/vote/doVote",
+	       	        	data:{'voteTopic.id':$('#currentTopicId').val(),id:optionId},
+	       	        	async: false,
+	       	        	success:function(json) {
+	       	           		if(json.success){
+	       	           			jc.alert('投票成功', function(b){
+	       	           				window.location.replace("${ctx }/vote/index");
+	       	           			});
+	       	           		}else{
+	       	           			if(json.code=='401'){
+	       	           				jc.alert('请勿重复投票！')
+	       	           			}else{
+	       	           				jc.alert('失败');
+	       	           			}
+	       	           		}
+	       	           	}    
+	       			});	
+	       		}else{
+	       			if(json.code=='404'){
+	       				jc.alert('验证码错误!');
+		    			return false;
+	       			}
+	       		}
+	       	}    
+	    );
 	});
 	
 	$('a[name="doPost_href"]').bind('click',function(event){
 		event.preventDefault();
+		
+		if($('textarea[name=postContent]').val()==''){
+			jc.alert('发表内容不能为空！');return false;
+		}
+		
 		$.ajax({                                                 
 	        type: "POST",                                     
 	        url: "${ctx}/vote/doPost",
@@ -58,7 +81,8 @@ $(function(){
 	
 });
 
-function doPraise(postId,numb){
+
+function doPraise(postId,obj){
 	
 	$.ajax({
 		type: "POST",
@@ -68,7 +92,7 @@ function doPraise(postId,numb){
     	success:function(json) {
        		if(json.success){
        			jc.alert('点赞成功', function(b){
-	  				$('#praise_href').text("点赞("+json.message+")");
+	  				$(obj).text("点赞("+json.message+")");
        			});
        		}else{
        			if(json.code=='402'){
@@ -81,7 +105,7 @@ function doPraise(postId,numb){
 	});
 }
 
-function doReport(postId,numb){
+function doReport(postId,obj){
 	$.ajax({
 		type: "POST",
        	url:"${ctx }/vote/doReport",
@@ -90,7 +114,7 @@ function doReport(postId,numb){
     	success:function(json) {
        		if(json.success){
        			jc.alert('举报成功', function(b){
-       				$('#report_href').text("举报("+json.message+")");
+       				$(obj).text("举报("+json.message+")");
        			});
        		}else{
        			if(json.code=='403'){
@@ -142,6 +166,9 @@ function countWords(){
 	$('#countWords_span').text(numb);
 }
 
+function refresh() {
+    $("#imageCode").attr("src","${ctx}/imageServlet?"+Math.random());
+}
 
 </script>
 
@@ -180,7 +207,10 @@ function countWords(){
                                 </div>
 
                                 <div class="J_vote">
-                                    <div class="v_title">${currentTopic.titleContent}<input type='hidden' id='currentTopicId' value='${currentTopic.id}'></div>
+                                    <div class="v_title">${currentTopic.titleContent}
+                                    	<input type='hidden' id='currentTopicId' value='${currentTopic.id}'>
+                                    	<input type='hidden' id='currentSchedule' value='${currentTopic.schedule}'>
+                                    </div>
                                     <div class="v_content">
                                     	<c:forEach items="${currentTopic.options }" var="option">
                                     		<div class="c_item">
@@ -249,12 +279,12 @@ function countWords(){
                         <div class="fr">
                             <div class="t_text mini">
                                 <label>
-                                    <input placeholder="验证码" type="text">
+                                    <input placeholder="验证码" type="text" id="randomCode">
                                 </label>
                             </div>
                             <div class="ml10 t_code">
-                                <a href="#">
-                                    <img src="${ctx }/static/tmp/code.png" />
+                                <a href="javascript:refresh();">
+                                    <img id="imageCode" src="${ctx }/imageServlet"/>
                                 </a>
                             </div>
                             <div class="ml10 t_button">
@@ -288,11 +318,11 @@ function countWords(){
 	                            	<div class="r_info clearfix">
 	                                    <div class="fl">${post.publisher.userName } 时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
 	                                    <div class="fr">
-	                                        <a class="i_replyBtn" id="praise_href" href="javascript:doPraise('${post.id }');">赞(${post.praiseCount})</a>
+	                                        <a class="i_replyBtn" href="javascript:doPraise('${post.id }',this);">赞(${post.praiseCount})</a>
 	                                        <span>| </span>
 	                                        <a class="i_replyBtn" href="javascript:showDialog('${post.id }');">回复</a>
 	                                        <span>| </span>
-	                                        <a class="i_replyBtn" id="report_href" href="javascript:doReport('${post.id }');">举报(${post.reportCount })</a>
+	                                        <a class="i_replyBtn" href="javascript:doReport('${post.id }',this);">举报(${post.reportCount })</a>
 	                                    </div>
                                     </div>
                                     <div class="r_content">${post.postContent }</div>
@@ -361,7 +391,7 @@ function countWords(){
 							<c:forEach items="${topics }" var="topic">
 		                    	<tr>
 		                            <td style="width:100px;" class="vat tac c999"><fmt:formatDate value="${topic.startDate}" pattern="yyyy-MM-dd"/></td>
-		                            <td><a class="alink black hover" href="#">${topic.titleContent}<span><i class="icon"></i> 166</span></a></td>
+		                            <td><a class="alink black hover" href="${ctx }/vote/link?id=${topic.id}">${topic.titleContent}<span><i class="icon"></i> 166</span></a></td>
 		                        </tr>
 		                   	</c:forEach>                        
                         </tbody>
