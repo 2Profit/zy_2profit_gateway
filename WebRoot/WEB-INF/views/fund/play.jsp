@@ -57,7 +57,7 @@
 			<div class="fr c_1000">
 
 				<div class="J_title less">
-					<div class="t_txt">存款</div>
+					<div class="t_txt">在线充值</div>
 					<div class="t_tips"></div>
 					<div class="t_more"></div>
 				</div>
