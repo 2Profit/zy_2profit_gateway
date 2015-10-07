@@ -82,8 +82,7 @@ $(function(){
 });
 
 
-function doPraise(postId,obj){
-	
+function doPraise(obj,postId){
 	$.ajax({
 		type: "POST",
        	url:"${ctx }/vote/doPraise",
@@ -92,7 +91,7 @@ function doPraise(postId,obj){
     	success:function(json) {
        		if(json.success){
        			jc.alert('点赞成功', function(b){
-	  				$(obj).text("点赞("+json.message+")");
+	  				$(obj).text("赞("+json.message+")");
        			});
        		}else{
        			if(json.code=='402'){
@@ -105,7 +104,7 @@ function doPraise(postId,obj){
 	});
 }
 
-function doReport(postId,obj){
+function doReport(obj,postId){
 	$.ajax({
 		type: "POST",
        	url:"${ctx }/vote/doReport",
@@ -318,11 +317,11 @@ function refresh() {
 	                            	<div class="r_info clearfix">
 	                                    <div class="fl">${post.publisher.userName } 时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
 	                                    <div class="fr">
-	                                        <a class="i_replyBtn" href="javascript:doPraise('${post.id }',this);">赞(${post.praiseCount})</a>
+	                                        <a class="i_replyBtn" href="javascript:;" onclick="doPraise(this,'${post.id }')">赞(${post.praiseCount})</a>
 	                                        <span>| </span>
 	                                        <a class="i_replyBtn" href="javascript:showDialog('${post.id }');">回复</a>
 	                                        <span>| </span>
-	                                        <a class="i_replyBtn" href="javascript:doReport('${post.id }',this);">举报(${post.reportCount })</a>
+	                                        <a class="i_replyBtn" href="javascript:;" onclick="doReport(this,'${post.id }')">举报(${post.reportCount })</a>
 	                                    </div>
                                     </div>
                                     <div class="r_content">${post.postContent }</div>
