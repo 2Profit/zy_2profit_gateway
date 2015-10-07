@@ -4,7 +4,7 @@
 
 <div data-ui="header" class="J_header">
      <div class="h_inner">
-         <div class="i_logo"><a href="javascript:void(0);">Logo</a></div>
+         <div class="i_logo"><a href="javascript:void(0);"><img src="${ctx }/static/images/logo.png"></a></div>
          <div class="i_login">
          	<c:if test="${empty sessionScope.login_user }">
              <!-- 没登录显示这个 -->
