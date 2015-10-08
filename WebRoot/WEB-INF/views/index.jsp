@@ -72,7 +72,7 @@ $(function(){
                 <div class="J_title">
                     <div class="t_txt">经纪商</div>
                     <div class="t_tips">从事经纪商活动的人不能直接进入交易所经营，他们的主要作用是接受投资者的委托</div>
-                    <div class="t_more"><a href="${ctx }/bk/indexList">更多&nbsp;&gt;</a></div>
+                    <div class="t_more"><a href="${ctx }/bk/list">更多&nbsp;&gt;</a></div>
                 </div>
 
                 <div class="J_jjsList">

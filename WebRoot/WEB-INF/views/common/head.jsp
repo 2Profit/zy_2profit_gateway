@@ -58,7 +58,7 @@
                  <div class="i_menu"></div>
              </div>
              <div class="n_item">
-                 <div class="i_default"><a href="${ctx }/bk/indexList">为你选经销商</a></div>
+                 <div class="i_default"><a href="${ctx }/bk/list">为你选经销商</a></div>
                  <div class="i_menu"></div>
              </div>
              <div class="n_item">

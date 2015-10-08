@@ -1,7 +1,5 @@
 package com.zy.profit.gateway.web.broker;
 
-import java.io.UnsupportedEncodingException;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -25,17 +23,10 @@ public class BrokerController {
 	@Autowired
 	private BrokerExtInfoService brokerExtInfoService;
 	
-	@RequestMapping("/indexList")
+	@RequestMapping("/list")
 	public String brokerList(Model model,BrokerExtInfoDto queryDto,PageModel<BrokerExtInfo> pageModel){
 		
-		/*if(StringUtils.isNotBlank(queryDto.getBrokerName())){
-			try {
-				queryDto.setBrokerName(new String(queryDto.getBrokerName().getBytes("ISO-8859-1"),"UTF-8"));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		}*/
-		model.addAttribute("brokerExtInfos", brokerExtInfoService.queryForPage(queryDto, pageModel));
+		model.addAttribute("page", brokerExtInfoService.queryForPage(queryDto, pageModel));
 		model.addAttribute("queryDto", queryDto);
 		
 		return "broker/brokerIndex";

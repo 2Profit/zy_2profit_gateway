@@ -73,14 +73,14 @@
 		params += "&exchangeType="+$('a[name=exchangeType].active').children().val();
 		params += "&orderByParam="+orderByParam+"&orderByDirection="+orderByDirection;
     	
-    	window.location.href="${ctx }/bk/indexList?"+params;
+    	window.location.href="${ctx }/bk/list?"+params;
 	}
 </script>
 
 
 </head>
 <body>
-    
+    <form action="" name="form" id="form" method="post" theme="simple">
     <%@ include file="../common/head.jsp" %>
 
 	<div data-ui="indexMask" class="J_indexMask mini"></div>
@@ -201,7 +201,7 @@
                 
                 <div class="j_list">
                 
-                	<c:forEach items="${brokerExtInfos.list }" var="broker">
+                	<c:forEach items="${page.list }" var="broker">
                 	
 						<div class="j_item good clearfix">
 	                        <div class="i_left">
@@ -256,6 +256,7 @@
                 
                 
                 <div class="j_page">
+                	<tr><td colspan="50" style="text-align:center;"><%@ include file="../common/pager.jsp"%></td></tr>
                 </div>
             </div>
 
@@ -274,6 +275,6 @@
 
    	<%@ include file="../common/help.jsp" %>
 	<%@ include file="../common/foot.jsp" %>
-
+	</form>
 </body>
 </html>
