@@ -71,6 +71,7 @@
 	        	 /static/** = anon
 	             /index = anon
 	             /register/** = anon
+	             /findpwd/** = anon
 	             /dologin = anon
 	             /login = anon
 	             /** = rememberAuthFilter

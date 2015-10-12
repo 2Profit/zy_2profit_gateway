@@ -27,7 +27,7 @@
 		theme : 'll',
 		isShowMsg : true,	//是否显示提示错误信息
 		elBorder : {
-			show : true,
+			show : false,
 			validClass : 'll_v_valid',
 			invalidClass : 'll_v_invalid'
 		}, //是否显示高亮框

@@ -28,14 +28,6 @@ $(function(){
 	
 	$('#myForm').validator({
 		fields : {
-			userType : {
-				rule : 'required',
-				target : '#userType'
-			},
-			userName : {
-				rule : 'required',
-				target : '#userName'
-			},
 			oldPwd : {
 				rule : '旧密码: required',
 				target : '#oldPwd'
@@ -96,49 +88,6 @@ function mySubmit(){
 						<div style="" class="J_form J_reg ma mt20">
 							<table>
 								<tbody>
-									<tr>
-										<td class="tar">
-											<div class="J_toolsBar">
-												<div class="t_label plr10 fr">
-													<span class="cDeepRed fz16">* </span>项目：
-												</div>
-											</div>
-										</td>
-										<td>
-											<div class="J_toolsBar">
-												<div class="t_select">
-													<a href="javascript:;">用户中心</a> 
-													<select name="userType">
-														<option value="0">用户中心</option>
-														<option value="1">交易平台</option>
-													</select>
-												</div>
-											</div>
-										</td>
-										<td class="plr20" id="utType">
-										</td>
-									</tr>
-									<tr>
-										<td class="tar">
-											<div class="J_toolsBar">
-												<div class="t_label plr10 fr">
-													<span class="cDeepRed fz16">* </span>帐号：
-												</div>
-											</div>
-										</td>
-										<td>
-											<div class="J_toolsBar">
-												<div class="t_select">
-													<a href="javascript:;">${loginUser.mobile }</a> 
-													<select name="userName">
-														<option value="${loginUser.mobile }">${loginUser.mobile }</option>
-													</select>
-												</div>
-											</div>
-										</td>
-										<td class="plr20" id="userName">
-										</td>
-									</tr>
 									<tr>
 										<td class="tar">
 											<div class="J_toolsBar">

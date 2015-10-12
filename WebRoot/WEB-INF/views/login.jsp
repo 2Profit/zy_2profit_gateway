@@ -89,22 +89,14 @@ function mySubmit(){
                                     <tr>
                                         <td class="tar">
                                             <div class="J_toolsBar">
-                                                <div class="t_label">手机号：</div>
+                                                <div class="t_label">账号：</div>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="J_toolsBar">
-                                                <div style="width: 64px;" class="t_select">
-                                                    <a href="javascript:;">中国 86</a>
-                                                    <select name="mobilePfx">
-                                                        <option value="86">中国 86</option>
-                                                        <option value="852">香港 852</option>
-                                                        <option value="853">澳门 853</option>
-                                                    </select>
-                                                </div>
-                                                <div class="t_text ml10 t_phoneNumber">
+                                                <div class="t_text">
                                                     <label>
-                                                        <input type="text" name="username"/>
+                                                        <input type="text" name="username" placeholder="手机号码/邮箱"/>
                                                     </label>
                                                 </div>
                                             </div>
@@ -123,7 +115,7 @@ function mySubmit(){
                                             <div class="J_toolsBar">
                                                 <div class="t_text">
                                                     <label>
-                                                        <input type="password" name="pwd"/>
+                                                        <input type="password" name="pwd" placeholder="密码"/>
                                                     </label>
                                                 </div>
                                             </div>
@@ -141,7 +133,7 @@ function mySubmit(){
                                                         <input type="checkbox" name="autoChk" value="1"/>自动登录</label>
                                                 </div>
                                                 <div class="fr t_label">
-                                                    <a class="alink blue" href="#">忘记密码?</a>
+                                                    <a class="alink blue" href="${ctx }/findpwd/select">忘记密码?</a>
                                                 </div>
                                             </div>
                                         </td>

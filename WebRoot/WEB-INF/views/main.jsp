@@ -47,7 +47,7 @@
                                     <td>${loginUser.mobile }</td>
                                 </tr>
                                 <tr>
-                                    <td>用户名：</td>
+                                    <td>昵称：</td>
                                     <td>${loginUser.userName }</td>
                                 </tr>
                             </tbody>
@@ -67,19 +67,11 @@
                                 <tr>
                                     <td>平台</td>
                                     <td>帐号</td>
-                                    <td>公司</td>
-                                    <td>级别</td>
+                                    <td>经纪商</td>
                                     <td>余额</td>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>MT4</td>
-                                    <td>Member_21awdad1aa</td>
-                                    <td>深圳市腾讯计算机系统有限公司</td>
-                                    <td>高级</td>
-                                    <td><span class="cOrange">￥300,000,00</span> USD</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>

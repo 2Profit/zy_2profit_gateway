@@ -210,3 +210,14 @@ function hideNoDataMsg(llId){
 	}
 }
 
+/**
+ * 全选按钮
+ * @param chk
+ * @param name
+ */
+function checkAllClick(chk, name){
+	$('input[name="'+name+'"]:checkbox').attr('checked', chk.checked);
+	$('input[name="'+$(chk).attr('name')+'"]').attr('checked', chk.checked);
+}
+
+
