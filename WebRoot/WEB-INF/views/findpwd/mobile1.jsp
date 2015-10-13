@@ -9,6 +9,81 @@
 
 </head>
 
+<%@ include file="../common/nice-validator.jsp" %>
+
+<script type="text/javascript">
+
+$(function(){
+	
+	$('#myForm').validator({
+		timely : 0,
+		focusCleanup : true,
+		fields : {
+			mobile : {
+				rule : 'required;mobile;remote[${ctx}/register/vaild_mobile_exist]',
+				target : '#msg_mobile'
+			},
+			code : {
+				rule : 'required;',
+				target : '#msg_code'
+			}
+		},
+		valid : function(form){
+			form.submit();
+		}
+	});
+	
+	
+	
+});
+
+function sendCode(_this){
+	
+	var $sendBtn = $(_this);
+	if($sendBtn.attr('data-status') == 'no'){
+		return;
+	}
+	
+	//检查手机是否通过
+	$('input[name="mobile"]').isValid(function(v){
+		if(v){
+			var seconds = 59;
+			$sendBtn.removeClass('green').addClass('gray').html("重新获取 ( 60 ) ");
+			$sendBtn.attr('data-status', 'no');
+			//调用短信接口
+			$.ajax({
+				url : '${ctx}/register/send_msg',
+				data : {
+					'mobile' : $('input[name="mobile"]').val()
+				},
+				async : false,
+				success : function(result){
+					
+				}
+			});
+			
+			codeTimer = setInterval(function(){
+				if(seconds < 0){
+					clearInterval(codeTimer);
+					$sendBtn.removeClass('gray').addClass('green').html('获取手机验证码');
+					$sendBtn.attr('data-status', 'yes');
+				}else{
+					$sendBtn.html('重新获取 ( ' + (seconds--) + ' )');
+				}
+			}, 1000); 
+			
+		}else{
+			jc.alert('请输入正确的手机号');
+		}
+	});
+}
+
+function mySubmit(){
+	$('#myForm').submit();
+}
+
+</script>
+
 <body>
     
     <%@ include file="../common/head.jsp" %>
@@ -45,9 +120,15 @@
         </div>
         <div class="mt40">
             <div class="J_register pb40">
-                <form action="http://www.qq.com">
+                <form action="${ctx }/findpwd/mobile2" method="post" id="myForm">
                     <table class="r_table">
                         <tbody>
+                        	<c:if test="${not empty msg }">
+	                        	<tr class="tar">
+	                        		<td></td>
+	                        		<td style="color: red;text-align: left;">${msg }</td>
+	                        	</tr>
+                        	</c:if>
                             <tr class="tar">
                                 <td>
                                     <div class="J_toolsBar">
@@ -58,16 +139,13 @@
                                     <div class="J_toolsBar">
                                         <div class="t_text not">
                                             <label>
-                                                <input disabled="disabled" name="phoneNumber" value="15******663" type="text"></label>
+                                                <input name="mobile" value="" type="text">
+                                             </label>
                                         </div>
-                                        <div class="t_button"><a id="sendCode" class="abtn green" href="javascript:;">获取短信验证码</a></div>
+                                        <div class="t_button"><a id="sendCode" onclick="sendCode(this)" class="abtn green" href="javascript:void(0);">获取短信验证码</a></div>
                                     </div>
                                 </td>
-                                <td class="t_tips">
-                                    <div class="t_error"><i class="icon">󰂳</i>会员名不能为空</div>
-                                    <div class="t_success">
-                                        <i class="icon">󰂲</i>
-                                    </div>
+                                <td class="t_tips" id="msg_mobile">
                                 </td>
                             </tr>
                             <tr class="tar">
@@ -80,22 +158,18 @@
                                     <div class="J_toolsBar">
                                         <div class="t_text">
                                             <label>
-                                                <input type="text"></label>
+                                                <input type="text" name="code"></label>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="t_tips">
-                                    <div class="t_error"><i class="icon">󰂳</i>请输入验证码</div>
-                                    <div class="t_success">
-                                        <i class="icon">󰂲</i>
-                                    </div>
+                                <td class="t_tips" id="msg_code">
                                 </td>
                             </tr>
                             <tr>
                                 <td></td>
                                 <td>
                                     <div class="J_btnGroup mt40">
-                                        <a class="abtn green" href="javascript:;">下一步</a>
+                                        <a class="abtn green" href="javascript:mySubmit();">下一步</a>
                                     </div>
                                 </td>
                                 <td></td>

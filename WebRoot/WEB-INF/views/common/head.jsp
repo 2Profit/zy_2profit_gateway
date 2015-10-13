@@ -29,10 +29,10 @@
                      <a href="${ctx }/main">
                      	<c:choose>
                      		<c:when test="${empty sessionScope.login_user.headUrl }">
-                     			<img src="${ctx }/static/images/header_face.png">
+                     			<img src="${ctx }/static/images/userface.jpg" style="width: 64px; height: 64px;"/>
                      		</c:when>
                      		<c:otherwise>
-                     			<img src="${ctx }${sessionScope.login_user.headUrl }">
+                     			<img src="${ctx }${sessionScope.login_user.headUrl }"  style="width: 64px; height: 64px;"/>
                      		</c:otherwise>
                      	</c:choose>
                      </a>

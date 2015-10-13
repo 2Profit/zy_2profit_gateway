@@ -89,6 +89,7 @@ public class IndexController {
 				MemberCode memberCode = new MemberCode();
 				memberCode.setMobile(mobile);
 				memberCode.setCode(code);
+				memberCode.setStatus(0);
 				
 				memberCodeService.save(memberCode);
 				
@@ -117,6 +118,32 @@ public class IndexController {
 		int ret = memberService.vaildUserByEmail(email);
 		if(ret > 0){
 			retMsg = "该电子邮箱已经被绑定";
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		if(StringUtils.isNotBlank(retMsg)){
+			map.put("error", retMsg);
+		}else{
+			map.put("ok", "");
+		}
+		ajaxResult.setData(map);
+		
+		return ajaxResult;
+	}
+	
+	@RequestMapping(value="/register/vaild_mobile_exist")
+	@ResponseBody
+	public AjaxResult validMobileExist(HttpServletRequest request){
+		
+		AjaxResult ajaxResult = new AjaxResult();
+		
+		String retMsg = "";
+		
+		String mobile = request.getParameter("mobile");
+		
+		int ret = memberService.vaildUserByMobile(mobile);
+		if(ret <= 0){
+			retMsg = "该手机号未注册";
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -191,25 +218,10 @@ public class IndexController {
 		member.setNickName(member.getNickName().trim());
 		
 		//判断短信验证码
-		List<MemberCode> memberCodes = memberCodeService.findCodesByMobile(member.getMobile());
-		MemberCode memberCode = null;
-		if(memberCodes == null || memberCodes.isEmpty()){
-			msg = "短信验证码错误";
-		}else{
-			
-			memberCode = memberCodes.get(0);
-			Date currentDate = new Date();
-			
-			if(DateUtils.addMinutes(memberCode.getCreateDate(), SystemConfig.getSMSVaildTimeInt()).before(currentDate)){
-				msg = "短信验证码已过期，请重新注册";
-			}else{
-				String code = request.getParameter("code").trim();
-				if(!code.equals(memberCode.getCode())){
-					msg = "短信验证码错误";
-				}
-			}
-			
-		}
+		String code = request.getParameter("code");
+		Map<String, Object> map = memberCodeService.validatorCode(member.getMobile(), code, SystemConfig.getSMSVaildTimeInt());
+		
+		msg = map.get("msg").toString();
 		
 		int ret = memberService.vaildUserByMobile(member.getMobile());
 		if(ret > 0){
@@ -227,6 +239,7 @@ public class IndexController {
 		}
 		
 		member.setPwd(Md5Util.generatePassword(member.getPwd().trim()));
+		MemberCode memberCode = (MemberCode) map.get("memberCode");
 		memberService.saveMember(member, memberCode);
 		redirectAttributes.addAttribute("msg", "注册成功，马上登陆");
 		

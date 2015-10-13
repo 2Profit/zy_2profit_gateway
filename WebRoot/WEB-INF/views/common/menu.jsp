@@ -17,6 +17,35 @@ $(function(){
 
 <div class="fl c_180">
 
+	<div class="J_userInfo">
+         <div class="u_left">
+             <div class="l_face">
+                 <a class="f_hg"></a>
+                 <c:choose>
+               		<c:when test="${empty sessionScope.login_user.headUrl }">
+               			<img src="${ctx }/static/images/userface.jpg" style="width: 64px; height: 64px;"/>
+               		</c:when>
+               		<c:otherwise>
+               			<img src="${ctx }${sessionScope.login_user.headUrl }" style="width: 64px; height: 64px;"/>
+               		</c:otherwise>
+               	</c:choose>
+             </div>
+         </div>
+         <div class="u_right">
+             <div class="r_name" style="height: 20px;">${sessionScope.login_user.nickName }</div>
+             <div class="r_info">虚拟币：
+             	<span class="cOrange">
+             		<c:choose>
+             			<c:when test="${not empty sessionScope.login_user.coin }">
+             				${sessionScope.login_user.coin }
+             			</c:when>
+             			<c:otherwise>0</c:otherwise>
+             		</c:choose>
+             	</span>
+             </div>
+         </div>
+     </div>
+
      <div class="J_leftMenu">
          <div class="l_item">
              <div class="i_default"><a href="javascript:void(0);"><i class="icon">󰃌</i>账户管理</a></div>
