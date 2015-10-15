@@ -18,9 +18,20 @@
 $(function(){
 	
 	//set值
-	$('#myForm input[name="sex"][value="${loginUser.sex}"]').click();
-	$('#myForm select[name="nationality"]').val('${loginUser.nationality.id}').change();
-	$('#myForm select[name="cardType"]').val('${loginUser.cardType}').change();
+	$('#myForm input[name="sex"][value="${member.sex}"]').click();
+	$('#myForm select[name="nationalityId"]').val('${member.nationality.id}').change();
+	$('#myForm select[name="cardType"]').val('${member.cardType}').change();
+	
+	//除了证件类型、证件号、姓名中英、手机号码 银行资料 不能改
+	$('#myForm input').each(function(idx, obj){
+		if($(obj).val()){
+			$(obj).attr('disabled', 'disabled');
+		}
+	});
+	
+	if('${member.cardType}'){
+		$('#myForm select[name="cardType"]').attr('disabled', 'disabled');
+	}
 	
 	$('#myForm').validator({
 		isShowMsg : false,
@@ -30,7 +41,10 @@ $(function(){
 			card : '证件号码: length[~64]',
 			mobile : '手机号码: required;mobile;',
 			email : '电子邮箱: required;email;',
-			address : '联系地址: length[~512, true]'
+			address : '联系地址: length[~512, true]',
+			bankAccount : '银行账户: length[~64, true]',
+			bankCardNum : '银行账号: length[~64, true]',
+			bankAddress : '银行地址: length[~512, true]'
 		},
 		valid : function(form){
 			$(form).ajaxSubmit({
@@ -119,14 +133,15 @@ function uploadImg(_this, paramName){
                     <div class="t_more"></div>
                 </div>
                 <div class="plrb20">
+                
+                <form action="">
                     <div class="J_miniTitle">
                         <div class="m_token"></div>
-                        <div class="m_txt">修改资料</div>
+                        <div class="m_txt">基本资料</div>
                     </div>
 
-					<form action="${ctx }" id="myForm">
                     <div class="J_userInfoList">
-
+						
                         <table style="width: 100%">
                             <tbody>
                                 <tr>
@@ -139,7 +154,7 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_text w100">
                                                 <label>
-                                                    <input value="${loginUser.cnName }" type="text" name="cnName">
+                                                    <input value="${member.cnName }" type="text" name="cnName">
                                                 </label>
                                             </div>
                                         </div>
@@ -153,7 +168,7 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_text w300">
                                                 <label>
-                                                    <input value="${loginUser.enName }" type="text" name="enName">
+                                                    <input value="${member.enName }" type="text" name="enName">
                                                 </label>
                                             </div>
                                         </div>
@@ -167,11 +182,13 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_check">
                                                 <label>
-                                                    <input type="radio" name="sex" value="0"/>男</label>
+                                                    <input type="radio" name="sex" value="0"/>男
+                                                </label>
                                             </div>
                                             <div class="ml10 t_check">
                                                 <label>
-                                                    <input type="radio" name="sex" value="1"/>女</label>
+                                                    <input type="radio" name="sex" value="1"/>女
+                                                </label>
                                             </div>
                                         </div>
                                     </td>
@@ -183,12 +200,12 @@ function uploadImg(_this, paramName){
                                     <td>
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_select">
-                                                <a href="javascript:;">&nbsp;&nbsp;&nbsp;&nbsp;</a>
-                                                <select name="nationality">
-                                                    <option value="">&nbsp;&nbsp;&nbsp;&nbsp;</option>
-                                                    <c:forEach items="${nationalities }" var="nation">
-                                                    	<option value="${nation.id }">${nation.name }</option>
-                                                    </c:forEach>
+                                                <a href="javascript:;">请选择</a>
+                                                <select name="nationalitieId">
+                                                	<option value="">请选择</option>
+                                                	<c:forEach items="${nationalities }" var="n">
+                                                		<option value="${n.id }">${n.name }</option>
+                                                	</c:forEach>
                                                 </select>
                                             </div>
                                         </div>
@@ -204,9 +221,9 @@ function uploadImg(_this, paramName){
                                     <td colspan="2">
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_select">
-                                                <a href="javascript:;">&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                                                <a href="javascript:;">请选择</a>
                                                 <select name="cardType">
-                                                	<option value="">&nbsp;&nbsp;&nbsp;&nbsp;</option>
+                                                	<option value="">请选择</option>
                                                 	<c:forEach items="${cardTypes }" var="ct">
                                                 		<option value="${ct.key }">${ct.value }</option>
                                                 	</c:forEach>
@@ -223,7 +240,7 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_text w300">
                                                 <label>
-                                                    <input value="${loginUser.card }" type="text" name="card">
+                                                    <input value="${member.cardNo }" type="text" name="cardNo">
                                                 </label>
                                             </div>
                                         </div>
@@ -237,12 +254,12 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_text w180">
                                                 <label>
-                                                    <input value="${loginUser.mobile }" type="text" name="mobile">
+                                                    <input value="${member.mobile }" disabled="disabled" type="text" name="mobile">
                                                 </label>
                                             </div>
                                         </div>
                                     </td>
-									
+
                                 </tr>
 
                                 <tr>
@@ -255,7 +272,7 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_text w300">
                                                 <label>
-                                                    <input value="${loginUser.email }" type="text" name="email">
+                                                    <input value="${member.email }" type="text" name="email">
                                                 </label>
                                             </div>
                                             <div class="t_label">（电子邮件可作为您以后的用户名，用来管理您的帐户、入金、更改资料以及接收资讯等，请确保资料的准确性并牢记您的电邮设置）</div>
@@ -274,215 +291,120 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_text w830">
                                                 <label>
-                                                    <input value="${loginUser.address }" type="text" name="address">
+                                                    <input value="${member.address }" type="text" name="address">
                                                 </label>
                                             </div>
                                         </div>
                                     </td>
                                 </tr>
-
+								
                             </tbody>
 
                         </table>
 
-
                     </div>
 
-                    <div class="mt20 J_btnGroup md">
-                        <a class="sm abtn orange" href="javascript:void(0);" onclick="myUpdatePerson()">确认修改</a>
+					<div class="J_miniTitle">
+                        <div class="m_token"></div>
+                        <div class="m_txt">银行资料</div>
                     </div>
-					</form>
 
-					
-					<div id="uploadImg" style="display: none;">
-						<input type="file" name="imgFile" multiple="multiple" style="opacity: .0;">
-						<input type="hidden" name="paramName" value="" id="paramName">
+					<div class="J_userInfoList">
+						
+						<table style="width: 100%">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 60px;" class="bgf9">
+                                        <div class="J_toolsBar">
+                                            <div class="t_label right">银行账户</div>
+                                        </div>
+                                    </td>
+                                    <td colspan="4">
+                                        <div class="J_toolsBar">
+                                            <div class="ml10 t_text w300">
+                                                <label>
+                                                    <input value="${member.memBankInfo.bankAccount }" type="text" name="bankAccount">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td style="width: 60px;" class="bgf9">
+                                        <div class="J_toolsBar">
+                                            <div class="t_label right">银行账号</div>
+                                        </div>
+                                    </td>
+                                    <td colspan="4">
+                                        <div class="J_toolsBar">
+                                            <div class="ml10 t_text w300">
+                                                <label>
+                                                    <input value="${member.memBankInfo.bankCardNum }" type="text" name="bankCardNum">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+								
+								<tr>
+                                    <td style="width: 60px;" class="bgf9">
+                                        <div class="J_toolsBar">
+                                            <div class="t_label right">银行地址</div>
+                                        </div>
+                                    </td>
+                                    <td colspan="9">
+                                        <div class="J_toolsBar">
+                                            <div class="ml10 t_text w830">
+                                                <label>
+                                                    <input value="${member.memBankInfo.bankAddress }" type="text" name="bankAddress">
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+								
+                            </tbody>
+
+                        </table>
+						
 					</div>
+					</form>
 					
-                    <div class="J_miniTitle mt20">
-                        <div class="m_token"></div>
-                        <div class="m_txt">身份证</div>
+                    <div class="mt20 J_btnGroup md">
+                        <a class="sm abtn orange" href="#">确认修改</a>
                     </div>
-					
-                    <div class="J_picBox clearfix">
-                        <div class="p_item">
-                            <div class="i_inner">
-                                <div class="i_mask">
-                                    <div class="ml10 fl">身份证正面</div>
-                                    <div class="fr">
-                                    	<a class="abtn orange" href="javascript:void(0)" onclick="uploadImg(this, 'imgIDCardA')">立即上传</a>
-                                    </div>
-                                </div>
-                                <div class="i_pic">
-                                	<c:choose>
-                                		<c:when test="${not empty loginUser.imgIDCardA }">
-                               				<img src="${ctx }${loginUser.imgIDCardA}" data-param-name="imgIDCardA"/>
-                                		</c:when>
-                                		<c:otherwise>
-                                			<img src="${ctx }/static/images/J_null.png" data-param-name="imgIDCardA"/>
-                                		</c:otherwise>
-                                	</c:choose>
-                                </div>
-                               	<c:choose>
-                               		<c:when test="${not empty loginUser.imgIDCardA }">
-                              			<div class="i_status cDeepRed"><i class="icon">󰂸</i> 上传未审核</div>
-                               		</c:when>
-                               		<c:otherwise>
-                               			<div class="i_status cDeepRed"><i class="icon">󰂸</i> 未上传</div>
-                               		</c:otherwise>
-                               	</c:choose>
-                            </div>
-                        </div>
-                        <div class="p_item">
-                            <div class="i_inner">
-                                <div class="i_mask">
-                                    <div class="ml10 fl">身份证背面</div>
-                                    <div class="fr"><a class="abtn orange" href="javascript:void(0);" onclick="uploadImg(this, 'imgIDCardB')">立即上传</a></div>
-                                </div>
-                                <div class="i_pic">
-                                	<c:choose>
-                                		<c:when test="${not empty loginUser.imgIDCardB }">
-                               				<img src="${ctx }${loginUser.imgIDCardB}" data-param-name="imgIDCardB"/>
-                                		</c:when>
-                                		<c:otherwise>
-                                			<img src="${ctx }/static/images/J_null.png" data-param-name="imgIDCardB"/>
-                                		</c:otherwise>
-                                	</c:choose>
-                                </div>
-                               	<c:choose>
-                               		<c:when test="${not empty loginUser.imgIDCardB }">
-                              			<div class="i_status cOrange"><i class="icon">󰃄</i> 上传未审核</div>
-                               		</c:when>
-                               		<c:otherwise>
-                               			<div class="i_status cDeepRed"><i class="icon">󰂸</i> 未上传</div>
-                               		</c:otherwise>
-                               	</c:choose>
-                            </div>
-                        </div>
-                    </div>
+
+
 
 
                     <div class="J_miniTitle mt20">
                         <div class="m_token"></div>
-                        <div class="m_txt">地址证明</div>
+                        <div class="m_txt">资料上传</div>
                     </div>
 
-                    <div class="J_picBox clearfix">
-                        <div class="p_item">
-                            <div class="i_inner">
-                                <div class="i_mask">
-                                    <div class="ml10 fl">地址证明</div>
-                                    <div class="fr"><a class="abtn orange" href="javascript:void(0);" onclick="uploadImg(this, 'imgAddress')">立即上传</a></div>
-                                </div>
-                                <div class="i_pic">
-                                	<c:choose>
-                                		<c:when test="${not empty loginUser.imgAddress }">
-                               				<img src="${ctx }${loginUser.imgAddress}" data-param-name="imgAddress"/>
-                                		</c:when>
-                                		<c:otherwise>
-                                			<img src="${ctx }/static/images/J_null.png" data-param-name="imgAddress"/>
-                                		</c:otherwise>
-                                	</c:choose>
-                                </div>
-                                <c:choose>
-                               		<c:when test="${not empty loginUser.imgAddress }">
-                              			<div class="i_status cOrange"><i class="icon">󰃄</i> 上传未审核</div>
-                               		</c:when>
-                               		<c:otherwise>
-                               			<div class="i_status cDeepRed"><i class="icon">󰂸</i> 未上传</div>
-                               		</c:otherwise>
-                               	</c:choose>
-                                <!-- <div class="i_status cGreen"><i class="icon">󰅖</i> 审核通过</div> -->
-                            </div>
-                        </div>
-                    </div>
+                    <div class="J_table mt10">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>证件名称</td>
+                                    <td>状态</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="width:120px;">身份证明</td>
+                                    <td><span class="cOrange">未上传</span><span class="ml10 cGreen">(联系客服上传)</span></td>
+                                </tr>
+                                <tr>
+                                    <td>地址证明</td>
+                                    <td><span class="cGreen"><i class="icon">󰅖</i> 已上传</span></td>
+                                </tr>
+                                <tr>
+                                    <td>银行证明</td>
+                                    <td><span class="cOrange">未上传</span><span class="ml10 cGreen">(联系客服上传)</span></td>
+                                </tr>
 
-                    <div class="J_miniTitle mt20">
-                        <div class="m_token"></div>
-                        <div class="m_txt">银行证明</div>
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="J_picBox clearfix">
-                        <div class="p_item">
-                            <div class="i_inner">
-                                <div class="i_mask">
-                                    <div class="ml10 fl">银行一证明</div>
-                                    <div class="fr"><a class="abtn orange" href="javascript:void(0);" onclick="uploadImg(this, 'imgBankCard1')">立即上传</a></div>
-                                </div>
-                                 <div class="i_pic">
-                                	<c:choose>
-                                		<c:when test="${not empty loginUser.imgBankCard1 }">
-                               				<img src="${ctx }${loginUser.imgBankCard1}" data-param-name="imgBankCard1"/>
-                                		</c:when>
-                                		<c:otherwise>
-                                			<img src="${ctx }/static/images/J_null.png" data-param-name="imgBankCard1"/>
-                                		</c:otherwise>
-                                	</c:choose>
-                                </div>
-                                <c:choose>
-                               		<c:when test="${not empty loginUser.imgBankCard1 }">
-                              			<div class="i_status cOrange"><i class="icon">󰃄</i> 上传未审核</div>
-                               		</c:when>
-                               		<c:otherwise>
-                               			<div class="i_status cDeepRed"><i class="icon">󰂸</i> 未上传</div>
-                               		</c:otherwise>
-                               	</c:choose>
-                            </div>
-                        </div>
-                        <div class="p_item">
-                            <div class="i_inner">
-                                <div class="i_mask">
-                                    <div class="ml10 fl">银行二证明</div>
-                                    <div class="fr"><a class="abtn orange" href="javascript:void(0);" onclick="uploadImg(this, 'imgBankCard2')">立即上传</a></div>
-                                </div>
-                                <div class="i_pic">
-                                	<c:choose>
-                                		<c:when test="${not empty loginUser.imgBankCard2 }">
-                               				<img src="${ctx }${loginUser.imgBankCard2}" data-param-name="imgBankCard2"/>
-                                		</c:when>
-                                		<c:otherwise>
-                                			<img src="${ctx }/static/images/J_null.png" data-param-name="imgBankCard2"/>
-                                		</c:otherwise>
-                                	</c:choose>
-                                </div>
-                                <c:choose>
-                               		<c:when test="${not empty loginUser.imgBankCard2 }">
-                              			<div class="i_status cOrange"><i class="icon">󰃄</i> 上传未审核</div>
-                               		</c:when>
-                               		<c:otherwise>
-                               			<div class="i_status cDeepRed"><i class="icon">󰂸</i> 未上传</div>
-                               		</c:otherwise>
-                               	</c:choose>
-                            </div>
-                        </div>
-                        <div class="p_item">
-                            <div class="i_inner">
-                                <div class="i_mask">
-                                    <div class="ml10 fl">银行三证明</div>
-                                    <div class="fr"><a class="abtn orange" href="javascript:void(0);" onclick="uploadImg(this, 'imgBankCard3')">立即上传</a></div>
-                                </div>
-                                <div class="i_pic">
-                                	<c:choose>
-                                		<c:when test="${not empty loginUser.imgBankCard3 }">
-                               				<img src="${ctx }${loginUser.imgBankCard3}" data-param-name="imgBankCard3"/>
-                                		</c:when>
-                                		<c:otherwise>
-                                			<img src="${ctx }/static/images/J_null.png" data-param-name="imgBankCard3"/>
-                                		</c:otherwise>
-                                	</c:choose>
-                                </div>
-                                <c:choose>
-                               		<c:when test="${not empty loginUser.imgBankCard3 }">
-                              			<div class="i_status cOrange"><i class="icon">󰃄</i> 上传未审核</div>
-                               		</c:when>
-                               		<c:otherwise>
-                               			<div class="i_status cDeepRed"><i class="icon">󰂸</i> 未上传</div>
-                               		</c:otherwise>
-                               	</c:choose>
-                            </div>
-                        </div>
-                    </div>
-
 
 
 
@@ -523,12 +445,10 @@ function uploadImg(_this, paramName){
                             </tbody>
                         </table>
                     </div>
-
                 </div>
-
-
-
             </div>
+            
+            
         </div>
     </div>
 

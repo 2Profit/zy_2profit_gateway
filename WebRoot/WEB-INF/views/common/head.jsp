@@ -25,16 +25,16 @@
              <!-- 登录了显示这个 -->
              <div class="l_login">
                  <div class="l_face">
-                     <img width="60" height="60" src="${ctx }/static/tmp/u1.png">
+                     <c:choose>
+                   		<c:when test="${empty sessionScope.login_user.headUrl }">
+                   			<img src="${ctx }/static/images/userface.jpg" width="60" height="60"/>
+                   		</c:when>
+                   		<c:otherwise>
+                   			<img src="${ctx }${sessionScope.login_user.headUrl }"  style="width: 64px; height: 64px;"/>
+                   		</c:otherwise>
+                   	</c:choose>
                      <a href="${ctx }/main">
-                     	<c:choose>
-                     		<c:when test="${empty sessionScope.login_user.headUrl }">
-                     			<img src="${ctx }/static/images/userface.jpg" style="width: 64px; height: 64px;"/>
-                     		</c:when>
-                     		<c:otherwise>
-                     			<img src="${ctx }${sessionScope.login_user.headUrl }"  style="width: 64px; height: 64px;"/>
-                     		</c:otherwise>
-                     	</c:choose>
+                     	<img src="${ctx }/static/images/header_face.png">
                      </a>
                  </div>
                  <div class="l_info">

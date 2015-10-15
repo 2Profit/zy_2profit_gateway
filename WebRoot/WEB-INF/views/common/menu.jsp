@@ -58,8 +58,8 @@ $(function(){
          <div class="l_item">
              <div class="i_default"><a href="#"><i class="icon">󰇸</i>资金管理</a></div>
              <div class="i_menu">
-                 <!-- <div class="m_txt"><a href="#"><i class="icon">󰀥</i>额度明細</a></div> -->
-                 <div class="m_txt"><a href="${ctx }/fund/pay"><i class="icon">󰀵</i>在线充值</a></div>
+                 <div class="m_txt"><a href="${ctx }/fund/amount"><i class="icon">󰀥</i>额度明細</a></div>
+                 <%-- <div class="m_txt"><a href="${ctx }/fund/pay"><i class="icon">󰀵</i>在线充值</a></div> --%>
              </div>
          </div>
          <!-- <div class="l_item">
