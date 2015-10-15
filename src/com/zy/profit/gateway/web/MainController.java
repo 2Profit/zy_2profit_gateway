@@ -24,6 +24,7 @@ import com.zy.common.util.CommonConstants;
 import com.zy.common.util.ConstantEnity;
 import com.zy.member.entity.Member;
 import com.zy.member.service.MemberService;
+import com.zy.personal.entity.MemBankInfo;
 import com.zy.profit.gateway.util.Constants;
 import com.zy.profit.gateway.util.FileUploadUtil;
 import com.zy.profit.gateway.util.HttpUtils;
@@ -78,36 +79,78 @@ public class MainController {
 			String nationality = request.getParameter("nationality");
 			String cardType = request.getParameter("cardType");
 			String card = request.getParameter("card");
-			String mobile = request.getParameter("mobile");
+//			String mobile = request.getParameter("mobile");
 			String email = request.getParameter("email");
 			String address = request.getParameter("address");
+			
+			String bankAccount = request.getParameter("bankAccount");
+			String bankCardNum = request.getParameter("bankCardNum");
+			String bankAddress = request.getParameter("bankAddress");
 			
 			Member member = HttpUtils.getMember(request);
 			member = memberService.find(member.getId());
 			
-			member.setCnName(StringUtils.trim(cnName));
-			member.setEnName(StringUtils.trim(enName));
+			//有些字段有值得就不能再修改
+			if(StringUtils.isBlank(member.getCnName())){
+				member.setCnName(StringUtils.trim(cnName));
+			}
+			
+			if(StringUtils.isBlank(member.getEnName())){
+				member.setEnName(StringUtils.trim(enName));
+			}
+			
+			if(member.getCardType() == null){
+				if(StringUtils.isNotBlank(cardType)){
+					member.setCardType(Integer.parseInt(cardType));
+				}
+			}
+			
+			if(StringUtils.isBlank(member.getCard())){
+				member.setCard(StringUtils.trim(card));
+			}
+			
+			MemBankInfo memBankInfo = member.getMemBankInfo();
+			if(memBankInfo == null){
+				memBankInfo = new MemBankInfo();
+				member.setMemBankInfo(memBankInfo);
+			}
+			
+			if(StringUtils.isBlank(memBankInfo.getBankAccount())){
+				memBankInfo.setBankAccount(StringUtils.trim(bankAccount));
+			}
+			
+			if(StringUtils.isBlank(memBankInfo.getBankCardNum())){
+				memBankInfo.setBankCardNum(StringUtils.trim(bankCardNum));
+			}
+			
+			if(StringUtils.isBlank(memBankInfo.getBankAddress())){
+				memBankInfo.setBankAddress(StringUtils.trim(bankAddress));
+			}
+			
+			//可以改的
 			if(StringUtils.isNotBlank(sex)){
 				member.setSex(Integer.parseInt(sex));
+			}else{
+				member.setSex(null);
 			}
 			if(StringUtils.isNotBlank(nationality)){
 				Nationality nationalityBean = new Nationality();
 				nationalityBean.setId(nationality);
 				member.setNationality(nationalityBean);
+			}else{
+				member.setNationality(null);
 			}
-			if(StringUtils.isNotBlank(cardType)){
-				member.setCardType(Integer.parseInt(cardType));
-			}
-			member.setCard(StringUtils.trim(card));
 			
-			if(!member.getMobile().equals(StringUtils.trim(mobile))){
+			/*if(!member.getMobile().equals(StringUtils.trim(mobile))){
 				int ret = memberService.vaildUserByMobile(StringUtils.trim(mobile));
 				if(ret > 0){
 					ajaxResult.setMsg("手机号码已经被注册");
 					return ajaxResult;
 				}
 			}
-
+			member.setMobile(StringUtils.trim(mobile));
+			*/
+			
 			if(member.getEmail() == null || !member.getEmail().equals(StringUtils.trim(email))){
 				int ret = memberService.vaildUserByEmail(StringUtils.trim(email));
 				if(ret > 0){
@@ -115,13 +158,13 @@ public class MainController {
 					return ajaxResult;
 				}
 				member.setEmail(StringUtils.trim(email));
+			}else{
+				member.setEmail(null);
 			}
-			
-			member.setMobile(StringUtils.trim(mobile));
 			
 			member.setAddress(StringUtils.trim(address));
 			
-			memberService.update(member);
+			memberService.saveOrUpdateMember(member, memBankInfo);
 			
 			request.getSession().setAttribute(WebHelper.SESSION_LOGIN_USER, member);
 			
@@ -154,7 +197,7 @@ public class MainController {
 			
 			String imgPath = FileUploadUtil.uploadAttachment(is, imgName);
 			
-			//修改资料路径
+			/*//修改资料路径
 			Member member = HttpUtils.getMember(request);
 			member = memberService.find(member.getId());
 			if("imgIDCardA".equals(paramName)){
@@ -173,7 +216,7 @@ public class MainController {
 			
 			memberService.update(member);
 			request.getSession().setAttribute(WebHelper.SESSION_LOGIN_USER, member);
-			
+			*/
 			ajaxResult.setData(imgPath);
 			ajaxResult.setSuccess(true);
 			
