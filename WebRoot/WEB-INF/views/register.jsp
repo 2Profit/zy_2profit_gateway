@@ -25,6 +25,8 @@ $(function(){
 	
 	//表单验证
 	$('#registerForm').validator({
+		timely : 0,
+		focusCleanup : true,
 		rules : {
 			nickName : [/^[0-9a-zA-Z\u0391-\uFFE5]{2,8}$/, '昵称长度2到8个字符，支持汉子、英文及数字']
 		},
@@ -42,8 +44,12 @@ $(function(){
 				target : '#msg_nickName'
 			},
 			pwd : {
-				rule : 'required;password',
+				rule : '密码: required;password',
 				target : '#msg_pwd'
+			},
+			pwd1 : {
+				rule : '密码确认: required;match[pwd]',
+				target : '#msg_pwd1'
 			}
 		},
 		valid : function(form){
@@ -214,6 +220,24 @@ function sendCode(_this){
                                             </div>
                                         </td>
                                         <td class="plr20" id="msg_pwd">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tar">
+                                            <div class="J_toolsBar">
+                                                <div class="t_label">密码确认：</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="J_toolsBar">
+                                                <div class="t_text">
+                                                    <label>
+                                                        <input type="password" name="pwd1"/>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="plr20" id="msg_pwd1">
                                         </td>
                                     </tr>
                                     <tr class="f_fixPadding">

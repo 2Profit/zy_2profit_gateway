@@ -35,22 +35,28 @@
                         <div class="m_txt">账户信息</div>
                     </div>
 
-                    <div class="J_userInfoTable">
+					<div class="J_userInfoTable">
                         <table>
                             <tbody>
                                 <tr>
-                                    <td>姓名：</td>
+                                    <td><b>姓名：</b></td>
                                     <td>${loginUser.cnName }</td>
-                                </tr>
-                                <tr>
-                                    <td>帐号：</td>
+                                    <td><b>帐号：</b></td>
                                     <td>${loginUser.mobile }</td>
-                                </tr>
-                                <tr>
-                                    <td>用户名：</td>
+                                    <td><b>昵称：</b></td>
                                     <td>${loginUser.userName }</td>
-                                </tr>
-                            </tbody>
+                                    <td><b>性别：</b></td>
+                                    <td>
+                                    	<c:choose>
+                                    		<c:when test="${loginUser.sex eq 0 }">
+                                    			男
+                                    		</c:when>
+                                    		<c:when test="${loginUser.sex eq 1 }">
+                                    			女
+                                    		</c:when>
+                                    	</c:choose>
+                                    </td>
+                            </tr></tbody>
                         </table>
                     </div>
 
@@ -59,36 +65,23 @@
                         <div class="m_txt">已绑定的交易帐号</div>
                     </div>
 
-
-
                     <div class="J_table mt10">
                         <table>
                             <thead>
                                 <tr>
                                     <td>平台</td>
                                     <td>帐号</td>
-                                    <td>公司</td>
-                                    <td>级别</td>
-                                    <td>余额</td>
+                                    <td>经纪商</td>
+                                    <td>状态</td>
+                                    <td>虚拟币余额</td>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>MT4</td>
-                                    <td>Member_21awdad1aa</td>
-                                    <td>深圳市腾讯计算机系统有限公司</td>
-                                    <td>高级</td>
-                                    <td><span class="cOrange">￥300,000,00</span> USD</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
 
-
-
                 </div>
-
-
 
                 <div class="J_title less">
                     <div class="t_txt">最新公告</div>

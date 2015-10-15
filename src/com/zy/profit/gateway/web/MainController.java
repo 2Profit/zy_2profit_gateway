@@ -200,30 +200,23 @@ public class MainController {
 		ajaxResult.setSuccess(false);
 		
 		try {
-			String userType = request.getParameter("userType");
-			String userName = request.getParameter("userName");
 			String oldPwd = request.getParameter("oldPwd");
 			String pwd1 = request.getParameter("pwd1");
 			String pwd2 = request.getParameter("pwd2");
 			
-			if("0".equals(userType)){
-				Member member = memberService.findMemberByLogin(userName);
+			Member member = HttpUtils.getMember(request);
+			
+			//旧密码是否正确
+			if(Md5Util.validatePassword(member.getPwd(), oldPwd)){
 				
-				//旧密码是否正确
-				if(Md5Util.validatePassword(member.getPwd(), oldPwd)){
-					
-					member.setPwd(Md5Util.generatePassword(pwd1));
-					memberService.update(member);
-					
-					ajaxResult.setSuccess(true);
-					
-				}else{
-					ajaxResult.setMsg("旧密码不正确");
-					return ajaxResult;
-				}
+				member.setPwd(Md5Util.generatePassword(pwd1));
+				memberService.update(member);
 				
-			}else if("1".equals(userType)){
+				ajaxResult.setSuccess(true);
 				
+			}else{
+				ajaxResult.setMsg("旧密码不正确");
+				return ajaxResult;
 			}
 			
 		} catch (Exception e) {
