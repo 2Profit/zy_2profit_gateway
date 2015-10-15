@@ -395,10 +395,10 @@ a.abtn.red:hover { background-color: #f70; }
     .J_router span { margin: 0 10px; }
 
 .J_jjsFilter { background-color: #f6f6f6; border: 1px solid #ddd; }
-    .J_jjsFilter .j_left { float: left; padding: 0 30px; width: 864px; }
-        .J_jjsFilter .j_left .l_item { line-height: 70px; border-bottom: 1px solid #ddd; }
-            .J_jjsFilter .j_left .l_item .i_left { float: left; width: 120px; color: #666; }
-            .J_jjsFilter .j_left .l_item .i_right { float: left; }
+    .J_jjsFilter .j_left { float: left; padding: 0 0 0 30px; width: 894px; }
+        .J_jjsFilter .j_left .l_item { position: relative; padding: 10px 0 10px 120px; border-bottom: 1px solid #ddd; }
+            .J_jjsFilter .j_left .l_item .i_left { position: absolute; left: 0; top: 0; width: 120px; line-height: 70px; color: #666; }
+            .J_jjsFilter .j_left .l_item .i_right { line-height: 50px; }
                 .J_jjsFilter .j_left .l_item .i_right a.not { width: 60px; }
                 .J_jjsFilter .j_left .l_item .i_right a { display: inline-block; *zoom: 1; *display: inline; margin-right: 10px; width: 120px; line-height: 34px; background-color: #fff; border: 1px solid #ddd; border-radius: 3px; text-align: center; color: #666; }
                     .J_jjsFilter .j_left .l_item .i_right a.active { background: #f60; color: #fff; }
@@ -569,7 +569,7 @@ a.abtn.red:hover { background-color: #f70; }
         .J_table table thead { }
             .J_table table thead tr td { padding: 10px 20px; border-top: 1px solid #eee; border-bottom: 1px solid #eee; background-color: #f9f9f9; color: #444; }
         .J_table table tbody tr td { padding: 10px 20px; border-bottom: 1px dashed #eee; color: #666; }
-            .J_table table tbody tr td a.abtn { display:inline-block; *zoom:1; *display:inline; margin-left:20px; padding:2px 12px; border-radius:3px; color:#fff; }
+            .J_table table tbody tr td a.abtn { display: inline-block; *zoom: 1; *display: inline; margin-left: 20px; padding: 2px 12px; border-radius: 3px; color: #fff; }
 
 .J_tipsBox.green { padding: 8px 16px; background-color: #e6fee7; border: 1px solid #a1daa2; color: #52b254; }
 
@@ -590,8 +590,8 @@ a.abtn.red:hover { background-color: #f70; }
 
 .J_userInfoTable { padding-left: 20px; }
     .J_userInfoTable table tr td { padding: 10px 20px; }
-    .J_userInfoTable table tr td { color:#666; }
-        .J_userInfoTable table tr td b { color:#444; }
+    .J_userInfoTable table tr td { color: #666; }
+        .J_userInfoTable table tr td b { color: #444; }
 
 .J_userInfoList { }
     .J_userInfoList table { font-size: 14px; }
@@ -741,9 +741,9 @@ a.abtn.red:hover { background-color: #f70; }
 
 
     .J_userInfo .u_right { float: right; width: 116px; }
-        .J_userInfo .u_right .r_name { width:100%; line-height: 30px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .J_userInfo .u_right .r_info { color:#fff; }
-            .J_userInfo .u_right .r_info span { margin-left:10px; }
+        .J_userInfo .u_right .r_name { width: 100%; line-height: 30px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .J_userInfo .u_right .r_info { color: #fff; }
+            .J_userInfo .u_right .r_info span { margin-left: 10px; }
 .J_jjsHolder { position: relative; margin: 0 auto; padding-left: 240px; width: 960px; background-color: #f6f6f6; }
     .J_jjsHolder .j_left { position: absolute; left: 0; top: 0; width: 240px; }
         .J_jjsHolder .j_left .l_pic { }
@@ -770,6 +770,13 @@ a.abtn.red:hover { background-color: #f70; }
     .J_jjsInfo table { width: 100%; }
         .J_jjsInfo table td { padding: 0 20px; border: 1px dashed #ddd; line-height: 36px; }
             .J_jjsInfo table td.t_title { text-align: right; background-color: #f6f6f6; color: #999; }
+
+.J_follow { text-align: center; background-color: #fff; }
+    .J_follow .f_txt { line-height: 40px; font-size: 18px; background: url(../images/dot_ddd.png) repeat-x left center; }
+        .J_follow .f_txt .t_center { display: inline-block; *zoom: 1; *display: none; padding: 0 20px; background-color: #fff; color: #28a47c; }
+        .J_follow .f_txt span { margin: 0 16px; color: #f60; }
+    .J_follow .f_pic { padding: 10px 0 20px; }
+        .J_follow .f_pic img { vertical-align: top; }
 
 /* 美腿 */
 .J_footer { position: relative; padding: 30px 0; border-bottom: 4px solid #1d1d1d; background-color: #272727; text-align: center; }

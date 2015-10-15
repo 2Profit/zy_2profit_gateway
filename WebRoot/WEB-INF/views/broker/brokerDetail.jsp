@@ -33,34 +33,11 @@
                     </div>
                 </div>
                 <div class="j_right">
-                    <div class="r_title">
-                        <span>返佣金额</span>
-                    </div>
-                    <div class="r_list clearfix">
-                        <div class="l_item">
-                            <div class="i_title">欧美</div>
-                            <div class="i_num">${brokerExtInfo.commissionEurope }$</div>
-                        </div>
-                        <div class="l_item">
-                            <div class="i_title">黄金</div>
-                            <div class="i_num">${brokerExtInfo.commissionGold }$</div>
-                        </div>
-                        <div class="l_item">
-                            <div class="i_title">白银</div>
-                            <div class="i_num">${brokerExtInfo.commissionSilver }$</div>
-                        </div>
-                        <div class="l_item">
-                            <div class="i_title">原油</div>
-                            <div class="i_num">${brokerExtInfo.commissionOil }$</div>
-                        </div>
-
-                    </div>
                     <div class="r_btn">
                         <a class="b_btn" href="#">
                             <img src="../static/images/khfy.png" /></a>
                         <a class="b_link" href="#">了解返佣规则</a>
                     </div>
-
                 </div>
             </div>
 

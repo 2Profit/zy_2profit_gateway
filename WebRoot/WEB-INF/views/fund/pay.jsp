@@ -33,11 +33,28 @@
 				}
 			},
 			valid : function(form){
-				form.submit();
+				$(form).ajaxSubmit({
+					url : '${ctx }/fund/pay/order/submit',
+					async : false,
+					success : function(result){
+						if(result.success){
+							dialogPaying();
+						}else{
+							alert(result.msg);
+						}
+					}
+				});
 			}
 		});
 	});
 
+	function dialogPaying(){
+		jc.dialog.get("${ctx}/fund/dialog_paying",
+			function(obj) {
+				obj.show();
+		}, "dialogPaying");
+	}
+	
 	function mySubmit() {
 		$('#myForm').submit();
 	}
@@ -63,55 +80,19 @@
 				</div>
 				<div class="plrb20">
 
-					<form action="${ctx }/fund/pay/submit" id="myForm" method="post">
+					<form id="myForm" method="post">
 					<div class="J_form hasLine J_reg">
 						<table style="width: 100%">
 							<tbody>
 								<tr>
-									<td style="width: 20%;" class="tar">
-										<div class="J_toolsBar">
-											<div class="t_label plr20 fr">帐号：</div>
-										</div>
-									</td>
-									<td style="width: 40%;">
-										<div class="J_toolsBar">
-											<div class="t_select">
-                                                <a href="javascript:;">4008111</a>
-                                                <select name="accountNum">
-                                                    <option value="4008111">4008111</option>
-                                                </select>
-                                            </div>
-											<%-- <div class="t_label cOrange">${loginUser.mobile }</div> --%>
-										</div>
-									</td>
-									<td class="plr20" id="accountNum" style="width: 40%;">
-									</td>
-								</tr>
-								<tr>
-									<td class="tar">
-										<div class="J_toolsBar">
-											<div class="t_label plr20 fr">存款币种：</div>
-										</div>
-									</td>
-									<td>
-										<div class="J_toolsBar">
-											<div class="t_label">
-												CNY<input type="hidden" name="curType" value="CNY"/>
-											</div>
-										</div>
-									</td>
-									<td class="plr20">
-									</td>
-								</tr>
-								<tr>
-									<td class="tar">
+									<td class="tar" style="width: 20%;">
 										<div class="J_toolsBar">
 											<div class="t_label plr20 fr">
 												<span class="fz16 cDeepRed">* </span>存款金额：
 											</div>
 										</div>
 									</td>
-									<td>
+									<td style="width: 40%;">
 										<div class="J_toolsBar">
 											<div class="t_text">
 												<label> 
@@ -224,7 +205,7 @@
 						<a class="abtn orange" href="javascript:mySubmit();">确认支付</a>
 					</div>
 
-					<div class="J_miniTitle">
+					<!-- <div class="J_miniTitle">
 						<div class="m_token"></div>
 						<div class="m_txt">注意事项</div>
 					</div>
@@ -267,7 +248,7 @@
 
 							</tbody>
 						</table>
-					</div>
+					</div> -->
 
 				</div>
 
