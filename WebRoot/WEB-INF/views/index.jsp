@@ -262,55 +262,79 @@ $(function(){
 
     <div class="J_content mt20 bgfff hasShadow">
         <div class="fl c_760">
-            <div class="pau">
+			<div class="pau">
                 <div class="J_title">
-                    <div class="t_txt">话题社区</div>
+                    <div class="t_txt">至盈社区</div>
                     <div class="t_tips"></div>
-                    <div class="t_more"><a href="${ctx }/vote/index">更多投票&nbsp;&gt;</a></div>
+                    <div class="t_more"><a href="${ctx }/vote/index/list">更多投票&nbsp;&gt;</a></div>
                 </div>
 
-                <div class="J_news mt20">
-                    <div class="n_left">
-                        <a href="${ctx }/vote/link?id=${currentTopic.id}">
-                            <img src="/${currentTopic.imageUrl }" />
-                        </a>
-                    </div>
-                    <div class="n_right">
-                        <div class="r_title">
-                            <a href="${ctx }/vote/link?id=${currentTopic.id}">${currentTopic.titleContent }</a>
+                <div class="J_voteTitle mt10">${currentTopic.titleContent }<span class="fz14 cOrange">回应数量(${currentTopic.postCount })</span></div>
+                <div class="J_voteSuccess mt10">
+                	<c:forEach items="${currentTopic.options }" var="option" varStatus="index">
+                		<div class="v_item">
+                			<div class="i_left">${option.optionContent }</div>
+                			<div class="i_right">
+	         					<c:choose>
+	                   				<c:when test="${currentTopic.voteCount == null || currentTopic.voteCount == 0 }">
+										<div style="width:0%; background-color: #ee6a53;" class="r_bar">
+	                           				<div class="b_txt">0%</div>
+	                           			</div>                    					
+	                   				</c:when>
+	                   				<c:otherwise>
+	                           			<div style="width:<fmt:formatNumber type='number' value='${option.voteCount*100/currentTopic.voteCount}' maxFractionDigits='0'/>%; background-color: #ee6a53;" class="r_bar">
+	                           				<div class="b_txt"><fmt:formatNumber type="number" value="${option.voteCount*100/currentTopic.voteCount}" maxFractionDigits="0"/>%</div>
+	                           			</div>
+	                           		</c:otherwise>
+	                   			</c:choose>                			
+                			</div>
+                		</div>
+                	</c:forEach>
+                </div>
+
+                <div data-ui="commentsList" class="J_commentsList">
+                    <div class="c_item">
+                        <div class="i_left">
+                            <div class="l_img">
+                                <img src="${ctx }/static/tmp/face_08.jpg">
+                            </div>
+                            <div class="l_hg"></div>
                         </div>
-                        <div class="r_info">
-                            <div class="i_txt">${currentTopic.titleContent }</div>
-                            <div class="i_time"><span>时间:</span><fmt:formatDate value="${currentTopic.startDate }" type="both" pattern="yyyy-MM-dd"/></div>
+                        <div class="i_right">
+                            <div class="r_info clearfix">
+                                <div class="fl">${currentTopic.mostPraisePost1.publisher.userName } 时间: 
+                                <fmt:formatDate value="${currentTopic.mostPraisePost1.createDate }" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+                            </div>
+                            <div class="r_content">${currentTopic.mostPraisePost1.postContent }</div>
+                        </div>
+
+                    </div>
+
+                    <div class="c_item">
+                        <div class="i_left">
+                            <div class="l_img">
+                                <img src="${ctx }/static/tmp/face_03.jpg">
+                            </div>
+                            <div class="l_hg"></div>
+                        </div>
+                        <div class="i_right">
+                            <div class="r_info clearfix">
+                                <div class="fl">${currentTopic.mostPraisePost2.publisher.userName } 时间: 
+                                <fmt:formatDate value="${currentTopic.mostPraisePost2.createDate }" type="both" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+                            </div>
+                            <div class="r_content">${currentTopic.mostPraisePost2.postContent }</div>
                         </div>
 
                     </div>
                 </div>
 
-                <div class="J_picHolder middle">
-                    <div class="p_main clearfix">
-                        <c:forEach items="${topics }" var="topic">
-	                        <div class="m_item">
-	                            <div class="i_pic">
-	                                <a href="${ctx }/vote/link?id=${topic.id}">
-	                                    <img src="/${topic.imageUrl }" />
-	                                </a>
-	                                <div class="p_title">
-	                                    <div class="t_txt">
-	                                        <a href="${ctx }/vote/link?id=${topic.id}">${topic.titleContent }</a>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                            <div class="i_info">
-	                                <div class="i_txt"><a href="${ctx }/vote/link?id=${topic.id}">${topic.titleContent }</a></div>
-	                                <div class="i_time"><span>时间:</span><fmt:formatDate value="${topic.startDate }" type="both" pattern="yyyy-MM-dd"/></div>
-	                            </div>
-	                        </div>	                        
-	                   	</c:forEach>
-                    </div>
-                </div>
-            </div>
 
+                <div class="J_btnGroup mt20 md">
+                    <a class="abtn green" href="#">我要投票</a>
+                    <a class="abtn blue" href="#">我要回应</a>
+                </div>
+
+            </div>        
 
         </div>
         <div class="fr c_430">

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -30,9 +31,12 @@ import com.zy.member.entity.MemberCode;
 import com.zy.member.service.MemberCodeService;
 import com.zy.member.service.MemberService;
 import com.zy.profit.gateway.util.HttpUtils;
-import com.zy.profit.gateway.util.SystemConfig;
 import com.zy.profit.gateway.util.SMSAPI;
+import com.zy.profit.gateway.util.SystemConfig;
 import com.zy.util.Md5Util;
+import com.zy.vote.entity.VoteTopic;
+import com.zy.vote.entity.VoteTopicPost;
+import com.zy.vote.service.VoteTopicPostService;
 import com.zy.vote.service.VoteTopicService;
 
 
@@ -53,12 +57,23 @@ public class IndexController {
 	private VoteTopicService voteTopicService;
 	@Autowired
 	private BrokerExtInfoService brokerExtInfoService;
+	@Autowired
+	private VoteTopicPostService voteTopicPostService;
+	
 	
 	@RequestMapping("/index")
 	public String index(Model model){
 		
-		model.addAttribute("currentTopic", voteTopicService.getCurrentTopic());
-		model.addAttribute("topics", voteTopicService.getIndexTopic());
+		VoteTopic currentTopic = voteTopicService.getCurrentTopic();
+		List<VoteTopicPost> voteTopicPosts = voteTopicPostService.queryMostPraisePost(currentTopic.getId());
+		if(CollectionUtils.isNotEmpty(voteTopicPosts)){
+			currentTopic.setMostPraisePost1(voteTopicPosts.get(0));
+			if(voteTopicPosts.size()>1){
+				currentTopic.setMostPraisePost2(voteTopicPosts.get(1));
+			}
+		}
+		
+		model.addAttribute("currentTopic", currentTopic);
 		model.addAttribute("brokers", brokerExtInfoService.findIndexPageBrokers());
 		
 		return "/index";

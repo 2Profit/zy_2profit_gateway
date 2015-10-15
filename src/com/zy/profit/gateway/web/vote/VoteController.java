@@ -1,5 +1,6 @@
 package com.zy.profit.gateway.web.vote;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.zy.common.entity.PageModel;
 import com.zy.common.entity.ResultDto;
 import com.zy.member.entity.Member;
 import com.zy.profit.gateway.util.HttpUtils;
@@ -19,6 +21,8 @@ import com.zy.util.RandomValidateCode;
 import com.zy.vote.entity.VoteMemberLog;
 import com.zy.vote.entity.VotePostPraise;
 import com.zy.vote.entity.VotePostReport;
+import com.zy.vote.entity.VoteReplayPraise;
+import com.zy.vote.entity.VoteReplayReport;
 import com.zy.vote.entity.VoteTopic;
 import com.zy.vote.entity.VoteTopicOption;
 import com.zy.vote.entity.VoteTopicPost;
@@ -26,6 +30,8 @@ import com.zy.vote.entity.VoteTopicPostReplay;
 import com.zy.vote.service.VoteMemberLogService;
 import com.zy.vote.service.VotePostPraiseService;
 import com.zy.vote.service.VotePostReportService;
+import com.zy.vote.service.VoteReplayPraiseService;
+import com.zy.vote.service.VoteReplayReportService;
 import com.zy.vote.service.VoteTopicOptionService;
 import com.zy.vote.service.VoteTopicPostReplayService;
 import com.zy.vote.service.VoteTopicPostService;
@@ -45,6 +51,7 @@ public class VoteController {
 	public static final String RESULT_CODE_PRAISE_ERROR = "402";//用户对帖子重复点赞
 	public static final String RESULT_CODE_REPORT_ERROR = "403";//用户对帖子重复举报
 	public static final String RESULT_CODE_RANDOMCODE_ERROR = "404";//验证码错误
+	public static final String RESULT_CODE_LOGIN_ERROR = "405";//用户未登录错误
 
 	@Autowired
 	private VoteTopicService voteTopicService;
@@ -60,14 +67,21 @@ public class VoteController {
 	private VotePostPraiseService votePostPraiseService;
 	@Autowired
 	private VotePostReportService votePostReportService;
+	@Autowired
+	private VoteReplayPraiseService voteReplayPraiseService;
+	@Autowired
+	private VoteReplayReportService voteReplayReportService;
+	
+	
+	
 	
 	@RequestMapping("/link")
 	public String link(Model model, VoteTopic qto){
 		
-		model.addAttribute("currentTopic", voteTopicService.get(qto.getId()));
+		/*model.addAttribute("currentTopic", voteTopicService.get(qto.getId()));
 		if(CollectionUtils.isNotEmpty(voteTopicService.getIndexTopic()))
 			model.addAttribute("nextTopic", voteTopicService.getIndexTopic().get(0));
-		model.addAttribute("topics", voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_NEXT));
+		model.addAttribute("topics", voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_NEXT));*/
 		
 		return "vote/voteIndex"; 
 	}
@@ -93,20 +107,31 @@ public class VoteController {
 		return result;
 	}
 	
-	@RequestMapping("/index")
-	public String index(Model model){
+	@RequestMapping("/index/list")
+	public String index(Model model, HttpServletRequest request,
+			VoteTopicPost queryDto, PageModel<VoteTopicPost> pageModel){
 		
-		List<VoteTopic> currentTopics = voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_CURRENT);
-		List<VoteTopic> nextTopics = voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_NEXT);
+		int currentUserPostNumb = 0;
+		List<VoteTopicPost> currentUserPosts = new ArrayList<VoteTopicPost>();
 		
-		if(CollectionUtils.isNotEmpty(currentTopics))
-			model.addAttribute("currentTopic", currentTopics.get(0));
-		if(CollectionUtils.isNotEmpty(nextTopics))
-			model.addAttribute("nextTopic", nextTopics.get(0));
+		VoteTopic currentTopic = voteTopicService.getCurrentTopic();
+		if(HttpUtils.getMember(request) != null){
+			currentUserPosts = voteTopicPostService.findMemberPost(currentTopic.getId(), 
+					HttpUtils.getMember(request).getId());
+			if(CollectionUtils.isNotEmpty(currentUserPosts))
+				currentUserPostNumb = currentUserPosts.size();
+		}
 		
-		model.addAttribute("topics", voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_NEXT));
+		queryDto.setVoteTopic(currentTopic);
+		model.addAttribute("page", voteTopicPostService.queryPage(queryDto, pageModel));
+		model.addAttribute("currentTopic", voteTopicService.getCurrentTopic());
+		model.addAttribute("nextTopic", voteTopicService.getNextTopic());
+		model.addAttribute("topics", voteTopicService.getHistoryTopics());
 		
-		return "vote/voteIndex";
+		model.addAttribute("currentUserPosts", currentUserPosts);
+		model.addAttribute("currentUserPostNumb", currentUserPostNumb);
+		
+		return "vote/votePage";
 	}
 	
 	@RequestMapping("/doVote")
@@ -114,8 +139,7 @@ public class VoteController {
 	public ResultDto<VoteTopic> doVote(VoteTopicOption dto, HttpServletRequest request){
 		ResultDto<VoteTopic> result = new ResultDto<VoteTopic>();
 		try {
-			Member member = HttpUtils.getMember(request);
-			int logNumb = voteMemberLogService.findMemberTopicLog(member.getId(), dto.getVoteTopic().getId());
+			int logNumb = voteMemberLogService.findTopicLogByIp(dto.getVoteTopic().getId(), AddressUtils.getIp(request));
 			if(logNumb>0){
 				result.setSuccess(false);
 				result.setCode(RESULT_CODE_VOTE_ERROR);
@@ -125,7 +149,7 @@ public class VoteController {
 			VoteMemberLog voteLog = new VoteMemberLog();
 			voteLog.setVoteTopic(dto.getVoteTopic());
 			voteLog.setVoteTopicOption(dto);
-			voteLog.setMember(member);
+			voteLog.setMember(HttpUtils.getMember(request));
 			voteLog.setIpAddress(AddressUtils.getIp(request));
 			voteMemberLogService.save(voteLog);
 			
@@ -143,16 +167,96 @@ public class VoteController {
 		return result;
 	}
 	
+	@RequestMapping("/doReplayPraise")
+	@ResponseBody
+	public ResultDto<Object> postPraise(VoteTopicPostReplay dto, HttpServletRequest request){
+		ResultDto<Object> result = new ResultDto<Object>();
+		try {
+			Member member = HttpUtils.getMember(request);
+			if(member == null){
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				return result;
+			}
+			
+			int numb = voteReplayPraiseService.findMemberPraise(dto.getId(), member.getId());
+			if(numb>0){
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_PRAISE_ERROR);//该帖子用户已经点赞
+				return result;
+			}
+			
+			VoteReplayPraise praise = new VoteReplayPraise();
+			praise.setVoteTopicPostReplay(dto);
+			praise.setMember(member);
+			praise.setIpAddress(AddressUtils.getIp(request));
+			voteReplayPraiseService.save(praise);
+			
+			VoteTopicPostReplay entity = voteTopicPostReplayService.get(dto.getId());
+			entity.setPraiseCount(entity.getPraiseCount()+1);
+			voteTopicPostReplayService.update(entity);
+			
+			result.setMessage(entity.getPraiseCount()+"");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+		}
+		return result;
+	}
+	
+	@RequestMapping("/doReplayReport")
+	@ResponseBody
+	public ResultDto<Object> postReport(VoteTopicPostReplay dto, HttpServletRequest request){
+		ResultDto<Object> result = new ResultDto<Object>();
+		try {
+			Member member = HttpUtils.getMember(request);
+			if(member == null){
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				return result;
+			}
+
+			int numb = voteReplayReportService.findMemberReport(dto.getId(), member.getId());
+			if(numb>0){
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_PRAISE_ERROR);//该回复用户已经举报
+				return result;
+			}
+			
+			VoteReplayReport report = new VoteReplayReport();
+			report.setVoteTopicPostReplay(dto);
+			report.setMember(member);
+			report.setIpAddress(AddressUtils.getIp(request));
+			voteReplayReportService.save(report);
+			
+			VoteTopicPostReplay entity = voteTopicPostReplayService.get(dto.getId());
+			entity.setReportCount(entity.getPraiseCount()+1);
+			voteTopicPostReplayService.update(entity);
+			
+			result.setMessage(entity.getReportCount()+"");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+		}
+		return result;
+	}
+	
 	@RequestMapping("/doPraise")
 	@ResponseBody
 	public ResultDto<VoteTopicPost> praise(VoteTopicPost dto, HttpServletRequest request){
 		ResultDto<VoteTopicPost> result = new ResultDto<VoteTopicPost>();
 		try {
 			Member member = HttpUtils.getMember(request);
-			int memberPostNumb = votePostPraiseService.findMemberPraise(member.getId(), dto.getId());
-			if(memberPostNumb>0){//该帖子用户已经点赞
+			if(member == null){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_PRAISE_ERROR);
+				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				return result;
+			}
+			
+			int memberPostNumb = votePostPraiseService.findMemberPraise(member.getId(), dto.getId());
+			if(memberPostNumb>0){
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_PRAISE_ERROR);//该帖子用户已经点赞
 				return result;
 			}
 			
@@ -181,10 +285,16 @@ public class VoteController {
 		ResultDto<VoteTopicPost> result = new ResultDto<VoteTopicPost>();
 		try {
 			Member member = HttpUtils.getMember(request);
-			int memberPostNumb = votePostPraiseService.findMemberPraise(member.getId(), dto.getId());
-			if(memberPostNumb>0){//该帖子用户已经举报
+			if(member == null){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_REPORT_ERROR);
+				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				return result;
+			}
+			
+			int memberPostNumb = votePostPraiseService.findMemberPraise(member.getId(), dto.getId());
+			if(memberPostNumb>0){
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_REPORT_ERROR);//该帖子用户已经举报
 				return result;
 			}
 			
@@ -211,9 +321,11 @@ public class VoteController {
 	public ResultDto<VoteTopicPost> post(VoteTopicPost dto, HttpServletRequest request){
 		ResultDto<VoteTopicPost> result = new ResultDto<VoteTopicPost>();
 		try {
+			VoteTopic topic = voteTopicService.get(dto.getVoteTopic().getId());
 			dto.setPublisher(HttpUtils.getMember(request));
 			dto.setPraiseCount(0);
 			dto.setReportCount(0);
+			dto.setFloorNumb(topic.getPostCount()+1);
 			dto.setIpAddress(AddressUtils.getIp(request));
 			voteTopicPostService.save(dto);
 		} catch (Exception e) {
@@ -228,6 +340,13 @@ public class VoteController {
 	public ResultDto<VoteTopicPostReplay> raplay(VoteTopicPostReplay dto, HttpServletRequest request){
 		ResultDto<VoteTopicPostReplay> result = new ResultDto<VoteTopicPostReplay>();
 		try {
+			Member member = HttpUtils.getMember(request);
+			if(member == null){
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				return result;
+			}
+			
 			dto.setReplayer(HttpUtils.getMember(request));
 			dto.setIpAddress(AddressUtils.getIp(request));
 			voteTopicPostReplayService.save(dto);
