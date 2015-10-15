@@ -17,7 +17,7 @@ $(function(){
 	       	{randomCode:$('#randomCode').val()},
 	       	function(json) {
 	       		if(json.success){
-	       			if($('#currentSchedule').val()!='1'){
+	       			if($('#isVoteTime').val()=='false'){
 	       				jc.alert('当前不是投票有效期，谢谢');
 	       				return false;
 	       			}
@@ -34,7 +34,7 @@ $(function(){
 	       	        	success:function(json) {
 	       	           		if(json.success){
 	       	           			jc.alert('投票成功', function(b){
-	       	           				window.location.replace("${ctx }/vote/index");
+	       	           				window.location.replace("${ctx }/vote/index/list");
 	       	           			});
 	       	           		}else{
 	       	           			if(json.code=='401'){
@@ -58,7 +58,7 @@ $(function(){
 	$('a[name="doPost_href"]').bind('click',function(event){
 		event.preventDefault();
 		
-		if($('textarea[name=postContent]').val()==''){
+		if($.trim($('textarea[name=postContent]').val()) == ''){
 			jc.alert('发表内容不能为空！');return false;
 		}
 		
@@ -70,7 +70,7 @@ $(function(){
 	        success: function(json){   
 	          	if(json.success){
 	          		jc.alert('回复成功', function(b){
-	          			window.location.href="${ctx}/vote/index";
+	          			window.location.href="${ctx}/vote/index/list";
 	          		});
 	          	}else{
 	          		jc.alert('回复失败'); 
@@ -81,17 +81,23 @@ $(function(){
 	
 });
 
+/*第一种形式 第二种形式 更换显示样式*/
+function setTab(name, cursel, n) {
+    for (var i = 1; i <= n; i++) {
+        var menu = document.getElementById(name + i);
+        var con = document.getElementById("con_" + name + "_" + i);
+        menu.className = i == cursel ? "t_txt active" : "t_txt";
+        con.style.display = i == cursel ? "block" : "none";
+    }
+}
 
 function doPraise(obj,postId){
-	$.ajax({
-		type: "POST",
-       	url:"${ctx }/vote/doPraise",
-    	data:{id:postId},
-    	async: false,
-    	success:function(json) {
+	$.post("${ctx }/vote/doPraise",
+    	{id:postId},
+    	function(json) {
        		if(json.success){
        			jc.alert('点赞成功', function(b){
-	  				$(obj).text("<i class='icon'>󰄼</i>赞("+json.message+")");
+	  				$(obj).children('span').text(json.message);
        			});
        		}else{
        			if(json.code=='405'){jc.alert('请先登录！');return false;}
@@ -99,7 +105,7 @@ function doPraise(obj,postId){
        			jc.alert('点赞失败');
        		}
        	}    
-	});
+	);
 }
 function doReplayPraise(obj,replayId){
 	$.post(
@@ -108,7 +114,7 @@ function doReplayPraise(obj,replayId){
     	function(json) {
        		if(json.success){
        			jc.alert('点赞成功', function(b){
-	  				$(obj).text("<i class='icon'>󰄼</i>赞("+json.message+")");
+	  				$(obj).children('span').text(json.message);
        			});
        		}else{
        			if(json.code=='405'){ jc.alert('请先登录！');return false;}
@@ -165,22 +171,17 @@ function showDialog(postId) {
 }
 
 function postReplay(){
-	$.ajax({
-		type:"POST",
-		url:"${ctx}/vote/doReplay",
-		data:{  
-				'voteTopic.id':$('#currentTopicId').val(),
-				'voteTopicPost.id':globalPostId,
-				'replayContent':$('#replayContent').val()
-			},
-		success:function(json){
+	$.post("${ctx}/vote/doReplay",
+		{'voteTopic.id':$('#currentTopicId').val(),'voteTopicPost.id':globalPostId,
+			'replayContent':$('#replayContent').val()},
+		function(json){
 			if(json.success){
 				window.location.href="${ctx}/vote/index";
 			}else{
 				jc.alert('回复失败');
 			}
 		}
-	});
+	);
 }
 
 function countWords(){
@@ -204,7 +205,7 @@ function refresh() {
 <%@ include file="../common/nice-validator.jsp" %>
 
 <body>
-
+	<form action="" name="form" id="form" method="post" theme="simple">
 	<%@ include file="../common/head.jsp" %>
 
     <div class="bgfff">
@@ -216,6 +217,7 @@ function refresh() {
                             <div class="J_miniTitle">
                                 <div class="m_token"></div>
                                 <div class="m_txt">本期投票</div>
+                                <input id="isVoteTime" type="hidden" value="${currentTopic.isVoteTime }">
                             </div>
                             <div class="J_vote">
                                 <div class="v_title">${currentTopic.titleContent}
@@ -322,9 +324,13 @@ function refresh() {
 	                            
 	                            <div class="i_right">
 	                                <div class="r_info clearfix">
-	                                    <div class="fl"> <div class="i_now">${post.floorNumb }楼</div> ${post.publisher.userName } 时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+	                                    <div class="fl">
+	                                    	<div class="i_now">${post.floorNumb }楼</div> ${post.publisher.userName } 时间: 
+	                                    		<fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+	                                    </div>
 										<div class="fr">
-	                                        <a class="i_replyBtn" href="javascript:;" onclick="doPraise(this,'${post.id }')"><i class="icon">󰄼</i>赞(${post.praiseCount})</a>
+	                                        <a class="i_replyBtn" href="javascript:;" onclick="doPraise(this,'${post.id }')">
+	                                        	<i class="icon">󰄼</i>赞(<span>${post.praiseCount}</span>)</a>
 	                                        <span>| </span>
 	                                        <a class="i_replyBtn" href="javascript:showDialog('${post.id }');">回复</a>
 	                                        <span>| </span>
@@ -338,7 +344,7 @@ function refresh() {
 											<div class="c_item">
 		                                        <div class="i_left">
 		                                            <div class="l_img">
-		                                                <img src="${ctx }/static/tmp/face_08.jpg">
+		                                                <img src="${ctx }/static/tmp/face_04.jpg">
 		                                            </div>
 		                                            <div class="l_hg"></div>
 		                                        </div>
@@ -346,13 +352,14 @@ function refresh() {
 		                                            <div class="r_info">${replay.replayer.userName } 回复 ${post.publisher.userName } 
 		                                            		时间: <fmt:formatDate value="${replay.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
 	                                                <div class="fr">
-	                                                    <a class="i_replyBtn" href="javascript:;" onclick="doReplayPraise(this,'${replay.id }')"><i class="icon">󰄼</i>赞(${replay.praiseCount}) </a>
+	                                                    <a class="i_replyBtn" href="javascript:;" onclick="doReplayPraise(this,'${replay.id }')">
+	                                                    	<i class="icon">󰄼</i>赞(<span>${replay.praiseCount}</span>) </a>
 	                                                    <span>| </span>
 	                                                    <a class="i_replyBtn" href="javascript:;" onclick="doReplayReport(this,'${replay.id }')">举报(${replay.reportCount })</a>
-	                                                </div>		                                            
+	                                                </div>
+	                                                <div class="r_content">${replay.replayContent }</div>		                                            
 		                                        </div>
-		                                        <div class="r_content">${replay.replayContent }</div>
-		                                    </div>	                                	
+		                                    </div>
 	                                	</c:forEach>
 	                                </div>
 	                            </div>
@@ -360,6 +367,7 @@ function refresh() {
 	                	</c:forEach>
                     </div>
                     <div class="j_page">
+                    	<br>
 	                	<tr><td colspan="50" style="text-align:center;"><%@ include file="../common/pager.jsp"%></td></tr>
 	                </div>
                 </div>
@@ -376,7 +384,7 @@ function refresh() {
 	                            </div>
 	                            <div class="i_right">
 	                                <div class="r_info clearfix">
-	                                    <div class="fl">${post.postContent } 时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+	                                    <div class="fl">${post.publisher.userName } 时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
 	                                </div>
 	                                <div class="r_content">${post.postContent }</div>
 	                            </div>
@@ -390,28 +398,26 @@ function refresh() {
                     <div data-ui="title" class="J_title">
                         <div class="t_txt">我要发表</div>
                     </div>
-                    
-                    <div class="r_textarea">
-	                   	<c:choose>
-	                   		<c:when test="${not empty sessionScope.login_user }">
-	                   			<textarea class="t_textarea" name="postContent" onkeyup="countWords()"></textarea>
-	                   		</c:when>
-	                   		<c:otherwise>
-	                   			<div class="t_tips">请先 <a class="abtn green" href="${ctx }/login">登录</a> | <a class="abtn green" href="${ctx }/register">注册</a></div>
-	                   		</c:otherwise>
-	                   	</c:choose>
-                   	</div>
+                   
+               		<div class="r_textarea">
+               			<textarea class="t_textarea" name="postContent" onkeyup="countWords()"></textarea>
+               			<c:if test="${memberLogin == null }">
+               				<div class="t_tips">请先 <a class="abtn green" href="${ctx }/login">登录</a> | <a class="abtn green" href="${ctx }/register">注册</a></div>
+               			</c:if>
+               		</div>
 
                     <div class="J_toolsBar">
                         <div class="fr">
                             <div class="t_label plr10">还可以输入<span class="l_range cOrange" id='countWords_span'>255</span>字</div>
                             <div class="ml10 t_button">
-                                <c:if test="${empty sessionScope.login_user }">
-                                	<a class="b_submit abtn gray" href="javascript:;">回复</a>
-                                </c:if>
-                                <c:if test="${not empty sessionScope.login_user }">
-                                	<a class="b_submit abtn orange" href="" name='doPost_href'>回复</a>
-                            	</c:if>
+	                            <c:choose>
+		                    		<c:when test="${memberLogin == null }">
+		                    			<a class="b_submit abtn gray" href="javascript:;">回复</a>
+		                    		</c:when>
+		                    		<c:otherwise>
+		                    			<a class="b_submit abtn orange" href="" name='doPost_href'>回复</a>
+		                    		</c:otherwise>
+		                    	</c:choose>                            
                             </div>
                         </div>
                     </div>
@@ -443,7 +449,8 @@ function refresh() {
             </div>
         </div>
     </div>
-    
+	</form>
+	    
 	<%@ include file="../common/help.jsp" %>
 	<%@ include file="../common/foot.jsp" %>
 

@@ -80,7 +80,7 @@ $(function(){
              <div class="i_default"><a href="#"><i class="icon">󰄊</i>我的活动</a></div>
          </div> -->
          <div class="l_item">
-             <div class="i_default"><a href="${ctx }/vote/index"><i class="icon">󰇀</i>投票功能</a></div>
+             <div class="i_default"><a href="${ctx }/vote/index/list"><i class="icon">󰇀</i>投票功能</a></div>
          </div>
          <div class="l_item">
              <div class="i_default"><a href="${ctx }/notice/list"><i class="icon">󰊑</i>公告</a></div>

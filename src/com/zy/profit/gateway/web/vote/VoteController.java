@@ -1,11 +1,13 @@
 package com.zy.profit.gateway.web.vote;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,17 +75,37 @@ public class VoteController {
 	private VoteReplayReportService voteReplayReportService;
 	
 	
-	
-	
 	@RequestMapping("/link")
-	public String link(Model model, VoteTopic qto){
+	public String link(Model model, HttpServletRequest request, PageModel<VoteTopicPost> pageModel){
 		
-		/*model.addAttribute("currentTopic", voteTopicService.get(qto.getId()));
-		if(CollectionUtils.isNotEmpty(voteTopicService.getIndexTopic()))
-			model.addAttribute("nextTopic", voteTopicService.getIndexTopic().get(0));
-		model.addAttribute("topics", voteTopicService.getTopicBySchedule(VoteTopic.SCHEDULE_NEXT));*/
+		int currentUserPostNumb = 0;
+		List<VoteTopicPost> currentUserPosts = new ArrayList<VoteTopicPost>();
 		
-		return "vote/voteIndex"; 
+		VoteTopic currentTopic = voteTopicService.get(request.getParameter("id"));
+		if(HttpUtils.getMember(request) != null){
+			currentUserPosts = voteTopicPostService.findMemberPost(currentTopic.getId(), 
+					HttpUtils.getMember(request).getId());
+			if(CollectionUtils.isNotEmpty(currentUserPosts))
+				currentUserPostNumb = currentUserPosts.size();
+		}
+		//判断是否在可以投票的时间
+		if(currentTopic.getStartDate().after(new Date()) || currentTopic.getEndDate().before(new Date())){
+			currentTopic.setIsVoteTime(false);
+		}
+		
+		VoteTopicPost queryDto = new VoteTopicPost();
+		queryDto.setVoteTopic(currentTopic);
+		model.addAttribute("page", voteTopicPostService.queryPage(queryDto, pageModel));
+		model.addAttribute("currentTopic", currentTopic);
+		model.addAttribute("nextTopic", voteTopicService.getNextTopic());
+		model.addAttribute("topics", voteTopicService.getHistoryTopics());
+		
+		model.addAttribute("memberLogin", HttpUtils.getMember(request));
+		model.addAttribute("currentUserPosts", currentUserPosts);
+		model.addAttribute("currentUserPostNumb", currentUserPostNumb);
+		
+		
+		return "vote/votePage"; 
 	}
 	
 	@RequestMapping("/randomValidate")
@@ -123,11 +145,13 @@ public class VoteController {
 		}
 		
 		queryDto.setVoteTopic(currentTopic);
+		pageModel.setPageSize(2);
 		model.addAttribute("page", voteTopicPostService.queryPage(queryDto, pageModel));
 		model.addAttribute("currentTopic", voteTopicService.getCurrentTopic());
 		model.addAttribute("nextTopic", voteTopicService.getNextTopic());
 		model.addAttribute("topics", voteTopicService.getHistoryTopics());
 		
+		model.addAttribute("memberLogin", HttpUtils.getMember(request));
 		model.addAttribute("currentUserPosts", currentUserPosts);
 		model.addAttribute("currentUserPostNumb", currentUserPostNumb);
 		
@@ -328,6 +352,10 @@ public class VoteController {
 			dto.setFloorNumb(topic.getPostCount()+1);
 			dto.setIpAddress(AddressUtils.getIp(request));
 			voteTopicPostService.save(dto);
+			
+			topic.setPostCount(topic.getPostCount()+1);
+			voteTopicService.save(topic);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.setSuccess(false);
