@@ -395,10 +395,10 @@ a.abtn.red:hover { background-color: #f70; }
     .J_router span { margin: 0 10px; }
 
 .J_jjsFilter { background-color: #f6f6f6; border: 1px solid #ddd; }
-    .J_jjsFilter .j_left { float: left; padding: 0 30px; width: 864px; }
-        .J_jjsFilter .j_left .l_item { line-height: 70px; border-bottom: 1px solid #ddd; }
-            .J_jjsFilter .j_left .l_item .i_left { float: left; width: 120px; color: #666; }
-            .J_jjsFilter .j_left .l_item .i_right { float: left; }
+    .J_jjsFilter .j_left { float: left; padding: 0 0 0 30px; width: 894px; }
+        .J_jjsFilter .j_left .l_item { position: relative; padding: 10px 0 10px 120px; border-bottom: 1px solid #ddd; }
+            .J_jjsFilter .j_left .l_item .i_left { position: absolute; left: 0; top: 0; width: 120px; line-height: 70px; color: #666; }
+            .J_jjsFilter .j_left .l_item .i_right { line-height: 50px; }
                 .J_jjsFilter .j_left .l_item .i_right a.not { width: 60px; }
                 .J_jjsFilter .j_left .l_item .i_right a { display: inline-block; *zoom: 1; *display: inline; margin-right: 10px; width: 120px; line-height: 34px; background-color: #fff; border: 1px solid #ddd; border-radius: 3px; text-align: center; color: #666; }
                     .J_jjsFilter .j_left .l_item .i_right a.active { background: #f60; color: #fff; }
@@ -773,7 +773,7 @@ a.abtn.red:hover { background-color: #f70; }
 
 .J_follow { text-align: center; background-color: #fff; }
     .J_follow .f_txt { line-height: 40px; font-size: 18px; background: url(../images/dot_ddd.png) repeat-x left center; }
-        .J_follow .f_txt .t_center { display: inline-block; *zoom: 1; *display: none; padding:0 20px; background-color:#fff; color:#28a47c; }
+        .J_follow .f_txt .t_center { display: inline-block; *zoom: 1; *display: none; padding: 0 20px; background-color: #fff; color: #28a47c; }
         .J_follow .f_txt span { margin: 0 16px; color: #f60; }
     .J_follow .f_pic { padding: 10px 0 20px; }
         .J_follow .f_pic img { vertical-align: top; }
