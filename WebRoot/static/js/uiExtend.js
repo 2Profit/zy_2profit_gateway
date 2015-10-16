@@ -11,13 +11,27 @@ $(function () {
 });
 
 
+jc.uiExtend("header", {
+    init: function () {
+        this.$item = this.$element.find(".n_item");
+        this.$item.hover(function () {
+            $(this).addClass("active")
+        }, function () {
+            $(this).removeClass("active");
+        });
+
+
+    }
+
+});
+
 jc.uiExtend("newsList", {
     init: function () {
         this.$element.on("click", ".t_txt a", function () {
             var $item = $(this).parents(".n_item");
             $item.addClass("current").siblings().removeClass("current");
 
-            
+
         });
     }
 

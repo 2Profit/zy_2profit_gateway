@@ -24,7 +24,8 @@ $(function(){
 	
 	//除了证件类型、证件号、姓名中英、手机号码 银行资料 不能改
 	$('#myForm input').each(function(idx, obj){
-		if($(obj).val()){
+		var name = $(obj).attr('name');
+		if($(obj).val() && name != 'address' && name != 'sex' && name != 'email'){
 			$(obj).attr('disabled', 'disabled');
 		}
 	});
@@ -40,7 +41,7 @@ $(function(){
 			enName : '英文姓名: length[~64, true]',
 			card : '证件号码: length[~64]',
 			mobile : '手机号码: required;mobile;',
-			email : '电子邮箱: required;email;',
+			email : '电子邮箱: email;',
 			address : '联系地址: length[~512, true]',
 			bankAccount : '银行账户: length[~64, true]',
 			bankCardNum : '银行账号: length[~64, true]',
@@ -52,10 +53,11 @@ $(function(){
 				async : false,
 				success : function(result){
 					if(result.success){
-						alert('修改成功');
-						window.location.reload();
+						jc.alert('修改成功', function(){
+							window.location.reload();
+						});
 					}else{
-						alert(result.msg);
+						jc.alert(result.msg);
 					}
 				}
 			});
@@ -134,7 +136,7 @@ function uploadImg(_this, paramName){
                 </div>
                 <div class="plrb20">
                 
-                <form action="">
+                <form action="" id="myForm" method="post">
                     <div class="J_miniTitle">
                         <div class="m_token"></div>
                         <div class="m_txt">基本资料</div>
@@ -201,7 +203,7 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_select">
                                                 <a href="javascript:;">请选择</a>
-                                                <select name="nationalitieId">
+                                                <select name="nationalityId">
                                                 	<option value="">请选择</option>
                                                 	<c:forEach items="${nationalities }" var="n">
                                                 		<option value="${n.id }">${n.name }</option>
@@ -240,7 +242,7 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_text w300">
                                                 <label>
-                                                    <input value="${member.cardNo }" type="text" name="cardNo">
+                                                    <input value="${member.card }" type="text" name="card">
                                                 </label>
                                             </div>
                                         </div>
@@ -369,11 +371,8 @@ function uploadImg(_this, paramName){
 					</form>
 					
                     <div class="mt20 J_btnGroup md">
-                        <a class="sm abtn orange" href="#">确认修改</a>
+                        <a class="sm abtn orange" href="javascript:myUpdatePerson()">确认修改</a>
                     </div>
-
-
-
 
                     <div class="J_miniTitle mt20">
                         <div class="m_token"></div>
@@ -391,15 +390,29 @@ function uploadImg(_this, paramName){
                             <tbody>
                                 <tr>
                                     <td style="width:120px;">身份证明</td>
-                                    <td><span class="cOrange">未上传</span><span class="ml10 cGreen">(联系客服上传)</span></td>
-                                </tr>
-                                <tr>
-                                    <td>地址证明</td>
-                                    <td><span class="cGreen"><i class="icon">󰅖</i> 已上传</span></td>
+                                    <td>
+                                    	<c:choose>
+                                    		<c:when test="${empty member.imgIDCardA }">
+                                    			<span class="cOrange">未上传</span><span class="ml10 cGreen">(联系客服上传)</span>
+                                    		</c:when>
+                                    		<c:otherwise>
+                                    			<span class="cGreen"><i class="icon">󰅖</i> 已上传</span>
+                                    		</c:otherwise>
+                                    	</c:choose>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>银行证明</td>
-                                    <td><span class="cOrange">未上传</span><span class="ml10 cGreen">(联系客服上传)</span></td>
+                                    <td>
+                                    	<c:choose>
+                                    		<c:when test="${empty member.imgBankCard }">
+                                    			<span class="cOrange">未上传</span><span class="ml10 cGreen">(联系客服上传)</span>
+                                    		</c:when>
+                                    		<c:otherwise>
+                                    			<span class="cGreen"><i class="icon">󰅖</i> 已上传</span>
+                                    		</c:otherwise>
+                                    	</c:choose>
+                                    </td>
                                 </tr>
 
                             </tbody>
@@ -410,7 +423,7 @@ function uploadImg(_this, paramName){
 
                     <div class="J_miniTitle mt20">
                         <div class="m_token"></div>
-                        <div class="m_txt">温馨提示 <span class="fz14">(身份證明與銀行證明審核通過後，方可取款。請閣下及時上載資料，以免影響閣下的取款。)</span></div>
+                        <div class="m_txt">温馨提示 <span class="fz14">(身份证明与银行证明上传审核通过后，方可取款。请您及时上传资料，以免影响您的取款。)</span></div>
                     </div>
 
 
@@ -419,27 +432,23 @@ function uploadImg(_this, paramName){
                             <tbody>
                                 <tr>
                                     <td class="tar">身份证明：</td>
-                                    <td class="c54">可使用居民身份證，護照等可作為有效身份證明使用。</td>
-                                </tr>
-                                <tr>
-                                    <td class="tar">地址证明：</td>
-                                    <td class="c54"></td>
+                                    <td class="c54">可使用居民身份证，护照等可作为有效身份证明使用。</td>
                                 </tr>
                                 <tr>
                                     <td class="tar">银行证明：</td>
-                                    <td class="c54">閣下收款的銀行卡必須為帳戶本人所有，銀行卡號亦須與帳戶登記時一致。</td>
+                                    <td class="c54">您收款的银行卡必须为帐户本人所有，银行卡号亦须与帐户登记时一致。</td>
                                 </tr>
                                 <tr>
                                     <td class="tar">图片格式：</td>
-                                    <td class="c54">支援 jpg\gif\bmp\png\tif 格式，圖片大小需小於 5M。</td>
+                                    <td class="c54">支援 jpg\gif\bmp\png\tif 格式，图片大小需小于 5M。</td>
                                 </tr>
                                 <tr>
                                     <td class="tar">身份证明上传：</td>
-                                    <td class="c54">可分別上載正反面(若有)或者將同一檔中的正反面上載到身份證正、反面到其中一個欄位皆可。</td>
+                                    <td class="c54">可分别上载正反面(若有)或者将同一档中的正反面上载到身份证正、反面到其中一个栏位皆可。</td>
                                 </tr>
                                 <tr>
                                     <td class="tar">银行证明上传：</td>
-                                    <td class="c54">需上載銀行卡正面。</td>
+                                    <td class="c54">需上传银行卡正面。</td>
                                 </tr>
 
                             </tbody>

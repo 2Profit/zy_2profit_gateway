@@ -39,7 +39,7 @@
         for (var attr in obj) {
             jc.tmpUiValue[uiName].prototype[attr] = obj[attr];
         }
-        console.log("jc.ui=" + JSON.stringify(jc.ui));
+        //console.log("jc.ui=" + JSON.stringify(jc.ui));
 
     };
 

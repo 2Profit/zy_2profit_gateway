@@ -61,6 +61,10 @@ public class MainController {
 		List<ConstantEnity> cardTypes = CommonConstants.getCardTypes();
 		model.addAttribute("cardTypes", cardTypes);
 		
+		Member member = HttpUtils.getMember(request);
+		member = memberService.find(member.getId());
+		model.addAttribute("member", member);
+		
 		model.addAttribute(Constants.MENU_NAME, Constants.MENU_NAME_PERSON);
 		
 		return "/account/person";
@@ -76,7 +80,7 @@ public class MainController {
 			String cnName = request.getParameter("cnName");
 			String enName = request.getParameter("enName");
 			String sex = request.getParameter("sex");
-			String nationality = request.getParameter("nationality");
+			String nationalityId = request.getParameter("nationalityId");
 			String cardType = request.getParameter("cardType");
 			String card = request.getParameter("card");
 //			String mobile = request.getParameter("mobile");
@@ -133,9 +137,9 @@ public class MainController {
 			}else{
 				member.setSex(null);
 			}
-			if(StringUtils.isNotBlank(nationality)){
+			if(StringUtils.isNotBlank(nationalityId)){
 				Nationality nationalityBean = new Nationality();
-				nationalityBean.setId(nationality);
+				nationalityBean.setId(nationalityId);
 				member.setNationality(nationalityBean);
 			}else{
 				member.setNationality(null);
@@ -152,14 +156,14 @@ public class MainController {
 			*/
 			
 			if(member.getEmail() == null || !member.getEmail().equals(StringUtils.trim(email))){
-				int ret = memberService.vaildUserByEmail(StringUtils.trim(email));
-				if(ret > 0){
-					ajaxResult.setMsg("电子邮箱已经被注册");
-					return ajaxResult;
+				if(StringUtils.isNotBlank(email)){
+					int ret = memberService.vaildUserByEmail(StringUtils.trim(email));
+					if(ret > 0){
+						ajaxResult.setMsg("电子邮箱已经被注册");
+						return ajaxResult;
+					}
 				}
 				member.setEmail(StringUtils.trim(email));
-			}else{
-				member.setEmail(null);
 			}
 			
 			member.setAddress(StringUtils.trim(address));
