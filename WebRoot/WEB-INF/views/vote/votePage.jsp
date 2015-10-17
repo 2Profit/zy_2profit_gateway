@@ -171,16 +171,35 @@ function showDialog(postId) {
 }
 
 function postReplay(){
-	$.post("${ctx}/vote/doReplay",
-		{'voteTopic.id':$('#currentTopicId').val(),'voteTopicPost.id':globalPostId,
-			'replayContent':$('#replayContent').val()},
-		function(json){
-			if(json.success){
-				window.location.href="${ctx}/vote/index";
-			}else{
-				jc.alert('回复失败');
-			}
-		}
+	if($('#randomCode2').val() == ''){
+		jc.alert('请输入验证码！');return false;
+	}
+	$.post(
+       	"${ctx }/vote/randomValidate",
+       	{randomCode:$('#randomCode2').val()},
+       	function(json) {
+       		if(json.success){
+       			if($('#replayContent').val() ==''){
+       				jc.alert('回复内容不能为空！');return false;
+       			}
+       			$.post("${ctx}/vote/doReplay",
+   					{'voteTopic.id':$('#currentTopicId').val(),'voteTopicPost.id':globalPostId,
+   						'replayContent':$('#replayContent').val()},
+   					function(json){
+   						if(json.success){
+   							window.location.href="${ctx}/vote/index/list";
+   						}else{
+   							if(json.code == '405'){
+   								jc.alert('请登录后再回复！');return false;
+   							}
+   							jc.alert('回复失败');
+   						}
+   					}
+   				);       			
+       		}else{
+       			jc.alert('验证码错误！');return false;
+       		}
+       	}
 	);
 }
 
@@ -197,6 +216,9 @@ function countWords(){
 function refresh() {
     $("#imageCode").attr("src","${ctx}/imageServlet?"+Math.random());
 }
+function refresh2() {
+    $("#imageCode2").attr("src","${ctx}/imageServlet?"+Math.random());
+}
 
 </script>
 
@@ -205,9 +227,8 @@ function refresh() {
 <%@ include file="../common/nice-validator.jsp" %>
 
 <body>
-	<form action="" name="form" id="form" method="post" theme="simple">
 	<%@ include file="../common/head.jsp" %>
-
+	<form action="" name="form" id="form" method="post" theme="simple">
     <div class="bgfff">
         <div class="J_content">
             <div class="plrb20">
@@ -427,7 +448,7 @@ function refresh() {
             </div>
 
                 <div class="J_title less">
-                    <div class="t_txt">更多投票</div>
+                    <div class="t_txt">更多投票  ${sessionScope.login_user.pwd }</div>
                     <div class="t_tips"></div>
                     <div class="t_more"></div>
                 </div>

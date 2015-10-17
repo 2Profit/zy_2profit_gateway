@@ -27,10 +27,10 @@ public class BrokerController {
 	public String brokerList(Model model,BrokerExtInfoDto queryDto,PageModel<BrokerExtInfo> pageModel){
 		
 		//model.addAttribute("page", brokerExtInfoService.queryForPage(queryDto, pageModel));
-		if(StringUtils.isNotBlank(queryDto.getBkName())){
+		/*if(StringUtils.isNotBlank(queryDto.getBkName())){
 			if(queryDto.getBkName().startsWith(","))
 				queryDto.setBkName(queryDto.getBkName().substring(1));
-		}
+		}*/
 		model.addAttribute("page", brokerExtInfoService.queryPage(queryDto, pageModel));
 		model.addAttribute("queryDto", queryDto);
 		

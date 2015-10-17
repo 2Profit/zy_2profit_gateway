@@ -7,7 +7,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -145,7 +144,6 @@ public class VoteController {
 		}
 		
 		queryDto.setVoteTopic(currentTopic);
-		pageModel.setPageSize(2);
 		model.addAttribute("page", voteTopicPostService.queryPage(queryDto, pageModel));
 		model.addAttribute("currentTopic", voteTopicService.getCurrentTopic());
 		model.addAttribute("nextTopic", voteTopicService.getNextTopic());

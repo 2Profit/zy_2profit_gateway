@@ -354,8 +354,8 @@
 
 
 				<div class="J_btnGroup mt20 md">
-					<a class="abtn green" href="#">我要投票</a> <a class="abtn blue"
-						href="#">我要回应</a>
+					<a class="abtn green" href="${ctx }/vote/index/list">我要投票</a> <a class="abtn blue"
+						href="${ctx }/vote/index/list">我要回应</a>
 				</div>
 
 			</div>

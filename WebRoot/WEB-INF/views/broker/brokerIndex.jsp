@@ -126,8 +126,12 @@
 	
 	function query(){
 		
-		var params = "bkName="+$('input[name=bkName]').val();
-		params += "&companyType="+$('a[name=companyType].active').children().val();
+		var params = "companyType="+$('a[name=companyType].active').children().val();
+		
+		if($('input[name=bkName]').val()!='' && $('input[name=bkName]').val()!=','){
+			params += "&bkName="+$('input[name=bkName]').val();
+		}
+		
 		params += "&productType="+$('a[name=productType].active').children().val();
 		params += "&exTypeP="+$('a[name=exchangeType].active').children().val();
 		params += "&orderP="+$('li[name=orderBy_li].active').children('a').children('input').val();
@@ -168,7 +172,7 @@
                 </div>
             </div>
 
-            <div class="J_router"><a href="#">首页</a><span></span><a href="#">经纪商</a></div>
+            <div class="J_router"><a href="${ctx }/index">首页</a><span>&gt;</span><a href="${ctx }/bk/list">经纪商</a></div>
             <div class="J_jjsFilter clearfix">
                 <div class="j_left">
                     <div class="l_item clearfix">
@@ -248,7 +252,7 @@
 
             <div class="J_jjsList mt20">
                 <div class="j_filter clearfix">
-                    <div class="f_txt">经纪商筛选结果 共 <span class="cOrange">${fn:length(brokerExtInfos.list)}</span> 个</div>
+                    <div class="f_txt">经纪商筛选结果 共 <span class="cOrange">${page.totalCount}</span> 个</div>
                     <div class="f_btn">
                         <ul class="clearfix">
                             <li name='orderBy_li' <c:if test="${queryDto.orderP==null || queryDto.orderP == 'company_index' }">class='active'</c:if>>
