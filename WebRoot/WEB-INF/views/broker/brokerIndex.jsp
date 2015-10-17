@@ -15,23 +15,44 @@
 	var slider3T = 0;
 	
 	$(function () {
-	    var points = 2000;
-	    $('.slider1').slider({min: 0, max: points, animate: true, range: true, values: [0, 2000]});
-	    $('.slider2').slider({min: 0, max: points, animate: true, range: true, values: [0, 2000]});
-	    $('.slider3').slider({min: 0, max: points, animate: true, range: true, values: [0, 2000]});
+		
+		//$("#slider").slider('option',{min: 0, max: 500});调整范围，后续加上
+		
+	    var points = 200;
+	    $('.slider1').slider({min: 0, max: points, animate: true, range: true, values: [0, 200]});
+	    $('.slider2').slider({min: 0, max: points, animate: true, range: true, values: [0, 300]});
+	    $('.slider3').slider({min: 0, max: points, animate: true, range: true, values: [0, 200]});
 	    
 	    $('.slider1').slider('pips', { });
 	    $('.slider2').slider('pips', { });
 	    $('.slider3').slider('pips', { });
+	    
+	    if('${queryDto.slider1F}'!='' && parseInt('${queryDto.slider1F}')!=0){
+	    	$(".slider1").slider('values',0, parseInt('${queryDto.slider1F}'));
+	    } 
+	    if('${queryDto.slider1T}'!='' && parseInt('${queryDto.slider1T}')!=0){
+	    	$(".slider1").slider('values',1, parseInt('${queryDto.slider1T}'));
+	    } 
+	    if('${queryDto.slider2F}'!='' && parseInt('${queryDto.slider2F}')!=0){
+	    	$(".slider2").slider('values',0, parseInt('${queryDto.slider2F}'));
+	    } 
+	    if('${queryDto.slider2T}'!='' && parseInt('${queryDto.slider2T}')!=0){
+	    	$(".slider2").slider('values',1, parseInt('${queryDto.slider2T}'));
+	    } 
+	    if('${queryDto.slider3F}'!='' && parseInt('${queryDto.slider3F}')!=0){
+	    	$(".slider3").slider('values',0, parseInt('${queryDto.slider3F}'));
+	    } 
+	    if('${queryDto.slider3T}'!='' && parseInt('${queryDto.slider3T}')!=0){
+	    	$(".slider3").slider('values',1, parseInt('${queryDto.slider3T}'));
+	    } 
 	    
 	    $(".slider1").slider({
 	        stop: function (event, ui) {
 	        	if($('a[name=productType].active').children().val()==''){
 	        		jc.alert('请选择产品！');return false;
 	        	}
-	        	alert(ui.values[0] + "," + ui.values[1]);
-	        	slide1F = ui.values[0];
-	        	slide1T = ui.values[1];
+	        	slider1F = ui.values[0];
+	        	slider1T = ui.values[1];
 	        	query();
 	        }
 	    });
@@ -40,9 +61,8 @@
 	        	if($('a[name=productType].active').children().val()==''){
 	        		jc.alert('请选择产品！');return false;
 	        	}
-	        	alert(ui.values[0] + "," + ui.values[1]);
-	        	slide2F = ui.values[0];
-	        	slide2T = ui.values[1];
+	        	slider2F = ui.values[0];
+	        	slider2T = ui.values[1];
 	        	query();
 	        }
 	    });
@@ -51,9 +71,8 @@
 	        	if($('a[name=productType].active').children().val()==''){
 	        		jc.alert('请选择产品！');return false;
 	        	}
-	        	alert(ui.values[0] + "," + ui.values[1]);
-	        	slide3F = ui.values[0];
-	        	slide3T = ui.values[1];
+	        	slider3F = ui.values[0];
+	        	slider3T = ui.values[1];
 	        	query();
 	        }
 	    });
@@ -88,6 +107,17 @@
 	    	query();
 	    });
 	    
+	    
+	    $('input[name=isEaSupport]').click(function(){
+	    	query();
+	    });
+	    $('input[name=isUnionpay]').click(function(){
+	    	query();
+	    });
+	    $('input[name=isInOutFree]').click(function(){
+	    	query();
+	    });
+	    
 	    $('#search_href').click(function(event){
 	    	event.preventDefault();
 	    	query();
@@ -100,7 +130,14 @@
 		params += "&companyType="+$('a[name=companyType].active').children().val();
 		params += "&productType="+$('a[name=productType].active').children().val();
 		params += "&exTypeP="+$('a[name=exchangeType].active').children().val();
-		params += "&orderP="+$('li[name=orderBy_li].active').children('input').val();
+		params += "&orderP="+$('li[name=orderBy_li].active').children('a').children('input').val();
+		
+		if($('input[name=isEaSupport]').is(':checked'))
+			params += "&isEaSupport=1";
+		if($('input[name=isUnionpay]').is(':checked'))
+			params += "&isUnionpay=1";
+		if($('input[name=isInOutFree]').is(':checked'))
+			params += "&isInOutFree=1";
 		
 		params += "&slider1F="+slider1F+"&slider1T="+slider1T;
 		params += "&slider2F="+slider2F+"&slider2T="+slider2T;
@@ -194,15 +231,15 @@
                 <div class="j_right">
 
                     <div class="c_title">最低产品点差</div>
-                    <div class="c_tips">0 - 2000</div>
+                    <div class="c_tips">0 - 200</div>
                     <div class="wrapper"><div class="slider1"></div></div>
 
                     <div class="c_title">杠杆比列</div>
-                    <div class="c_tips">1:1 - 3000:1</div>
+                    <div class="c_tips">1:1 - 200:1</div>
                     <div class="wrapper"><div class="slider2"></div></div>
 
                     <div class="c_title">开仓保证金</div>
-                    <div class="c_tips">0 - 2000</div>
+                    <div class="c_tips">0 - 200</div>
                     <div class="wrapper"><div class="slider3"></div></div>
 
                 </div>
@@ -214,23 +251,26 @@
                     <div class="f_txt">经纪商筛选结果 共 <span class="cOrange">${fn:length(brokerExtInfos.list)}</span> 个</div>
                     <div class="f_btn">
                         <ul class="clearfix">
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'companyIndex' }">class='active'</c:if>>
-                            	<a name='orderBy_href' href="#">综合推荐<input type="hidden" value="companyIndex"> <i class="icon">󰄓</i></a>
+                            <li name='orderBy_li' <c:if test="${queryDto.orderP==null || queryDto.orderP == 'company_index' }">class='active'</c:if>>
+                            	<a name='orderBy_href' href="#">综合推荐<input type="hidden" value="company_index"> <i class="icon">󰄓</i></a>
                             </li>
-                            <li <c:if test="${queryDto.orderP == 'companyIndex'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">高返佣推荐 <input type="hidden" value=""><i class="icon">󰄓</i></a>
+                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_llg'}">class="active"</c:if>>
+                            	<a name='orderBy_href' href="#">黄金返佣推荐 <input type="hidden" value="commission_llg"><i class="icon">󰄓</i></a>
                             </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commissionEurope'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">欧美返佣 <input type="hidden" value="commissionEurope"><i class="icon">󰄓</i></a>
+                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_lls'}">class="active"</c:if>>
+                            	<a name='orderBy_href' href="#">白银返佣 <input type="hidden" value="commission_lls"><i class="icon">󰄓</i></a>
                             </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commissionGold'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">黄金返佣<input type="hidden" value="commissionGold"><i class="icon">󰄓</i></a>
+                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_hkg'}">class="active"</c:if>>
+                            	<a name='orderBy_href' href="#">港金返佣<input type="hidden" value="commission_hkg"><i class="icon">󰄓</i></a>
                             </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commissionSilver'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">白银返佣 <input type="hidden" value="commissionSilver"><i class="icon">󰄓</i></a>
+                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_lkg'}">class="active"</c:if>>
+                            	<a name='orderBy_href' href="#">人民币公斤返佣 <input type="hidden" value="commission_lkg"><i class="icon">󰄓</i></a>
                             </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commissionOil'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">原油返佣 <input type="hidden" value="commissionOil"><i class="icon">󰄓</i></a>
+                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_wh'}">class="active"</c:if>>
+                            	<a name='orderBy_href' href="#">外汇返佣 <input type="hidden" value="commission_wh"><i class="icon">󰄓</i></a>
+                            </li>
+                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_yy'}">class="active"</c:if>>
+                            	<a name='orderBy_href' href="#">原油返佣 <input type="hidden" value="commission_yy"><i class="icon">󰄓</i></a>
                             </li>
                         </ul>
                     </div>
