@@ -245,7 +245,7 @@ function sendCode(_this){
                                         <td>
                                             <div class="J_toolsBar">
                                                 <div class="t_check">
-                                                    <label><input type="checkbox" checked="checked" disabled="disabled"/>我已阅读e桶金<a class="alink blue" target="_blank" href="${ctx }/register/agree">用户协议</a></label>
+                                                    <label><input type="checkbox" checked="checked" disabled="disabled"/>我已阅读至盈网<a class="alink blue" target="_blank" href="${ctx }/register/agree">用户协议</a></label>
                                                 </div>
                                             </div>
                                         </td>
@@ -273,7 +273,7 @@ function sendCode(_this){
                 <div class="fr c_430">
                     <div class="pau">
                         <div class="J_moreLogin">
-                            <div class="m_txt">直接使用社交帐号登录e桶金</div>
+                            <div class="m_txt">直接使用社交帐号登录至盈网</div>
                             <%-- <div class="m_item">
                                 <a class="abtn blue" href="#"><i><img src="${ctx }/static/images/i_2.png" /></i><span>使用QQ帐号登录</span></a>
                             </div> --%>

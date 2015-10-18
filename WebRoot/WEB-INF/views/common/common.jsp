@@ -11,7 +11,7 @@
 
 <!-- 设计：黄健聪 | 重构：黄健聪 | 创建：2015/05/09 | 更新：2015/05/10 | -->
 
-<title>e桶金</title>
+<title>至盈网</title>
 
 <link href="${ctx }/static/css/desktop.css" rel="stylesheet" />
 <link href="${ctx }/static/css/jquery-ui.min.css" rel="stylesheet" />

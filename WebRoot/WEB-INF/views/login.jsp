@@ -176,10 +176,10 @@ function mySubmit(){
                 <div class="fr c_430">
                     <div class="pau">
                         <div class="J_moreLogin">
-                            <div class="m_txt">还沒有e桶金帐号?</div>
+                            <div class="m_txt">还沒有至盈网帐号?</div>
                             <div class="m_item tac">
                                 <a class="abtn orange" href="${ctx }/register">
-                                    <span>马上注册e桶金帐号</span>
+                                    <span>马上注册至盈网帐号</span>
                                 </a>
                             </div>
                         </div>
