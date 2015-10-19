@@ -32,6 +32,11 @@
 var ctx = '${ctx}';
 </script>
 
+<style>
+body{
+	height: 100%;
+}
+</style>
 <!--[if IE 6 ]><script type="text/javascript">window.location.href="${ctx }/static/IE6/index.htm"</script><![endif]-->
 <!--[if lt IE 9 ]><script type="text/javascript" src="${ctx }/static/js/json2.min.js"></script><![endif]-->
 

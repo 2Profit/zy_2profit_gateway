@@ -11,7 +11,7 @@
 
 <%@ include file="../common/nice-validator.jsp" %>
 
-<script type="text/javascript" src="${ctx }/static/plugins/dmuploader/dmuploader.js"></script>
+<script type="text/javascript" src="${ctx }/static/plugins/dmuploader/dmuploader.min.js"></script>
 
 <script type="text/javascript">
 
@@ -25,7 +25,7 @@ $(function(){
 	//除了证件类型、证件号、姓名中英、手机号码 银行资料 不能改
 	$('#myForm input').each(function(idx, obj){
 		var name = $(obj).attr('name');
-		if($(obj).val() && name != 'address' && name != 'sex' && name != 'email'){
+		if($(obj).val() && name != 'nickName' && name != 'address' && name != 'sex' && name != 'email'){
 			$(obj).attr('disabled', 'disabled');
 		}
 	});
@@ -36,16 +36,22 @@ $(function(){
 	
 	$('#myForm').validator({
 		isShowMsg : false,
+		rules : {
+			nickName : [/^[0-9a-zA-Z\u0391-\uFFE5]{2,8}$/, '昵称长度2到8个字符，支持汉子、英文及数字'],
+			card : [/[0-9a-zA-Z]+/, '证件号有误'],
+			bankcard : [/^\d{16}|\d{19}$/, '银行账号有误']
+		},
 		fields : {
 			cnName : '中文姓名: length[~64, true]',
-			enName : '英文姓名: length[~64, true]',
+			nickName : '昵称: nickName;',
 			card : '证件号码: length[~64]',
 			mobile : '手机号码: required;mobile;',
 			email : '电子邮箱: email;',
+			card : 'card',
 			address : '联系地址: length[~512, true]',
-			bankAccount : '银行账户: length[~64, true]',
-			bankCardNum : '银行账号: length[~64, true]',
-			bankAddress : '银行地址: length[~512, true]'
+			bankAccount : '银行名称: length[~64, true]',
+			bankCardNum : '银行账号: bankcard',
+			bankAddress : '账户持有人姓名: length[~512, true]'
 		},
 		valid : function(form){
 			$(form).ajaxSubmit({
@@ -67,23 +73,9 @@ $(function(){
 		}
 	});
 	
-});
-
-function myUpdatePerson(){
-	$('#myForm').submit();
-}
-
-function uploadImg(_this, paramName){
-
-	if($('#uploadImg').data('dmUploader')){
-		$('#uploadImg').data('dmUploader', null);
-	}
 	//上传文件
 	$('#uploadImg').dmUploader({
 		url : '${ctx}/main/ajax/upload/img',
-		extraData : {
-			'paramName' : paramName
-		},
 		maxFileSize : 5*1024*1024,
 		maxFiles : 1,
 		extFilter : 'jpg;png;gif;bmp;tif',
@@ -96,8 +88,46 @@ function uploadImg(_this, paramName){
 		},
 		onUploadSuccess : function(id, result){
 			if(result.success){
-				//$('img[data-param-name="'+paramName+'"]').attr('src', ctx + result.data);
-				window.location.reload();
+				var paramName = $('#paramName').val();
+				var title = '上传图片';
+				if(paramName == 'imgIDCardA'){
+					title = '上传身份证明';
+				}else if(paramName == 'imgBankCard'){
+					title = '上传银行证明';
+				}
+				var imgUrl = result.data;
+				$('#imgDiv').find('img[data-param-name="img"]').attr('src', ctx + imgUrl);
+				layer.open({
+					type : 1,
+					title : title,
+					content : $('#imgDiv'),
+					area : ['400px', '320px'],
+					btn : ['确定', '取消'],
+					yes: function(index, layero){
+				        //保存
+				        $.ajax({
+				        	url : '${ctx}/main/ajax/save/upload_img',
+				        	data : {
+				        		imgUrl : imgUrl,
+				        		paramName : paramName,
+				        	},
+				        	async : false,
+				        	success : function(re){
+				        		console.log(re);
+				        		if(re.success){
+				        			layer.alert('上传成功', function(){
+				        				window.location.reload();
+				        			});
+				        		}else{
+				        			jc.alert(re.msg);
+				        		}
+				        	}
+				        });
+				    },cancel: function(index){
+				        
+				    }
+				});
+				
 			}else{
 				jc.alert(result.msg);
 			}
@@ -110,7 +140,27 @@ function uploadImg(_this, paramName){
 		}
 	});
 	
+});
+
+function myUpdatePerson(){
+	$('#myForm').submit();
+}
+
+function uploadImg(_this, paramName){
+	
+	$('#paramName').val(paramName);
 	$('#uploadImg input[type="file"]').click();
+}
+
+function showUploadImg(title, imgUrl){
+	$('#imgDiv').find('img[data-param-name="img"]').attr('src', ctx + imgUrl);
+	layer.open({
+		type : 1,
+		shadeClose : true,
+		title : title,
+		content : $('#imgDiv'),
+		area : ['400px', '300px'],
+	});
 }
 
 </script>
@@ -147,9 +197,9 @@ function uploadImg(_this, paramName){
                         <table style="width: 100%">
                             <tbody>
                                 <tr>
-                                    <td style="width: 60px;" class="bgf9">
+                                    <td style="width: 80px;" class="bgf9">
                                         <div class="J_toolsBar">
-                                            <div class="t_label right">姓名(中)</div>
+                                            <div class="t_label right">姓名</div>
                                         </div>
                                     </td>
                                     <td colspan="2">
@@ -161,16 +211,16 @@ function uploadImg(_this, paramName){
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="bgf9">
+                                    <td class="bgf9" style="width: 80px;">
                                         <div class="J_toolsBar">
-                                            <div class="t_label right">姓名(英)</div>
+                                            <div class="t_label right">昵称</div>
                                         </div>
                                     </td>
                                     <td colspan="2">
                                         <div class="J_toolsBar">
-                                            <div class="ml10 t_text w300">
+                                            <div class="ml10 t_text w200">
                                                 <label>
-                                                    <input value="${member.enName }" type="text" name="enName">
+                                                    <input value="${member.nickName }" type="text" name="nickName">
                                                 </label>
                                             </div>
                                         </div>
@@ -196,7 +246,7 @@ function uploadImg(_this, paramName){
                                     </td>
                                     <td class="bgf9">
                                         <div class="J_toolsBar">
-                                            <div class="t_label right">国籍</div>
+                                            <div class="t_label right">国家/地区</div>
                                         </div>
                                     </td>
                                     <td>
@@ -240,9 +290,9 @@ function uploadImg(_this, paramName){
                                     </td>
                                     <td colspan="2">
                                         <div class="J_toolsBar">
-                                            <div class="ml10 t_text w300">
+                                            <div class="ml10 t_text w200">
                                                 <label>
-                                                    <input value="${member.card }" type="text" name="card">
+                                                    <input value="${card }" type="text" name="card">
                                                 </label>
                                             </div>
                                         </div>
@@ -256,7 +306,7 @@ function uploadImg(_this, paramName){
                                         <div class="J_toolsBar">
                                             <div class="ml10 t_text w180">
                                                 <label>
-                                                    <input value="${member.mobile }" disabled="disabled" type="text" name="mobile">
+                                                    <input value="${mobile }" disabled="disabled" type="text" name="mobile">
                                                 </label>
                                             </div>
                                         </div>
@@ -316,9 +366,9 @@ function uploadImg(_this, paramName){
 						<table style="width: 100%">
                             <tbody>
                                 <tr>
-                                    <td style="width: 60px;" class="bgf9">
+                                    <td style="width: 100px;" class="bgf9">
                                         <div class="J_toolsBar">
-                                            <div class="t_label right">银行账户</div>
+                                            <div class="t_label right">银行名称</div>
                                         </div>
                                     </td>
                                     <td colspan="4">
@@ -330,7 +380,7 @@ function uploadImg(_this, paramName){
                                             </div>
                                         </div>
                                     </td>
-                                    <td style="width: 60px;" class="bgf9">
+                                    <td style="width: 100px;" class="bgf9">
                                         <div class="J_toolsBar">
                                             <div class="t_label right">银行账号</div>
                                         </div>
@@ -347,14 +397,14 @@ function uploadImg(_this, paramName){
                                 </tr>
 								
 								<tr>
-                                    <td style="width: 60px;" class="bgf9">
+                                    <td style="width: 100px;" class="bgf9">
                                         <div class="J_toolsBar">
-                                            <div class="t_label right">银行地址</div>
+                                            <div class="t_label right">账户持有人姓名</div>
                                         </div>
                                     </td>
                                     <td colspan="9">
                                         <div class="J_toolsBar">
-                                            <div class="ml10 t_text w830">
+                                            <div class="ml10 t_text w300">
                                                 <label>
                                                     <input value="${member.memBankInfo.bankAddress }" type="text" name="bankAddress">
                                                 </label>
@@ -378,7 +428,10 @@ function uploadImg(_this, paramName){
                         <div class="m_token"></div>
                         <div class="m_txt">资料上传</div>
                     </div>
-
+					<div id="uploadImg" style="display: none;">
+						<input type="hidden" id="paramName" value="">
+						<input type="file" name="imgFile" multiple="multiple" style="opacity: .0;">
+					</div>
                     <div class="J_table mt10">
                         <table>
                             <thead>
@@ -392,25 +445,54 @@ function uploadImg(_this, paramName){
                                     <td style="width:120px;">身份证明</td>
                                     <td>
                                     	<c:choose>
-                                    		<c:when test="${empty member.imgIDCardA }">
-                                    			<span class="cOrange">未上传</span><span class="ml10 cGreen">(联系客服上传)</span>
+                                    		<c:when test="${empty member.imgIDCardStatus or member.imgIDCardStatus eq 0 }">
+                                    			<span class="cOrange">未上传</span>
+                                    		</c:when>
+                                    		<c:when test="${member.imgIDCardStatus eq 1 }">
+                                    			<span class="cGreen">待审核</span>
+                                    		</c:when>
+                                    		<c:when test="${member.imgIDCardStatus eq 3 }">
+                                    			<span class="cOrange">审核未通过（请联系客服）</span>
                                     		</c:when>
                                     		<c:otherwise>
                                     			<span class="cGreen"><i class="icon">󰅖</i> 已上传</span>
                                     		</c:otherwise>
                                     	</c:choose>
+                                    	<c:choose>
+                                    		<c:when test="${empty member.imgIDCardStatus or member.imgIDCardStatus eq 0 or member.imgIDCardStatus eq 3 }">
+                                    			<a class="abtn orange" href="javascript:void(0)" onclick="uploadImg(this, 'imgIDCardA')">立即上传</a>
+                                    		</c:when>
+                                    		<c:when test="${not empty member.imgIDCardStatus and member.imgIDCardStatus ne 0 }">
+                                    			<a class="abtn orange" href="javascript:void(0)" onclick="showUploadImg('身份证明', '${member.imgIDCardA}')">查看</a>
+                                    		</c:when>
+                                    	</c:choose>
+                                    	
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>银行证明</td>
                                     <td>
                                     	<c:choose>
-                                    		<c:when test="${empty member.imgBankCard }">
-                                    			<span class="cOrange">未上传</span><span class="ml10 cGreen">(联系客服上传)</span>
+                                    		<c:when test="${empty member.imgBackCardStatus or member.imgBackCardStatus eq 0 }">
+                                    			<span class="cOrange">未上传</span>
+                                    		</c:when>
+                                    		<c:when test="${member.imgBackCardStatus eq 1 }">
+                                    			<span class="cGreen">待审核</span>
+                                    		</c:when>
+                                    		<c:when test="${member.imgBackCardStatus eq 3 }">
+                                    			<span class="cOrange">审核未通过（请联系客服）</span>
                                     		</c:when>
                                     		<c:otherwise>
                                     			<span class="cGreen"><i class="icon">󰅖</i> 已上传</span>
                                     		</c:otherwise>
+                                    	</c:choose>
+                                    	<c:choose>
+                                    		<c:when test="${empty member.imgBackCardStatus or member.imgBackCardStatus eq 0 or member.imgBackCardStatus eq 3 }">
+                                    			<a class="abtn orange" href="javascript:void(0)" onclick="uploadImg(this, 'imgBankCard')">立即上传</a>
+                                    		</c:when>
+                                    		<c:when test="${not empty member.imgBackCardStatus and member.imgBackCardStatus ne 0 }">
+                                    			<a class="abtn orange" href="javascript:void(0)" onclick="showUploadImg('银行证明', '${member.imgBankCard}')">查看</a>
+                                    		</c:when>
                                     	</c:choose>
                                     </td>
                                 </tr>
@@ -423,16 +505,16 @@ function uploadImg(_this, paramName){
 
                     <div class="J_miniTitle mt20">
                         <div class="m_token"></div>
-                        <div class="m_txt">温馨提示 <span class="fz14">(身份证明与银行证明上传审核通过后，方可取款。请您及时上传资料，以免影响您的取款。)</span></div>
+                        <div class="m_txt">温馨提示 <span class="fz14">(身份证明与银行证明上传审核通过后，方可返佣。请您及时上传资料，以免影响您的返佣。)</span></div>
                     </div>
 
 
                     <div class="lh30">
-                        <table>
+                        <table class="fz14">
                             <tbody>
                                 <tr>
                                     <td class="tar">身份证明：</td>
-                                    <td class="c54">可使用居民身份证，护照等可作为有效身份证明使用。</td>
+                                    <td class="c54">可使用中国居民身份证可作为有效身份证明使用。</td>
                                 </tr>
                                 <tr>
                                     <td class="tar">银行证明：</td>
@@ -444,7 +526,7 @@ function uploadImg(_this, paramName){
                                 </tr>
                                 <tr>
                                     <td class="tar">身份证明上传：</td>
-                                    <td class="c54">可分别上载正反面(若有)或者将同一档中的正反面上载到身份证正、反面到其中一个栏位皆可。</td>
+                                    <td class="c54">需上传身份证的正面。</td>
                                 </tr>
                                 <tr>
                                     <td class="tar">银行证明上传：</td>
@@ -460,7 +542,20 @@ function uploadImg(_this, paramName){
             
         </div>
     </div>
-
+	
+	<div id="imgDiv" style="display: none;">
+		<div class="J_picBox clearfix" style="margin-top: 10px;margin-left: 30px;">
+			<div class="p_item">
+                 <div class="i_inner">
+                     <div class="i_pic">
+                     	
+                       	<img src="" data-param-name="img">
+                     	
+                     </div>
+                 </div>
+             </div>
+		</div>
+	</div>
     
 	<%@ include file="../common/help.jsp" %>
 	<%@ include file="../common/foot.jsp" %>

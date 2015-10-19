@@ -32,7 +32,7 @@ $(function(){
              </div>
          </div>
          <div class="u_right">
-             <div class="r_name" style="height: 20px;">${sessionScope.login_user.nickName }</div>
+             <div class="r_name" style="">${sessionScope.login_user.nickName }</div>
              <div class="r_info">虚拟币：
              	<span class="cOrange">
              		<c:choose>

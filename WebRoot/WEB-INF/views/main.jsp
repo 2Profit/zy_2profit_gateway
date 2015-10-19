@@ -44,7 +44,7 @@
                                     <td><b>帐号：</b></td>
                                     <td>${loginUser.mobile }</td>
                                     <td><b>昵称：</b></td>
-                                    <td>${loginUser.userName }</td>
+                                    <td>${loginUser.nickName }</td>
                                     <td><b>性别：</b></td>
                                     <td>
                                     	<c:choose>

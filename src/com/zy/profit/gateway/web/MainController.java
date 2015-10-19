@@ -63,6 +63,22 @@ public class MainController {
 		
 		Member member = HttpUtils.getMember(request);
 		member = memberService.find(member.getId());
+		
+		//手机号码  证件号带***
+		String mobile = member.getMobile();
+		if(StringUtils.isNotBlank(mobile)){
+			mobile = mobile.substring(0, 3) + "****" + mobile.substring(7);
+		}
+		model.addAttribute("mobile", mobile);
+		
+		String card = member.getCard();
+		if(StringUtils.isNotBlank(card)){
+			if(card.length() > 14){
+				card = card.substring(0, 8) + "******" + card.substring(14);
+			}
+		}
+		model.addAttribute("card", card);
+		
 		model.addAttribute("member", member);
 		
 		model.addAttribute(Constants.MENU_NAME, Constants.MENU_NAME_PERSON);
@@ -77,6 +93,9 @@ public class MainController {
 		ajaxResult.setSuccess(false);
 		
 		try {
+			
+			String nickName = request.getParameter("nickName");
+			
 			String cnName = request.getParameter("cnName");
 			String enName = request.getParameter("enName");
 			String sex = request.getParameter("sex");
@@ -145,6 +164,8 @@ public class MainController {
 				member.setNationality(null);
 			}
 			
+			member.setNickName(nickName);
+			
 			/*if(!member.getMobile().equals(StringUtils.trim(mobile))){
 				int ret = memberService.vaildUserByMobile(StringUtils.trim(mobile));
 				if(ret > 0){
@@ -176,6 +197,48 @@ public class MainController {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		return ajaxResult;
+	}
+	
+	@RequestMapping("/dialog/upload_img")
+	public String dialogUploadImg(HttpServletRequest request){
+		return "/account/dialog/upload_img";
+	}
+	
+	@RequestMapping("/ajax/save/upload_img")
+	@ResponseBody
+	public AjaxResult ajaxSaveUploadImg(HttpServletRequest request){
+		AjaxResult ajaxResult = new AjaxResult();
+		ajaxResult.setSuccess(false);
+		
+		try {
+			
+			String imgUrl = request.getParameter("imgUrl");
+			String paramName = request.getParameter("paramName");
+			
+			Member member = HttpUtils.getMember(request);
+			member = memberService.find(member.getId());
+			
+			if(StringUtils.isNotBlank(imgUrl)){
+				imgUrl = imgUrl.replaceAll("\\\\", "/");
+			}
+			
+			if("imgIDCardA".equals(paramName)){
+				member.setImgIDCardA(imgUrl);
+				member.setImgIDCardStatus(Member.IMG_STATUS_DSH);
+			}else if("imgBankCard".equals(paramName)){
+				member.setImgBankCard(imgUrl);
+				member.setImgBackCardStatus(Member.IMG_STATUS_DSH);
+			}
+			//TO DO  保存提案
+			memberService.update(member);
+			
+			ajaxResult.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setMsg("上传失败");
 		}
 		
 		return ajaxResult;
