@@ -165,7 +165,7 @@
 
             <div class="J_jjsSearch clearfix">
                 <div class="j_left">
-                    <input placeholder="经纪商 / 活动" type="text" name="bkName" value="${queryDto.bkName }"/>
+                    <input placeholder="经纪商 名称（中文/英文）" type="text" name="bkName" value="${queryDto.bkName }"/>
                 </div>
                 <div class="j_right">
                     <a class="abtn green" id="search_href" href=''>搜索</a>

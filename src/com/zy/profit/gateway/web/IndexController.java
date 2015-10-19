@@ -22,10 +22,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.zy.base.entity.Notice;
+import com.zy.base.service.NoticeService;
 import com.zy.broker.service.BrokerExtInfoService;
+import com.zy.common.entity.BaseEntity;
+import com.zy.common.entity.PageModel;
 import com.zy.common.util.AjaxResult;
 import com.zy.common.util.BaseUtils;
-import com.zy.common.util.DateUtils;
 import com.zy.member.entity.Member;
 import com.zy.member.entity.MemberCode;
 import com.zy.member.service.MemberCodeService;
@@ -59,6 +62,8 @@ public class IndexController {
 	private BrokerExtInfoService brokerExtInfoService;
 	@Autowired
 	private VoteTopicPostService voteTopicPostService;
+	@Autowired
+	private NoticeService noticeService;
 	
 	
 	@RequestMapping("/index")
@@ -73,6 +78,12 @@ public class IndexController {
 			}
 		}
 		
+		Notice queryNotice = new Notice();
+		queryNotice.setDeleteFlag(BaseEntity.DELETE_FLAG_NORMAL);
+		queryNotice.setOrderByParam(Notice.PROP_START_DATE);
+		List<Notice> noticeList = noticeService.queryForPage(queryNotice, new PageModel<Notice>(6)).getList();
+		
+		model.addAttribute("notices", noticeList);
 		model.addAttribute("currentTopic", currentTopic);
 		model.addAttribute("brokers", brokerExtInfoService.findIndexPageBrokers());
 		

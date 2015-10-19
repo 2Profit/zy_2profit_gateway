@@ -60,7 +60,12 @@
                         </tr>
                         <tr>
                             <td class="t_title">会员/监管机构</td>
-                            <td colspan="3">黃金、白銀、外匯</td>
+		                    <td>
+		                       	<c:if test="${broker.exchangeNo1!=null && broker.exchangeNo1!='' }">金银业贸易场, </c:if>
+		                       	<c:if test="${broker.exchangeNo2!=null && broker.exchangeNo2!='' }">证监会, </c:if>
+		                        <c:if test="${broker.exchangeNo3!=null && broker.exchangeNo3!='' }">英国FCA, </c:if>
+		                        <c:if test="${broker.exchangeNo4!=null && broker.exchangeNo4!='' }">日本FSA, </c:if>                    
+		                    </td>
                         </tr>
                     </tbody>
                 </table>

@@ -60,9 +60,20 @@
 
 	<div data-ui="indexMask" class="J_indexMask"></div>
 
-	<div data-ui="banner" class="J_banner">
-		<div class="b_background"></div>
-	</div>
+    <div data-ui="silder" class="J_silder">
+        <div class="s_main">
+            <div class="m_item" style="background-image: url(${ctx}/static/tmp/b1.png)"><a href="#"></a></div>
+            <div class="m_item" style="background-image: url(${ctx}/static/tmp/b2.png)"><a href="#"></a></div>
+            <div class="m_item" style="background-image: url(${ctx}/static/tmp/b3.png)"><a href="#"></a></div>
+        </div>
+        <div class="s_controller"></div>
+        <div class="s_step">
+            <a class="s_btn b_left" href="javascript:;">
+                <img src="${ctx}/static/images/b_left.png" /></a>
+            <a class="s_btn b_right" href="javascript:;">
+                <img src="${ctx}/static/images/b_right.png" /></a>
+        </div>
+    </div>
 
 	<div class="J_content mt-260 bgfff hasShadow">
 		<div class="fl c_760">
@@ -75,29 +86,57 @@
 					</div>
 				</div>
 
+                <div class="J_jjsHeader clearfix">
+                    <div class="j_left">
+                        <div class="l_txt">比较超过××间经纪商<br/>  为你省时省心省力</div>
+                    </div>
+                    <div class="j_right">
+                        <div class="r_top clearfix">
+                            <div class="t_left">立即寻找你想要的经纪商</div>
+                            <div class="t_right">
+                                <a class="abtn orange" href="${ctx }/bk/list">了解更多</a>
+                            </div>
+                        </div>
+                        <div class="r_bottom clearfix">
+                            <a class="abtn blue" href="${ctx }/bk/list">最低开户入金?</a>
+                            <a class="abtn blue" href="${ctx }/bk/list">出入金免手续费?</a>
+                            <a class="abtn blue" href="${ctx }/bk/list">最大的杠杆?</a>
+                        </div>
+                    </div>
+                </div>
+
 				<div class="J_jjsList">
 					<div class="j_inner">
 						<div class="i_main">
 							<c:forEach items="${brokers }" var="broker">
 								<div class="m_item">
 									<div class="i_pic">
-										<img width="54" height="54" src="/${broker.imageUrl }" />
+										<img width="100" height="33" src="/${broker.imageUrl }" />
 									</div>
 									<div class="i_info">
-										<div class="i_name">${broker.cnName }${broker.enName }</div>
-										<div class="i_abstract">
-											<div class="a_left">
-												<div class="l_txt">评定1</div>
-												<div class="l_prog">
-													<div style="width: 88%;" class="p_bar"></div>
-												</div>
-												<div class="ml10 l_txt">评定2</div>
-												<div class="l_prog">
-													<div style="width: 88%;" class="p_bar"></div>
-												</div>
-											</div>
-											<div class="a_right">5分钟前</div>
-										</div>
+	                                    <div class="i_left">
+	                                        <div class="l_name">${broker.cnName }/${broker.enName }</div>
+	                                        <div class="l_txt">
+	                                        	<c:choose>
+	                                        		<c:when test="${broker.exchangeNo1!=null && broker.exchangeNo1!='' }">金银业贸易场(${broker.exchangeNo1})</c:when>
+	                                        		<c:when test="${broker.exchangeNo2!=null && broker.exchangeNo2!='' }">证监会(${broker.exchangeNo2})</c:when>
+	                                        		<c:when test="${broker.exchangeNo3!=null && broker.exchangeNo3!='' }">英国FCA(${broker.exchangeNo3})</c:when>
+	                                        		<c:when test="${broker.exchangeNo4!=null && broker.exchangeNo4!='' }">日本FSA(${broker.exchangeNo4})</c:when>
+	                                        		<c:otherwise>&nbsp;</c:otherwise>
+	                                        	</c:choose>
+	                                        </div>
+	                                        <div class="l_info">伦敦金点差:<span class="cOrange">${broker.pointDiffMinLlg }</span>  
+	                                        					伦敦银点差:<span class="cOrange">${broker.pointDiffMinLls }</span>  
+	                                        					港金点差:<span class="cOrange">${broker.pointDiffMinHkg }</span>  
+	                                        					人民币公斤点差:<span class="cOrange">${broker.pointDiffMinLkg }</span>
+	                                        </div>
+	                                    </div>
+	                                    <div class="i_right">
+	                                        <div class="r_txt">至盈推荐</div>
+	                                        <div class="r_btn">
+	                                            <a class="abtn orange" href="${broker.commissionUrl }">马上开户</a>
+	                                        </div>
+	                                    </div>									
 									</div>
 								</div>
 							</c:forEach>
@@ -112,149 +151,56 @@
 		<div class="fr c_430">
 			<div class="pau">
 				<div class="J_title">
-					<div class="t_txt">晒单</div>
-					<div class="t_tips">实时更新最新动态</div>
-					<div class="t_more">
-						<a href="#">更多&nbsp;&gt;</a>
-					</div>
-				</div>
+                    <div class="t_txt">行情</div>
+                    <div class="t_tips">实时更新最新动态</div>
+                    <div class="t_more"><a href="#">更多&nbsp;&gt;</a></div>
+                </div>
 
-				<div class="J_sdList">
-					<div class="s_inner">
-						<div class="i_main">
+                <div data-ui="market" class="J_market">
+                    <div class="m_table mt10">
+                        <table>
+                            <tbody>
+                                <tr class="up">
+                                    <td>伦敦金/美元</td>
+                                    <td><i class="icon">󰄓</i></td>
+                                    <td>1172.19</td>
+                                    <td>-10.26</td>
+                                </tr>
+                                <tr class="down">
+                                    <td>伦敦金/美元</td>
+                                    <td><i class="icon">󰄑</i></td>
+                                    <td>1172.19</td>
+                                    <td>-10.26</td>
+                                </tr>
+                                <tr class="down">
+                                    <td>美元指数</td>
+                                    <td><i class="icon">󰄑</i></td>
+                                    <td>1172.19</td>
+                                    <td>-10.26</td>
+                                </tr>
+                                <tr class="down">
+                                    <td>纽约原油</td>
+                                    <td><i class="icon">󰄑</i></td>
+                                    <td>1172.19</td>
+                                    <td>-10.26</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
+                    <div class="m_tab mt20">
+                        <div class="t_title">
+                            <div class="t_item active"><a href="javascript:;">伦敦金</a></div>
+                            <div class="t_item"><a href="javascript:;">伦敦银</a></div>
 
-							<div class="m_item">
-								<div class="i_pic">
-									<img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-								</div>
-								<div class="i_info">
-									<div class="i_name">Barack Hussein Obama</div>
-									<div class="i_abstract">
-										<div class="a_left">
-											<div class="l_txt">评定1</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-											<div class="ml10 l_txt">评定2</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-										</div>
-										<div class="a_right">36人跟随</div>
-									</div>
-								</div>
-							</div>
-							<div class="m_item">
-								<div class="i_pic">
-									<img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-								</div>
-								<div class="i_info">
-									<div class="i_name">Barack Hussein Obama</div>
-									<div class="i_abstract">
-										<div class="a_left">
-											<div class="l_txt">评定1</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-											<div class="ml10 l_txt">评定2</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-										</div>
-										<div class="a_right">36人跟随</div>
-									</div>
-								</div>
-							</div>
-							<div class="m_item">
-								<div class="i_pic">
-									<img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-								</div>
-								<div class="i_info">
-									<div class="i_name">Barack Hussein Obama</div>
-									<div class="i_abstract">
-										<div class="a_left">
-											<div class="l_txt">评定1</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-											<div class="ml10 l_txt">评定2</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-										</div>
-										<div class="a_right">36人跟随</div>
-									</div>
-								</div>
-							</div>
-							<div class="m_item">
-								<div class="i_pic">
-									<img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-								</div>
-								<div class="i_info">
-									<div class="i_name">Barack Hussein Obama</div>
-									<div class="i_abstract">
-										<div class="a_left">
-											<div class="l_txt">评定1</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-											<div class="ml10 l_txt">评定2</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-										</div>
-										<div class="a_right">36人跟随</div>
-									</div>
-								</div>
-							</div>
-							<div class="m_item">
-								<div class="i_pic">
-									<img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-								</div>
-								<div class="i_info">
-									<div class="i_name">Barack Hussein Obama</div>
-									<div class="i_abstract">
-										<div class="a_left">
-											<div class="l_txt">评定1</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-											<div class="ml10 l_txt">评定2</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-										</div>
-										<div class="a_right">36人跟随</div>
-									</div>
-								</div>
-							</div>
-							<div class="m_item">
-								<div class="i_pic">
-									<img width="54" height="54" src="${ctx }/static/tmp/u1.png" />
-								</div>
-								<div class="i_info">
-									<div class="i_name">Barack Hussein Obama</div>
-									<div class="i_abstract">
-										<div class="a_left">
-											<div class="l_txt">评定1</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-											<div class="ml10 l_txt">评定2</div>
-											<div class="l_prog">
-												<div style="width: 88%;" class="p_bar"></div>
-											</div>
-										</div>
-										<div class="a_right">36人跟随</div>
-									</div>
-								</div>
-							</div>
-
-						</div>
-					</div>
-
-				</div>
+                        </div>
+                        <div class="t_main">
+                            <div class="m_item active"><img src="${ctx }/static/tmp/tmp_kline.png" /></div>
+                            <div class="m_item"><img src="${ctx }/static/tmp/tmp_kline.png" /></div>
+                        </div>
+                    </div>
+                </div>
+                
 			</div>
 
 		</div>
@@ -318,7 +264,7 @@
 						</div>
 						<div class="i_right">
 							<div class="r_info clearfix">
-								<div class="fl">${currentTopic.mostPraisePost1.publisher.userName }
+								<div class="fl">${fn:substring(currentTopic.mostPraisePost1.publisher.mobile, 0, 3)}****${fn:substring(currentTopic.mostPraisePost1.publisher.mobile, 8, 11)}
 									时间:
 									<fmt:formatDate
 										value="${currentTopic.mostPraisePost1.createDate }"
@@ -339,10 +285,9 @@
 						</div>
 						<div class="i_right">
 							<div class="r_info clearfix">
-								<div class="fl">${currentTopic.mostPraisePost2.publisher.userName }
+								<div class="fl">${fn:substring(currentTopic.mostPraisePost2.publisher.mobile, 0, 3) }****${fn:substring(currentTopic.mostPraisePost2.publisher.mobile, 8, 11)}
 									时间:
-									<fmt:formatDate
-										value="${currentTopic.mostPraisePost2.createDate }"
+									<fmt:formatDate value="${currentTopic.mostPraisePost2.createDate }"
 										type="both" pattern="yyyy-MM-dd HH:mm:ss" />
 								</div>
 							</div>
@@ -363,72 +308,30 @@
 		</div>
 		<div class="fr c_430">
 			<div class="pau">
-				<div class="J_title">
-					<div class="t_txt">财经资讯</div>
-					<div class="t_tips"></div>
-					<div class="t_more">
-						<a href="#">更多资讯&nbsp;&gt;</a>
-					</div>
-				</div>
+                <div class="J_title">
+                    <div class="t_txt">公告</div>
+                    <div class="t_tips"></div>
+                    <div class="t_more"><a href="#">更多公告&nbsp;&gt;</a></div>
+                </div>
 				<div class="J_cjzxList">
-					<div class="c_inner">
-						<div class="i_main">
-							<div class="m_item">
-								<div class="i_pic">
-									<a href="#"> <img src="${ctx }/static/tmp/k1.jpg" />
-									</a>
-								</div>
-								<div class="i_info">
-									<div class="i_name">
-										<a href="#">Barack Hussein Obama</a>
-									</div>
-									<div class="i_txt">这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</div>
-								</div>
-							</div>
-							<div class="m_item">
-								<div class="i_pic">
-									<a href="#"> <img src="${ctx }/static/tmp/k2.jpg" />
-									</a>
-								</div>
-								<div class="i_info">
-									<div class="i_name">
-										<a href="#">Barack Hussein Obama</a>
-									</div>
-									<div class="i_txt">这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</div>
-								</div>
-							</div>
-							<div class="m_item">
-								<div class="i_pic">
-									<a href="#"> <img src="${ctx }/static/tmp/k3.jpg" />
-									</a>
-								</div>
-								<div class="i_info">
-									<div class="i_name">
-										<a href="#">Barack Hussein Obama</a>
-									</div>
-									<div class="i_txt">这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</div>
-								</div>
-							</div>
-							<div class="m_item">
-								<div class="i_pic">
-									<a href="#"> <img src="${ctx }/static/tmp/k4.jpg" />
-									</a>
-								</div>
-								<div class="i_info">
-									<div class="i_name">
-										<a href="#">Barack Hussein Obama</a>
-									</div>
-									<div class="i_txt">这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容这里是内容</div>
-								</div>
-							</div>
-						</div>
-					</div>
+                    <div class="c_inner">
+                        <div class="i_main">
+                        	<c:forEach items="${notices }" var="notice">
+	                        	<div class="m_item">
+	                                <div class="i_info">
+	                                    <div class="i_name"><a href="#">${notice.title }</a></div>
+	                                    <div class="i_txt"><i class="icon">󰃄</i>
+	                                    	<span><fmt:formatDate value="${notice.startDate }"
+														type="both" pattern="yyyy-MM-dd HH:mm:ss" /></span>
+	                                    </div>
+	                                </div>
+	                            </div>
+                        	</c:forEach>
+                        </div>
+                    </div>
 
-				</div>
+                </div>				
 			</div>
-
-
-
 		</div>
 	</div>
 

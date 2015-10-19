@@ -346,7 +346,7 @@ function refresh2() {
 	                            <div class="i_right">
 	                                <div class="r_info clearfix">
 	                                    <div class="fl">
-	                                    	<div class="i_now">${post.floorNumb }楼</div> ${post.publisher.userName } 时间: 
+	                                    	<div class="i_now">${post.floorNumb }楼</div> ${fn:substring(post.publisher.mobile, 0, 3)}****${fn:substring(post.publisher.mobile, 8, 11)} 时间: 
 	                                    		<fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 	                                    </div>
 										<div class="fr">
@@ -370,7 +370,8 @@ function refresh2() {
 		                                            <div class="l_hg"></div>
 		                                        </div>
 		                                        <div class="i_right">
-		                                            <div class="r_info">${replay.replayer.userName } 回复 ${post.publisher.userName } 
+		                                            <div class="r_info">${fn:substring(replay.replayer.mobile, 0, 3)}****${fn:substring(replay.replayer.mobile, 8, 11)} 
+		                                            		回复 ${fn:substring(post.publisher.mobile, 0, 3)}****${fn:substring(post.publisher.mobile, 8, 11)}
 		                                            		时间: <fmt:formatDate value="${replay.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
 	                                                <div class="fr">
 	                                                    <a class="i_replyBtn" href="javascript:;" onclick="doReplayPraise(this,'${replay.id }')">
