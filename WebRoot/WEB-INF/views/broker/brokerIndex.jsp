@@ -284,7 +284,7 @@
                 
                 	<c:forEach items="${page.list }" var="broker">
                 	
-						<div class="j_item good clearfix">
+						<div class="j_item <c:if test='${broker.isRecommet==1 }'>good</c:if> clearfix">
 	                        <div class="i_left">
 	                            <img style="width: 120px; height: 57px;" src="${ctx}/${broker.imageUrl}" />
 	                        </div>
@@ -325,7 +325,7 @@
 	                                    <img src="${ctx }/static/images/logo_2.png" />
 	                                </div>
 	                                <div class="r_btns">
-	                                    <a class="abtn orange" href="#">马上开户</a>
+	                                    <a class="abtn orange" target="_blank" href="http://${broker.commissionUrl}">马上开户</a>
 	                                    <a class="abtn blue" href="${ctx}/bk/detail?id=${broker.id}">详细信息</a>
 	                                </div>
 	                            </div>

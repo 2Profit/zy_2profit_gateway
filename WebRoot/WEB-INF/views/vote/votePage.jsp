@@ -34,7 +34,7 @@ $(function(){
 	       	        	success:function(json) {
 	       	           		if(json.success){
 	       	           			jc.alert('投票成功', function(b){
-	       	           				window.location.replace("${ctx }/vote/index/list");
+	       	           				window.location.replace("${ctx }/vote/link?id="+$('#currentTopicId').val());
 	       	           			});
 	       	           		}else{
 	       	           			if(json.code=='401'){
@@ -188,7 +188,7 @@ function postReplay(){
    						'replayContent':$('#replayContent').val()},
    					function(json){
    						if(json.success){
-   							window.location.href="${ctx}/vote/index/list";
+   							window.location.href="${ctx}/vote/link?id="+$('#currentTopicId').val();
    						}else{
    							if(json.code == '405'){
    								jc.alert('请登录后再回复！');return false;
@@ -404,7 +404,8 @@ function refresh2() {
 	                            </div>
 	                            <div class="i_right">
 	                                <div class="r_info clearfix">
-	                                    <div class="fl">${post.publisher.userName } 时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+	                                    <div class="fl">${fn:substring(post.publisher.mobile, 0, 3)}****${fn:substring(post.publisher.mobile, 8, 11)}  
+	                                    		时间: <fmt:formatDate value="${post.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
 	                                </div>
 	                                <div class="r_content">${post.postContent }</div>
 	                            </div>
