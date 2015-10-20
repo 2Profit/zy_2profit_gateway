@@ -73,6 +73,7 @@ $(function(){
 	          			window.location.href="${ctx}/vote/index/list";
 	          		});
 	          	}else{
+	          		if(json.code == "406"){jc.alert('抱歉，该投票停止评论！'); return false;}
 	          		jc.alert('回复失败'); 
 	          	}
 	        }   
@@ -228,7 +229,7 @@ function refresh2() {
 
 <body>
 	<%@ include file="../common/head.jsp" %>
-	<form action="" name="form" id="form" method="post" theme="simple">
+	
     <div class="bgfff">
         <div class="J_content">
             <div class="plrb20">
@@ -258,25 +259,21 @@ function refresh2() {
                     </div>
                     
                     <div class="fr w50p">
-                        <div class="plr10">
-							<div class="plr10">
-                                <div class="J_miniTitle">
-                                    <div class="m_token"></div>
-                                    <div class="m_txt">下期投票</div>
-                                </div>
-                                <div class="J_vote next">
-                                    <div class="v_title">${nextTopic.titleContent}</div>
-                                    <div class="v_content">
-                                    	<c:forEach items="${nextTopic.options }" var="option">
-                                            <div class="c_item">
-	                                            <a href="javascript:"><label><input disabled="disabled" type="radio"/>${option.optionContent }</label></a>
-	                                        </div>                               	
-                                    	</c:forEach>
-                                    </div>
-                                </div>
+						<div class="plr10">
+                            <div class="J_miniTitle">
+                                <div class="m_token"></div>
+                                <div class="m_txt">过往投票</div>
+                            </div>
+                            <div class="J_vote next">
+                               	<c:forEach items="${historyTopics }" var="historyTopic">
+                                    <div class="v_title">
+                                 		<div class="t_left"><a class="alink black hover" href="${ctx }/vote/link?id=${historyTopic.id}"">${historyTopic.titleContent }<span><i class="icon">󰁦</i>${historyTopic.voteCount }</span></a></div>
+                             	    	<div class="t_right"><fmt:formatDate value="${historyTopic.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/></div>
+                             		</div>                          	
+                               	</c:forEach>
                             </div>
                         </div>
-                    </div>
+                	</div>
                 </div>
 
 
@@ -332,6 +329,7 @@ function refresh2() {
             </div>
 
             <div class="pau">
+            <form action="" name="form" id="form" method="post" theme="simple">
                 <div id="con_one_1">
                     <div data-ui="commentsList" class="J_commentsList">
                     	<c:forEach items="${page.list }" var="post">
@@ -414,7 +412,7 @@ function refresh2() {
 						</c:forEach>
                     </div>
                 </div>
-
+			</form>
 
                 <div data-ui="reply" class="J_reply">
                     <div data-ui="title" class="J_title">
@@ -447,31 +445,8 @@ function refresh2() {
                 </div>
                 
             </div>
-
-                <div class="J_title less">
-                    <div class="t_txt">更多投票  ${sessionScope.login_user.pwd }</div>
-                    <div class="t_tips"></div>
-                    <div class="t_more"></div>
-                </div>
-
-                <div class="J_voteList">
-                    <table>
-                        <tbody>
-							<c:forEach items="${topics }" var="topic">
-		                    	<tr>
-		                            <td style="width:100px;" class="vat tac c999"><fmt:formatDate value="${topic.startDate}" pattern="yyyy-MM-dd"/></td>
-		                            <td><a class="alink black hover" href="${ctx }/vote/link?id=${topic.id}">${topic.titleContent}<span><i class="icon"></i> 166</span></a></td>
-		                        </tr>
-		                   	</c:forEach>                        
-                        </tbody>
-                    </table>
-                </div>
-
-
-            </div>
         </div>
     </div>
-	</form>
 	    
 	<%@ include file="../common/help.jsp" %>
 	<%@ include file="../common/foot.jsp" %>

@@ -19,6 +19,7 @@ import com.zy.member.entity.Member;
 import com.zy.profit.gateway.util.HttpUtils;
 import com.zy.util.AddressUtils;
 import com.zy.util.RandomValidateCode;
+import com.zy.vote.dto.VoteTopicDto;
 import com.zy.vote.entity.VoteMemberLog;
 import com.zy.vote.entity.VotePostPraise;
 import com.zy.vote.entity.VotePostReport;
@@ -53,6 +54,8 @@ public class VoteController {
 	public static final String RESULT_CODE_REPORT_ERROR = "403";//用户对帖子重复举报
 	public static final String RESULT_CODE_RANDOMCODE_ERROR = "404";//验证码错误
 	public static final String RESULT_CODE_LOGIN_ERROR = "405";//用户未登录错误
+	public static final String RESULT_CODE_VOTE_PERMIT_ERROR = "406";//投票未开启评论错误
+	
 
 	@Autowired
 	private VoteTopicService voteTopicService;
@@ -91,13 +94,19 @@ public class VoteController {
 		if(currentTopic.getStartDate().after(new Date()) || currentTopic.getEndDate().before(new Date())){
 			currentTopic.setIsVoteTime(false);
 		}
+		model.addAttribute("currentTopic", currentTopic);
 		
 		VoteTopicPost queryDto = new VoteTopicPost();
+		queryDto.setDeleteFlag(VoteTopicPost.DELETE_FLAG_NORMAL);
+		queryDto.setOrderByParam(VoteTopicPost.CREATE_DATE_PROPERTY_NAME);
 		queryDto.setVoteTopic(currentTopic);
 		model.addAttribute("page", voteTopicPostService.queryPage(queryDto, pageModel));
-		model.addAttribute("currentTopic", currentTopic);
-		model.addAttribute("nextTopic", voteTopicService.getNextTopic());
-		model.addAttribute("topics", voteTopicService.getHistoryTopics());
+
+		VoteTopicDto topicQuery = new VoteTopicDto();
+		topicQuery.setPageSize(4);
+		topicQuery.setDeleteFlag(VoteTopicPost.DELETE_FLAG_NORMAL);
+		topicQuery.setToDateEnd(new Date());
+		model.addAttribute("historyTopics", voteTopicService.queryPage(topicQuery).getList());
 		
 		model.addAttribute("memberLogin", HttpUtils.getMember(request));
 		model.addAttribute("currentUserPosts", currentUserPosts);
@@ -142,12 +151,19 @@ public class VoteController {
 			if(CollectionUtils.isNotEmpty(currentUserPosts))
 				currentUserPostNumb = currentUserPosts.size();
 		}
+		model.addAttribute("currentTopic", voteTopicService.getCurrentTopic());
+
 		
 		queryDto.setVoteTopic(currentTopic);
+		queryDto.setDeleteFlag(VoteTopicPost.DELETE_FLAG_NORMAL);
+		queryDto.setOrderByParam(VoteTopicPost.CREATE_DATE_PROPERTY_NAME);
 		model.addAttribute("page", voteTopicPostService.queryPage(queryDto, pageModel));
-		model.addAttribute("currentTopic", voteTopicService.getCurrentTopic());
-		model.addAttribute("nextTopic", voteTopicService.getNextTopic());
-		model.addAttribute("topics", voteTopicService.getHistoryTopics());
+		
+		VoteTopicDto topicQuery = new VoteTopicDto();
+		topicQuery.setPageSize(4);
+		topicQuery.setDeleteFlag(VoteTopicPost.DELETE_FLAG_NORMAL);
+		topicQuery.setToDateEnd(new Date());
+		model.addAttribute("historyTopics", voteTopicService.queryPage(topicQuery).getList());
 		
 		model.addAttribute("memberLogin", HttpUtils.getMember(request));
 		model.addAttribute("currentUserPosts", currentUserPosts);
@@ -344,6 +360,14 @@ public class VoteController {
 		ResultDto<VoteTopicPost> result = new ResultDto<VoteTopicPost>();
 		try {
 			VoteTopic topic = voteTopicService.get(dto.getVoteTopic().getId());
+			
+			//投票未开启投票功能
+			if(!topic.getIsComment()){
+				result.setSuccess(false);
+				result.setCode(RESULT_CODE_VOTE_PERMIT_ERROR);
+				return result;
+			}
+			
 			dto.setPublisher(HttpUtils.getMember(request));
 			dto.setPraiseCount(0);
 			dto.setReportCount(0);

@@ -24,6 +24,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.zy.base.entity.Notice;
 import com.zy.base.service.NoticeService;
+import com.zy.broker.dto.BrokerExtInfoDto;
+import com.zy.broker.entity.BrokerExtInfo;
 import com.zy.broker.service.BrokerExtInfoService;
 import com.zy.common.entity.BaseEntity;
 import com.zy.common.entity.PageModel;
@@ -82,10 +84,13 @@ public class IndexController {
 		queryNotice.setDeleteFlag(BaseEntity.DELETE_FLAG_NORMAL);
 		queryNotice.setOrderByParam(Notice.PROP_START_DATE);
 		List<Notice> noticeList = noticeService.queryForPage(queryNotice, new PageModel<Notice>(6)).getList();
-		
 		model.addAttribute("notices", noticeList);
+		
 		model.addAttribute("currentTopic", currentTopic);
-		model.addAttribute("brokers", brokerExtInfoService.findIndexPageBrokers());
+		
+		BrokerExtInfoDto queryDto = new BrokerExtInfoDto();
+		queryDto.setDeleteFlag(BrokerExtInfoDto.DELETE_FLAG_NORMAL);		
+		model.addAttribute("brokers", brokerExtInfoService.queryPage(queryDto, new PageModel<BrokerExtInfo>(6)).getList());
 		
 		return "/index";
 	}
