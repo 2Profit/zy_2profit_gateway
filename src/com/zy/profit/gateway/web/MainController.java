@@ -1,5 +1,7 @@
 package com.zy.profit.gateway.web;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
@@ -28,6 +30,8 @@ import com.zy.personal.entity.MemBankInfo;
 import com.zy.profit.gateway.util.Constants;
 import com.zy.profit.gateway.util.FileUploadUtil;
 import com.zy.profit.gateway.util.HttpUtils;
+import com.zy.profit.gateway.util.ImageUtil;
+import com.zy.profit.gateway.util.SystemConfig;
 import com.zy.profit.gateway.util.WebHelper;
 import com.zy.util.Md5Util;
 
@@ -250,6 +254,7 @@ public class MainController {
 		AjaxResult ajaxResult = new AjaxResult();
 		ajaxResult.setSuccess(false);
 		
+		InputStream is = null;
 		try {
 			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
 			
@@ -260,7 +265,7 @@ public class MainController {
 			String ext = originFileName.substring(originFileName.lastIndexOf(".")).toLowerCase();
 			String imgName = UUID.randomUUID() + ext;
 			
-			InputStream is = mf.getInputStream();
+			is = mf.getInputStream();
 			
 			String imgPath = FileUploadUtil.uploadAttachment(is, imgName);
 			
@@ -290,6 +295,15 @@ public class MainController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			ajaxResult.setMsg("上传图片失败");
+		} finally {
+			if(is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		return ajaxResult;
@@ -332,6 +346,104 @@ public class MainController {
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
+		}
+		
+		return ajaxResult;
+	}
+	
+	@RequestMapping("/upload_head")
+	public String uploadHead(HttpServletRequest request){
+		return "/account/upload_head";
+	}
+	
+	@RequestMapping("/ajax/tmp/upload_head")
+	@ResponseBody
+	public AjaxResult ajaxTmpUploadHeadImg(HttpServletRequest request){
+		AjaxResult ajaxResult = new AjaxResult();
+		ajaxResult.setSuccess(false);
+		InputStream is = null;
+		try {
+			MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+			
+			MultipartFile mf = multipartRequest.getFile("file");
+			String originFileName = mf.getOriginalFilename();
+			String ext = originFileName.substring(originFileName.lastIndexOf(".")).toLowerCase();
+			String imgName = UUID.randomUUID() + ext;
+			
+			is = mf.getInputStream();
+			
+			String imgPath = FileUploadUtil.uploadTmp(is, imgName);
+			
+			ajaxResult.setData(imgPath);
+			ajaxResult.setSuccess(true);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setMsg("上传图片失败");
+		} finally {
+			if(is != null){
+				try {
+					is.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return ajaxResult;
+	}
+	
+	@RequestMapping("/ajax/save/head_img")
+	@ResponseBody
+	public AjaxResult ajaxSaveHeadImg(HttpServletRequest request){
+		AjaxResult ajaxResult = new AjaxResult();
+		
+		ajaxResult.setSuccess(false);
+		
+		try {
+			
+			String headUrl = request.getParameter("headUrl");
+			
+			String coordinateX = request.getParameter("coordinatexX");
+			String coordinateY = request.getParameter("coordinatexY");
+			String width = request.getParameter("width");
+			String height = request.getParameter("height");
+
+			if (StringUtils.isNotEmpty(coordinateX) && StringUtils.isNotEmpty(coordinateY)
+					&& StringUtils.isNotEmpty(width) && StringUtils.isNotEmpty(height)) {
+
+				String oldTmpImgPath = SystemConfig.getWebRoot() + headUrl;
+
+				String newHeadImg = SystemConfig.getHeadImagePath() + UUID.randomUUID() + headUrl.substring(headUrl.lastIndexOf("."));
+				
+				File headImgFile = new File(SystemConfig.getWebRoot() + SystemConfig.getHeadImagePath());
+				if(!headImgFile.exists()){
+					headImgFile.mkdirs();
+				}
+				
+				String newHeadPath = SystemConfig.getWebRoot() + newHeadImg;
+				
+				ImageUtil.scaleImage(oldTmpImgPath, newHeadPath, 300, 300);
+
+				ImageUtil.cutImage(Integer.parseInt(coordinateX), Integer.parseInt(coordinateY),
+						Integer.parseInt(width), Integer.parseInt(height), newHeadPath, newHeadPath);
+				
+				Member member = HttpUtils.getMember(request);
+				member.setHeadUrl(newHeadImg);
+				member = memberService.update(member);
+				request.getSession().setAttribute(WebHelper.SESSION_LOGIN_USER, member);
+				
+				ajaxResult.setSuccess(true);
+				
+			} else {
+				ajaxResult.setMsg("头像修改失败");
+				return ajaxResult;
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setMsg("头像修改失败");
 		}
 		
 		return ajaxResult;

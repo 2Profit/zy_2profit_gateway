@@ -86,4 +86,32 @@ public class SystemConfig {
 	public static String getSMSModelId(){
 		return properties.getProperty("SMS.modelId");
 	}
+	
+	/**
+	 * 邮箱的smtp服务
+	 * @return
+	 */
+	public static String getMailSmtp(){
+		return properties.getProperty("mail.smtp");
+	}
+	
+	public static String getMailUser(){
+		return properties.getProperty("mail.user");
+	}
+	
+	public static String getMailPwd(){
+		return properties.getProperty("mail.pwd");
+	}
+	
+	public static String getMailVaildTime(){
+		return properties.getProperty("mail.valid.time");
+	}
+	
+	public static int getMailVaildTimeInt(){
+		return Integer.parseInt(getMailVaildTime());
+	}
+	
+	public static String getMailContentUrl(){
+		return properties.getProperty("mail.content.url");
+	}
 }

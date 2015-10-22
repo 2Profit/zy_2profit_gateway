@@ -41,6 +41,7 @@ public class RememberAuthenticationFilter extends FormAuthenticationFilter {
 				if(member != null){
 					member.setLastLoginDate(new Date());
 					member.setLastLoginIp(request.getRemoteAddr());
+					member = memberService.save(member);
 					session.setAttribute(WebHelper.SESSION_LOGIN_USER, member);	
 				}
 			}

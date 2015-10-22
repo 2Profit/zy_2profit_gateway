@@ -50,6 +50,10 @@ $(function(){
 			pwd1 : {
 				rule : '密码确认: required;match[pwd]',
 				target : '#msg_pwd1'
+			},
+			imgCode : {
+				rule : 'required',
+				target : '#msg_img_code'
 			}
 		},
 		valid : function(form){
@@ -105,6 +109,12 @@ function sendCode(_this){
 		}
 	});
 }
+
+
+function changeCode(){
+	$('#captchaCode').attr('src', '${ctx }/imageServlet?' + Math.floor(Math.random() * 100));
+}
+
 
 </script>
 
@@ -168,7 +178,7 @@ function sendCode(_this){
                                     <tr>
                                         <td class="tar">
                                             <div class="J_toolsBar">
-                                                <div class="t_label">验证码：</div>
+                                                <div class="t_label">短信验证：</div>
                                             </div>
                                         </td>
                                         <td>
@@ -240,6 +250,31 @@ function sendCode(_this){
                                         <td class="plr20" id="msg_pwd1">
                                         </td>
                                     </tr>
+                                    
+                                    <tr>
+                                        <td class="tar">
+                                            <div class="J_toolsBar">
+                                                <div class="t_label">验证码：</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="J_toolsBar">
+                                                <div class="t_text t_regCode">
+                                                    <label>
+                                                        <input type="text" name="imgCode"/>
+                                                    </label>
+                                                </div>
+                                                <div class="t_button ml10">
+                                                	<a href="javascript:void(0);">
+                                                    	<img src="${ctx }/imageServlet" title="看不清，换一张" id="captchaCode" onclick="changeCode()" width="100" height="36"/>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="plr20" id="msg_img_code">
+                                        </td>
+                                    </tr>
+                                    
                                     <tr class="f_fixPadding">
                                         <td>&nbsp;</td>
                                         <td>

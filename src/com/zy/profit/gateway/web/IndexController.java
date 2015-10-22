@@ -121,6 +121,7 @@ public class IndexController {
 				memberCode.setMobile(mobile);
 				memberCode.setCode(code);
 				memberCode.setStatus(0);
+				memberCode.setType(MemberCode.TYPE_REGISTER);
 				
 				memberCodeService.save(memberCode);
 				
@@ -135,7 +136,7 @@ public class IndexController {
 		
 		return ajaxResult;
 	}
-
+	
 	@RequestMapping(value="/register/vaild_email")
 	@ResponseBody
 	public AjaxResult validEmail(HttpServletRequest request){
@@ -242,6 +243,13 @@ public class IndexController {
 	
 	@RequestMapping("/register/save")
 	public String registerSave(Member member, RedirectAttributes redirectAttributes, HttpServletRequest request){
+		
+		//验证验证码
+		String imgCode = request.getParameter("imgCode");
+		if(StringUtils.isBlank(imgCode) || !imgCode.equalsIgnoreCase(HttpUtils.getCaptchaCode(request))){
+			redirectAttributes.addAttribute("msg", "验证码输入错误");
+			return "redirect:/register";
+		}
 		
 		String msg = "";
 		

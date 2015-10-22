@@ -77,4 +77,35 @@ public class FileUploadUtil {
 		return path + File.separator + fName;
 	}
 	
+	/**
+	 * 上传临时文件
+	 * @param is
+	 * @return
+	 * @throws UtilException 
+	 * @throws IOException 
+	 */
+	public static String uploadTmp(InputStream is, String fileName) throws UtilException, IOException{
+		
+		judgeExt(fileName);
+		
+		String path = SystemConfig.getTmpPath();
+		
+		String ext = getExt(fileName);
+		
+		String fName = UUID.randomUUID() + ext;
+		
+		String rootPath = SystemConfig.getWebRoot();
+		
+		File fileParent = new File(rootPath + path);
+		if(!fileParent.exists()){
+			fileParent.mkdirs();
+		}
+		
+		File file = new File(fileParent, fName);
+		
+		FileUtils.copyInputStreamToFile(is, file);
+		
+		return path + File.separator + fName;
+	}
+	
 }

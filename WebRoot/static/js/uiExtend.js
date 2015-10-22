@@ -157,7 +157,7 @@ jc.uiExtend("silder", {
             _this.next();
         });
 
-
+        /*
         this.$element.hover(function () {
             _this.autoPlay(false);
             _this.oStep.eq(0).stop().animate({ left: 20 }, "fast");
@@ -167,10 +167,173 @@ jc.uiExtend("silder", {
             _this.oStep.eq(1).stop().animate({ right: -60 }, "fast");
             _this.autoPlay(true);
         });
-
+        */
 
         this.autoPlay(true);
     }
 
+
+});
+
+
+
+jc.uiExtend("editFace", {
+    over: null,
+    setMask: function () {
+        this.oTop.height(this.iTop);
+        this.oBottom.height(this.iSize - (this.iTop + this.iDragSize));
+
+        this.oLeft.css({ top: this.iTop, height: this.iDragSize, width: this.iLeft });
+        this.oRight.css({ top: this.iTop, height: this.iDragSize, width: this.iSize - (this.iLeft + this.iDragSize) });
+
+    },
+    reset: function () {
+        this.iLeft = parseInt((this.iSize - this.iDragSize) / 2);
+        this.iTop = parseInt((this.iSize - this.iDragSize) / 2);
+
+        this.oDrag.css({ left: this.iLeft, top: this.iTop });
+        this.setMask();
+    },
+    getPos: function () {
+        return { x: this.iLeft, y: this.iTop, w: this.iDragSize, h: this.iDragSize };
+    },
+    init: function () {
+        var _this = this;
+
+        this.iSize = this.$element.width();
+        this.iLeft = 0;
+        this.iTop = 0;
+        this.iDragSize = 200;
+
+        this.oDrag = this.$element.find(".e_drag");
+        this.oResize = this.oDrag.find(".d_resize");
+        this.oImg = this.$element.find(".e_face");
+
+        this.oTop = this.$element.find(".e_top");
+        this.oRight = this.$element.find(".e_right");
+        this.oBottom = this.$element.find(".e_bottom");
+        this.oLeft = this.$element.find(".e_left");
+
+        this.oImg.width(this.iSize).height(this.iSize);
+
+
+        this.oDrag.mousedown(function (e) {
+            var e = e || window.event;
+
+            var iDisX = e.clientX - this.offsetLeft;
+            var iDisY = e.clientY - this.offsetTop;
+
+            if (document.body.setCapture) {
+                _this.oDrag.each(function (idx, obj) {
+                    obj.setCapture();
+                });
+            }
+
+            document.onmousemove = function (e) {
+                var e = e || window.event;
+
+                _this.iLeft = jc.tools.range(e.clientX - iDisX, 0, _this.iSize - _this.oDrag.width());
+                _this.iTop = jc.tools.range(e.clientY - iDisY, 0, _this.iSize - _this.oDrag.width());
+
+
+
+                _this.oDrag.css({ left: _this.iLeft, top: _this.iTop });
+
+                _this.setMask();
+
+                return false;
+            }
+
+            document.onmouseup = function (e) {
+                document.onmousemove = null;
+                document.onmouseup = null;
+
+                if (document.body.releaseCapture) {
+                    _this.oDrag.each(function (idx, obj) {
+                        obj.releaseCapture();
+                    });
+                }
+
+                if (_this.over) _this.over(_this.getPos());
+            }
+            return false;
+        });
+
+
+        this.oResize.mousedown(function (e) {
+            var e = e || window.event;
+
+
+            document.onmousemove = function (e) {
+                var e = e || window.event;
+                _this.iDragSize = jc.tools.range(e.clientX - _this.oDrag.offset().left, 100, _this.iSize - Math.max(_this.iLeft, _this.iTop));
+                _this.oDrag.css({ width: _this.iDragSize, height: _this.iDragSize });
+                _this.setMask();
+            }
+
+            document.onmouseup = function (e) {
+                document.onmousemove = null;
+                document.onmouseup = null;
+                if (_this.over) _this.over(_this.getPos());
+            }
+
+
+
+
+
+            if (e.stopPropagation) { //W3C阻止冒泡方法  
+                e.stopPropagation();
+            } else {
+                e.cancelBubble = true; //IE阻止冒泡方法  
+            }
+
+            return false;
+        });
+
+
+        this.reset();
+    }
+
+});
+
+/* 侧边栏 */
+jc.uiExtend("gotoTop", {
+    init: function () {
+        var $item = this.$element.find(".l_item");
+
+        $item.hover(function () {
+            $(this).addClass("hover");
+            $(this).find(".i_tips").show();
+        }, function () {
+            $(this).removeClass("hover");
+            $(this).find(".i_tips").hide();
+        });
+
+    }
+});
+
+jc.uiExtend("market", {
+    init: function () {
+        var _this = this;
+
+        this.$title = this.$element.find(".t_title");
+        this.$title_child = this.$title.children();
+
+        this.$main = this.$element.find(".t_main");
+        this.$main_child = this.$main.children();
+
+        this.$title_child.click(function () {
+            _this.$title_child.removeClass("active");
+            $(this).addClass("active");
+            _this.$main_child.removeClass("active");
+            _this.$main_child.eq($(this).index()).addClass("active");
+        });
+
+
+
+
+
+
+    }
 
 });

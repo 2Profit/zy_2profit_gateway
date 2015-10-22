@@ -49,14 +49,6 @@ import com.zy.vote.service.VoteTopicService;
 @RequestMapping("/vote")
 public class VoteController {
 	
-	public static final String RESULT_CODE_VOTE_ERROR = "401";//用户对投票重复投票
-	public static final String RESULT_CODE_PRAISE_ERROR = "402";//用户对帖子重复点赞
-	public static final String RESULT_CODE_REPORT_ERROR = "403";//用户对帖子重复举报
-	public static final String RESULT_CODE_RANDOMCODE_ERROR = "404";//验证码错误
-	public static final String RESULT_CODE_LOGIN_ERROR = "405";//用户未登录错误
-	public static final String RESULT_CODE_VOTE_PERMIT_ERROR = "406";//投票未开启评论错误
-	
-
 	@Autowired
 	private VoteTopicService voteTopicService;
 	@Autowired
@@ -127,7 +119,7 @@ public class VoteController {
 				return result;
 			}else{
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_RANDOMCODE_ERROR);
+				result.setCode(VoteTopicDto.RESULT_CODE_RANDOMCODE_ERROR);
 				return result;
 			}
 		} catch (Exception e) {
@@ -180,7 +172,7 @@ public class VoteController {
 			int logNumb = voteMemberLogService.findTopicLogByIp(dto.getVoteTopic().getId(), AddressUtils.getIp(request));
 			if(logNumb>0){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_VOTE_ERROR);
+				result.setCode(VoteTopicDto.RESULT_CODE_VOTE_ERROR);
 				return result;
 			}
 			
@@ -213,14 +205,14 @@ public class VoteController {
 			Member member = HttpUtils.getMember(request);
 			if(member == null){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				result.setCode(VoteTopicDto.RESULT_CODE_LOGIN_ERROR);//用户未登录
 				return result;
 			}
 			
 			int numb = voteReplayPraiseService.findMemberPraise(dto.getId(), member.getId());
 			if(numb>0){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_PRAISE_ERROR);//该帖子用户已经点赞
+				result.setCode(VoteTopicDto.RESULT_CODE_PRAISE_ERROR);//该帖子用户已经点赞
 				return result;
 			}
 			
@@ -250,14 +242,14 @@ public class VoteController {
 			Member member = HttpUtils.getMember(request);
 			if(member == null){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				result.setCode(VoteTopicDto.RESULT_CODE_LOGIN_ERROR);//用户未登录
 				return result;
 			}
 
 			int numb = voteReplayReportService.findMemberReport(dto.getId(), member.getId());
 			if(numb>0){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_PRAISE_ERROR);//该回复用户已经举报
+				result.setCode(VoteTopicDto.RESULT_CODE_REPORT_ERROR);//该回复用户已经举报
 				return result;
 			}
 			
@@ -268,7 +260,7 @@ public class VoteController {
 			voteReplayReportService.save(report);
 			
 			VoteTopicPostReplay entity = voteTopicPostReplayService.get(dto.getId());
-			entity.setReportCount(entity.getPraiseCount()+1);
+			entity.setReportCount(entity.getReportCount()+1);
 			voteTopicPostReplayService.update(entity);
 			
 			result.setMessage(entity.getReportCount()+"");
@@ -287,14 +279,14 @@ public class VoteController {
 			Member member = HttpUtils.getMember(request);
 			if(member == null){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				result.setCode(VoteTopicDto.RESULT_CODE_LOGIN_ERROR);//用户未登录
 				return result;
 			}
 			
 			int memberPostNumb = votePostPraiseService.findMemberPraise(member.getId(), dto.getId());
 			if(memberPostNumb>0){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_PRAISE_ERROR);//该帖子用户已经点赞
+				result.setCode(VoteTopicDto.RESULT_CODE_PRAISE_ERROR);//该帖子用户已经点赞
 				return result;
 			}
 			
@@ -325,14 +317,14 @@ public class VoteController {
 			Member member = HttpUtils.getMember(request);
 			if(member == null){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				result.setCode(VoteTopicDto.RESULT_CODE_LOGIN_ERROR);//用户未登录
 				return result;
 			}
 			
 			int memberPostNumb = votePostPraiseService.findMemberPraise(member.getId(), dto.getId());
 			if(memberPostNumb>0){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_REPORT_ERROR);//该帖子用户已经举报
+				result.setCode(VoteTopicDto.RESULT_CODE_REPORT_ERROR);//该帖子用户已经举报
 				return result;
 			}
 			
@@ -364,7 +356,7 @@ public class VoteController {
 			//投票未开启投票功能
 			if(!topic.getIsComment()){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_VOTE_PERMIT_ERROR);
+				result.setCode(VoteTopicDto.RESULT_CODE_VOTE_PERMIT_ERROR);
 				return result;
 			}
 			
@@ -393,7 +385,7 @@ public class VoteController {
 			Member member = HttpUtils.getMember(request);
 			if(member == null){
 				result.setSuccess(false);
-				result.setCode(RESULT_CODE_LOGIN_ERROR);//用户未登录
+				result.setCode(VoteTopicDto.RESULT_CODE_LOGIN_ERROR);//用户未登录
 				return result;
 			}
 			

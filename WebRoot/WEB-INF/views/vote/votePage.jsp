@@ -244,7 +244,6 @@ function refresh2() {
                             <div class="J_vote">
                                 <div class="v_title">${currentTopic.titleContent}
                                  	<input type='hidden' id='currentTopicId' value='${currentTopic.id}'>
-                                 	<input type='hidden' id='currentSchedule' value='${currentTopic.schedule}'>
                                  </div>
                                  <div class="v_content">
                                  	<c:forEach items="${currentTopic.options }" var="option">

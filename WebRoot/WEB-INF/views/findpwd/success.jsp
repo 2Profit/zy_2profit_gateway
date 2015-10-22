@@ -17,26 +17,33 @@
 
 	<div class="J_content bgfff mt20 hasShadow">
 		<div class="J_title">
-			<div class="t_txt has">通过手机号找回密码</div>
+			<div class="t_txt has">找回密码</div>
 		</div>
 		<div class="pt40">
 			<div class="J_retrieve">
 				<div class="r_inner">
-					<div class="i_header">
-						<div class="h_item clearfix">
-							<div class="i_icon i1"></div>
-							<div class="i_txt">验证身份</div>
-						</div>
-						<div class="h_item clearfix">
-							<div class="i_icon i2"></div>
-							<div class="i_txt">重置密码</div>
-						</div>
-						<div class="h_item active clearfix">
-							<div class="i_icon i3"></div>
-							<div class="i_txt">完成</div>
-						</div>
-					</div>
-				</div>
+                    <div class="i_header">
+                        <div class="h_item clearfix">
+                            <div class="i_icon i1"></div>
+                            <div class="i_txt">输入账号</div>
+                        </div>
+                        <div class="h_item clearfix">
+                            <div class="i_icon i2"></div>
+                            <div class="i_txt">验证身份</div>
+                        </div>
+                        <div class="h_item clearfix">
+                            <div class="i_icon i3"></div>
+                            <div class="i_txt">重置密码</div>
+                        </div>
+                        <div class="h_item active clearfix">
+                            <div class="i_icon i4"></div>
+                            <div class="i_txt">完成</div>
+                        </div>
+
+                    </div>
+
+
+                </div>
 			</div>
 		</div>
 		<div class="mt80">

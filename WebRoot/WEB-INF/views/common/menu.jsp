@@ -52,6 +52,7 @@ $(function(){
              <div class="i_menu">
                  <div class="m_txt"><a href="${ctx }/main"><i class="icon">󰂻</i>账户资料</a></div>
                  <div class="m_txt"><a href="${ctx }/main/person"><i class="icon">󰃔</i>个人资料</a></div>
+                 <div class="m_txt"><a href="${ctx }/main/upload_head"><i class="icon">󰃬</i>更换头像</a></div>
                  <div class="m_txt"><a href="${ctx }/main/update_pwd"><i class="icon">󰃉</i>修改密码</a></div>
              </div>
          </div>

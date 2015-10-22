@@ -30,7 +30,7 @@
                    			<img src="${ctx }/static/images/userface.jpg" width="60" height="60"/>
                    		</c:when>
                    		<c:otherwise>
-                   			<img src="${ctx }${sessionScope.login_user.headUrl }"  style="width: 64px; height: 64px;"/>
+                   			<img src="${ctx }${sessionScope.login_user.headUrl }"  style="width: 60px; height: 60px;"/>
                    		</c:otherwise>
                    	</c:choose>
                      <a href="${ctx }/main">

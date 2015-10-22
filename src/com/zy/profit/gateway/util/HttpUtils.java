@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import com.zy.member.entity.Member;
+import com.zy.util.RandomValidateCode;
 
 
 /** 
@@ -58,6 +59,15 @@ public class HttpUtils {
 		return (Member) request.getSession().getAttribute(WebHelper.SESSION_LOGIN_USER);
 	}
 	
+	/**
+	 * 图片验证码
+	 * @param request
+	 * @return
+	 */
+	public static String getCaptchaCode(HttpServletRequest request){
+		Object code = request.getSession().getAttribute(RandomValidateCode.RANDOMCODEKEY);
+		return code == null ? "" : code.toString();
+	}
 	
 	/**
 	 * 
