@@ -1,0 +1,32 @@
+<table cellpadding="0" cellspacing="0" bgcolor="#f7f7f7" width="100%" style="" class="baidu_pass">
+	<tbody>
+		<tr>
+			<td>
+				<table cellpadding="0" cellspacing="0" width="96%"
+					style="background:#ffffff;border:1px solid rgb(204,204,204);margin:2%;"> <tbody>
+						<tr>
+							<td width="30px;">&nbsp;</td>
+							<td align=""><div style="line-height:40px;height:40px;">&nbsp;</div>
+								<p style="margin:0px;padding:0px;">
+									<strong style="font-size:14px;line-height:30px;color:#333333;font-family:arial,sans-serif;">亲爱的用户：</strong>
+								</p>
+								<div style="line-height:20px;height:20px;">&nbsp;</div>
+								<p style="margin:0px;padding:0px;line-height:30px;font-size:14px;color:#333333;font-family:'宋体',arial,sans-serif;">您好！感谢您使用至盈网，您正在进行邮箱验证，本次请求的验证码为：</p>
+								<p style="margin:0px;padding:0px;line-height:30px;font-size:14px;color:#333333;font-family:'宋体',arial,sans-serif;">
+									<b style="font-size:18px;color:#ff9900">${code}</b>
+									<span style="margin:0px;padding:0px;margin-left:10px;line-height:30px;font-size:14px;color:#979797;font-family:'宋体',arial,sans-serif;">(为了保障您帐号的安全性，请在${vaildTime}分钟内完成验证。)</span>
+								</p>
+								<div style="line-height:80px;height:80px;">&nbsp;</div>
+								<p style="margin:0px;padding:0px;line-height:30px;font-size:14px;color:#333333;font-family:'宋体',arial,sans-serif;">至盈网</p>
+								<p style="margin:0px;padding:0px;line-height:30px;font-size:14px;color:#333333;font-family:'宋体',arial,sans-serif;">${date}</p>
+								<div style="line-height:20px;height:20px;">&nbsp;</div>
+							</td>
+							<td width="30px;">&nbsp;</td>
+						</tr>
+						
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</tbody>
+</table>
