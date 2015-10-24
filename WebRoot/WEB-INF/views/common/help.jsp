@@ -8,7 +8,7 @@
             <div class="i_item">
                 <dl>
                     <dt>至盈服务</dt>
-                    <dd><a href="${ctx }/bk/indexList">经纪商搜索引擎</a></dd>
+                    <dd><a href="${ctx }/bk/list">经纪商搜索引擎</a></dd>
                     <dd><a href="${ctx }/register">注册</a></dd>
                     <dd><a href="${ctx }/login">登录</a></dd>
                     <dd><a href="${ctx }/findpwd/select">忘记密码</a></dd>
@@ -25,18 +25,18 @@
             <div class="i_item">
                 <dl>
                     <dt>了解更多</dt>
-                    <dd><a href="${ctx }/static/help/help.html?id=1">常见问题</a></dd>
-                    <dd><a href="${ctx }/static/help/help.html?id=2">社区守则</a></dd>
-                    <dd><a href="${ctx }/static/help/help.html?id=3">免责条款</a></dd>
-                    <dd><a href="${ctx }/static/help/help.html?id=4">隐私政策</a></dd>
+                    <dd><a href="${ctx }/help/moreInfo?id=4">常见问题</a></dd>
+                    <dd><a href="${ctx }/help/moreInfo?id=3">社区守则</a></dd>
+                    <dd><a href="${ctx }/help/moreInfo?id=2">免责条款</a></dd>
+                    <dd><a href="${ctx }/help/moreInfo?id=1">隐私政策</a></dd>
                 </dl>
             </div>
             <div class="i_item">
                 <dl>
                     <dt>关于我们</dt>
-                    <dd><a href="${ctx }/static/help/help.html?id=5">至盈简介</a></dd>
-                    <dd><a href="${ctx }/static/help/help.html?id=6">加入我们</a></dd>
-                    <dd><a href="${ctx }/static/help/help.html?id=7">联系我们</a></dd>
+                    <dd><a href="${ctx }/help/aboutUs?id=5">至盈简介</a></dd>
+                    <dd><a href="${ctx }/help/joinUs?id=6">加入我们</a></dd>
+                    <dd><a href="${ctx }/help/joinUs?id=7">联系我们</a></dd>
                 </dl>
             </div>
             <div class="i_item">
