@@ -255,6 +255,8 @@ public class IndexController {
 		
 		member.setMobile(member.getMobile().trim());
 		member.setNickName(member.getNickName().trim());
+		member.setAccountCategory(Member.ACCOUNT_CATEGORY_CUSTOMER);
+		member.setAccountType(Member.ACCOUNT_TYPE_TRUE);
 		
 		//判断短信验证码
 		String code = request.getParameter("code");

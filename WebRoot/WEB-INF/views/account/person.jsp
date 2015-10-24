@@ -455,7 +455,7 @@ function showUploadImg(title, imgUrl){
                                     			<span class="cOrange">审核未通过（请联系客服）</span>
                                     		</c:when>
                                     		<c:otherwise>
-                                    			<span class="cGreen"><i class="icon">󰅖</i> 已上传</span>
+                                    			<span class="cGreen"><i class="icon">󰅖</i> 有效</span>
                                     		</c:otherwise>
                                     	</c:choose>
                                     	<c:choose>
@@ -483,7 +483,7 @@ function showUploadImg(title, imgUrl){
                                     			<span class="cOrange">审核未通过（请联系客服）</span>
                                     		</c:when>
                                     		<c:otherwise>
-                                    			<span class="cGreen"><i class="icon">󰅖</i> 已上传</span>
+                                    			<span class="cGreen"><i class="icon">󰅖</i> 有效</span>
                                     		</c:otherwise>
                                     	</c:choose>
                                     	<c:choose>
