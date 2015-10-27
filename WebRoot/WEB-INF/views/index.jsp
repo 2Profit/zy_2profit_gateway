@@ -11,6 +11,9 @@
 
 <script type="text/javascript">
 	$(function() {
+
+		headerAddClass();
+		
 		$('div[data-ui="header"]').addClass('index');
 	});
 </script>

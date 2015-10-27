@@ -2,7 +2,7 @@
 
 <%@ include file="jstl.jsp" %>
 
-<div data-ui="header" class="J_header">
+<div id="headrDiv" data-ui="header" class="J_header">
      <div class="h_inner">
          <div class="i_logo"><a href="javascript:void(0);"><img src="${ctx }/static/images/logo.png"></a></div>
          <div class="i_login">

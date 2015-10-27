@@ -9,6 +9,8 @@
 
 	$(function () {
 		
+		headerAddClass();
+		
 	});
 </script>
 

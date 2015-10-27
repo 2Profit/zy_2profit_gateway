@@ -9,6 +9,9 @@
 
 var globalPostId = '';
 $(function(){
+	
+	headerAddClass();
+	
 	$('a[name="doVote_href"]').bind('click',function(event){
 		event.preventDefault();
 		

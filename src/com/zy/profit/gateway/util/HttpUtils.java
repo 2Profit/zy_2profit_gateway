@@ -66,6 +66,7 @@ public class HttpUtils {
 	 */
 	public static String getCaptchaCode(HttpServletRequest request){
 		Object code = request.getSession().getAttribute(RandomValidateCode.RANDOMCODEKEY);
+		request.getSession().removeAttribute(RandomValidateCode.RANDOMCODEKEY);
 		return code == null ? "" : code.toString();
 	}
 	

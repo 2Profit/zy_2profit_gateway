@@ -19,7 +19,7 @@ form { display: inline; }
 @font-face { font-family: 'icomoon'; src: url('../font/icomoon.eot'); src: url('../font/icomoon.eot?#iefix') format('embedded-opentype'), url('../font/icomoon.woff') format('woff'), url('../font/icomoon.ttf') format('truetype'), url('../font/icomoon.svg#iconfont') format('svg'); }
 .icon { font-family: 'icomoon' !important; font-style: normal; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
-body { min-width: 1200px; background-color: #f0f2f3; }
+body { min-width: 1200px; background: url(../images/index_bg.png) repeat-x left bottom; background-color: #f0f2f3; }
 
 .fl { float: left !important; }
 .fr { float: right !important; }
@@ -147,7 +147,7 @@ a.abtn.red:hover { background-color: #f70; }
     .J_header .h_inner { margin: 0 auto; width: 1200px; height: 60px; }
         .J_header .h_inner .i_logo { float: left; height: 60px; line-height: 60px; }
             .J_header .h_inner .i_logo a { font-size: 32px; font-weight: bold; color: #56b30b; }
-                .J_header .h_inner .i_logo a img { width: 42px; height: 42px; margin-top: 9px; }
+                .J_header .h_inner .i_logo a img { vertical-align: top; width: 42px; height: 42px; margin-top: 9px; }
         .J_header .h_inner .i_nav { float: right; height: 60px; }
             .J_header .h_inner .i_nav .n_item { position: relative; float: left; height: 60px; }
                 .J_header .h_inner .i_nav .n_item .i_default { }
@@ -184,13 +184,14 @@ a.abtn.red:hover { background-color: #f70; }
                 .J_header .h_inner .i_login .l_login .l_info .i_logout a { color: #999; }
 
     .J_header.index { height: 170px; }
-
+        .J_header.index .h_inner .i_logo { margin-left: 30px; }
+            .J_header.index .h_inner .i_logo a img { position: relative; vertical-align: top; z-index: 100; width: auto; height: auto; margin-top: 9px; }
 
 
 .J_indexMask { position: absolute; left: 50%; top: 54px; margin-left: -613px; width: 1226px; height: 1300px; background: url(../images/index_mask.png) no-repeat; }
     .J_indexMask.mini { height: 116px; }
 
-.J_loginWrap { position: relative; z-index: 1; margin: -80px auto 0 auto; width: 1200px; height: 80px; }
+.J_loginWrap { position: relative; z-index: 1; padding-left: 160px; margin: -80px auto 0 auto; width: 1060px; height: 80px; }
     .J_loginWrap .l_left { float: left; padding-left: 20px; height: 34px; }
     .J_loginWrap .l_right { float: right; padding-right: 20px; }
 
@@ -464,7 +465,7 @@ a.abtn.red:hover { background-color: #f70; }
 .J_retrieve { width: 1100px; margin: auto; background: url(../images/dot_ddd2.png) left 50px repeat-x; }
     .J_retrieve .r_inner { width: 960px; margin: 0 auto; }
         .J_retrieve .r_inner .i_header { height: 52px; }
-            .J_retrieve .r_inner .i_header .h_item { float: left; width: 300px; height: 50px; text-align: center; }
+            .J_retrieve .r_inner .i_header .h_item { float: left; width: 230px; height: 50px; text-align: center; }
                 .J_retrieve .r_inner .i_header .h_item.active { border-bottom: 2px solid #ff8b03; }
                     .J_retrieve .r_inner .i_header .h_item.active .i_icon { background: url(../images/step_orange.png); }
                     .J_retrieve .r_inner .i_header .h_item.active .i_txt { color: #ff8b03; }
@@ -534,7 +535,7 @@ J_vote.J_sdList .s_inner .i_main .m_item .i_pic img { vertical-align: top; }
                 .J_cjzxList .c_inner .i_main .m_item .i_pic { position: absolute; left: 0; top: 0; padding: 10px 0; }
                     .J_cjzxList .c_inner .i_main .m_item .i_pic img { height: 72px; vertical-align: top; }
                 .J_cjzxList .c_inner .i_main .m_item .i_info { }
-                    .J_cjzxList .c_inner .i_main .m_item .i_info .i_name { font-size: 16px; }
+                    .J_cjzxList .c_inner .i_main .m_item .i_info .i_name { width: 100%; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
                         .J_cjzxList .c_inner .i_main .m_item .i_info .i_name a { color: #333; }
                     .J_cjzxList .c_inner .i_main .m_item .i_info .i_txt { margin-top: 8px; height: 22px; line-height: 22px; font-size: 12px; color: #999; }
                         .J_cjzxList .c_inner .i_main .m_item .i_info .i_txt span { margin-left: 6px; }
@@ -877,8 +878,8 @@ J_vote.J_sdList .s_inner .i_main .m_item .i_pic img { vertical-align: top; }
         .J_aboutMe .a_tab .t_main .m_item.active { display: block; }
 
 .J_aboutMe .a_textArea { padding: 0 80px 20px; }
-    .J_aboutMe .a_textArea h3 { margin-top:20px; line-height: 40px; font-weight: normal; font-size: 20px; }
-    .J_aboutMe .a_textArea p { text-indent: 2em; line-height:26px; color:#666; }
+    .J_aboutMe .a_textArea h3 { margin-top: 20px; line-height: 40px; font-weight: normal; font-size: 20px; }
+    .J_aboutMe .a_textArea p { text-indent: 2em; line-height: 26px; color: #666; }
 
 /* 美腿 */
 .J_footer { position: relative; padding: 30px 0; border-bottom: 4px solid #1d1d1d; background-color: #272727; text-align: center; }
