@@ -15,7 +15,7 @@
 
 $(function(){
 	
-	headerAddClass();
+	//headerAddClass();
 	
 	$('#loginForm').validator({
 		fields : {

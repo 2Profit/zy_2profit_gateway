@@ -145,7 +145,7 @@ a.abtn.red:hover { background-color: #f70; }
 
 .J_header { height: 60px; background-color: #333; }
     .J_header .h_inner { margin: 0 auto; width: 1200px; height: 60px; }
-        .J_header .h_inner .i_logo { float: left; height: 60px; line-height: 60px; }
+        .J_header .h_inner .i_logo { float: left;    height: 60px; line-height: 60px; }
             .J_header .h_inner .i_logo a { font-size: 32px; font-weight: bold; color: #56b30b; }
                 .J_header .h_inner .i_logo a img { vertical-align: top; width: 42px; height: 42px; margin-top: 9px; }
         .J_header .h_inner .i_nav { float: right; height: 60px; }
@@ -184,8 +184,8 @@ a.abtn.red:hover { background-color: #f70; }
                 .J_header .h_inner .i_login .l_login .l_info .i_logout a { color: #999; }
 
     .J_header.index { height: 170px; }
-        .J_header.index .h_inner .i_logo { margin-left: 30px; }
-            .J_header.index .h_inner .i_logo a img { position: relative; vertical-align: top; z-index: 100; width: auto; height: auto; margin-top: 9px; }
+        .J_header.index .h_inner .i_logo { position: relative; margin-left: 30px; }
+            .J_header.index .h_inner .i_logo a img { position: absolute; vertical-align: top; z-index: 100; width: auto; height: auto; margin-top: 9px; }
 
 
 .J_indexMask { position: absolute; left: 50%; top: 54px; margin-left: -613px; width: 1226px; height: 1300px; background: url(../images/index_mask.png) no-repeat; }

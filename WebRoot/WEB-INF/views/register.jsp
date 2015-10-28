@@ -15,7 +15,7 @@
 
 $(function(){
 	
-	headerAddClass();
+	//headerAddClass();
 	
 	if('${msg}'){
 		$('tr[data-type="msg"]').show();

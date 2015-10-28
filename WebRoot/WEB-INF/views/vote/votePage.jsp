@@ -10,7 +10,7 @@
 var globalPostId = '';
 $(function(){
 	
-	headerAddClass();
+	//headerAddClass();
 	
 	$('a[name="doVote_href"]').bind('click',function(event){
 		event.preventDefault();
