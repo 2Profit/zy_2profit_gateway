@@ -261,8 +261,15 @@
 					<div class="c_item">
 						<div class="i_left">
 							<div class="l_img">
-								<img src="${ctx }/static/tmp/face_08.jpg">
-							</div>
+			                    <c:choose>
+			                   		<c:when test="${empty currentTopic.mostPraisePost1.publisher.headUrl }">
+			                   			<img src="${ctx }/static/images/userface.jpg"/>
+			                   		</c:when>
+			                   		<c:otherwise>
+			                   			<img src="${ctx }${currentTopic.mostPraisePost1.publisher.headUrl }"/>
+			                   		</c:otherwise>
+			                   	</c:choose>		
+		                   	</div>					
 							<div class="l_hg"></div>
 						</div>
 						<div class="i_right">
@@ -282,7 +289,14 @@
 					<div class="c_item">
 						<div class="i_left">
 							<div class="l_img">
-								<img src="${ctx }/static/tmp/face_03.jpg">
+								<c:choose>
+			                   		<c:when test="${empty currentTopic.mostPraisePost2.publisher.headUrl }">
+			                   			<img src="${ctx }/static/images/userface.jpg"/>
+			                   		</c:when>
+			                   		<c:otherwise>
+			                   			<img src="${ctx }${currentTopic.mostPraisePost2.publisher.headUrl }"/>
+			                   		</c:otherwise>
+			                   	</c:choose>
 							</div>
 							<div class="l_hg"></div>
 						</div>

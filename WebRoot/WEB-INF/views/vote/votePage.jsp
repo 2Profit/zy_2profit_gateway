@@ -73,7 +73,7 @@ $(function(){
 	        success: function(json){   
 	          	if(json.success){
 	          		jc.alert('回复成功', function(b){
-	          			window.location.href="${ctx}/vote/index/list";
+	          			window.location.href="${ctx}/vote/link?id="+$('#currentTopicId').val();
 	          		});
 	          	}else{
 	          		if(json.code == "406"){jc.alert('抱歉，该投票停止评论！'); return false;}
@@ -338,7 +338,14 @@ function refresh2() {
 	                        <div class="c_item">
 	                            <div class="i_left">
 	                                <div class="l_img">
-	                                    <img src="${ctx }/static/tmp/face_08.jpg">
+					                    <c:choose>
+					                   		<c:when test="${empty post.publisher.headUrl }">
+					                   			<img src="${ctx }/static/images/userface.jpg"/>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<img src="${ctx }${post.publisher.headUrl }"/>
+					                   		</c:otherwise>
+					                   	</c:choose>	                                    
 	                                </div>
 	                                <div class="l_hg"></div>
 	                            </div>
@@ -365,7 +372,14 @@ function refresh2() {
 											<div class="c_item">
 		                                        <div class="i_left">
 		                                            <div class="l_img">
-		                                                <img src="${ctx }/static/tmp/face_04.jpg">
+									                    <c:choose>
+									                   		<c:when test="${empty replay.replayer.headUrl }">
+									                   			<img src="${ctx }/static/images/userface.jpg"/>
+									                   		</c:when>
+									                   		<c:otherwise>
+									                   			<img src="${ctx }${replay.replayer.headUrl }"/>
+									                   		</c:otherwise>
+									                   	</c:choose>		                                                
 		                                            </div>
 		                                            <div class="l_hg"></div>
 		                                        </div>
@@ -400,7 +414,14 @@ function refresh2() {
 						    <div class="c_item">
 	                            <div class="i_left">
 	                                <div class="l_img">
-	                                    <img src="${ctx }/static/tmp/face_03.jpg">
+					                    <c:choose>
+					                   		<c:when test="${empty post.publisher.headUrl }">
+					                   			<img src="${ctx }/static/images/userface.jpg"/>
+					                   		</c:when>
+					                   		<c:otherwise>
+					                   			<img src="${ctx }${post.publisher.headUrl }"/>
+					                   		</c:otherwise>
+					                   	</c:choose>	                                    
 	                                </div>
 	                                <div class="l_hg"></div>
 	                            </div>
