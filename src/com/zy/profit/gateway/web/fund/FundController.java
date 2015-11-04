@@ -18,6 +18,7 @@ import com.zy.base.service.ExchangeRateService;
 import com.zy.common.util.AjaxResult;
 import com.zy.common.util.DateUtils;
 import com.zy.member.entity.Member;
+import com.zy.member.service.MemberService;
 import com.zy.personal.entity.MemCoinLog;
 import com.zy.personal.entity.MemOrder;
 import com.zy.personal.service.MemCoinLogService;
@@ -48,6 +49,9 @@ public class FundController {
 	@Autowired
 	private MemPayService memPayService;
 	
+	@Autowired
+	private MemberService memberService;
+	
 	@RequestMapping("/amount")
 	public String amount(HttpServletRequest request, Model model){
 		
@@ -57,6 +61,9 @@ public class FundController {
 		model.addAttribute("exchangeRate", exchangeRate);
 		
 		Member member = HttpUtils.getMember(request);
+		
+		member = memberService.find(member.getId());
+		model.addAttribute("member", member);
 		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("memberId", member.getId());

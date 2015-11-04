@@ -1,3 +1,8 @@
+<%@page import="org.springframework.context.ApplicationContext"%>
+<%@page import="com.zy.member.service.MemberService"%>
+<%@page import="org.springframework.web.context.support.WebApplicationContextUtils"%>
+<%@page import="com.zy.profit.gateway.util.HttpUtils"%>
+<%@page import="com.zy.member.entity.Member"%>
 <%@ page language="java" pageEncoding="UTF-8"%>
 
 <%@ include file="jstl.jsp" %>
@@ -35,9 +40,17 @@ $(function(){
              <div class="r_name" style="">${sessionScope.login_user.nickName }</div>
              <div class="r_info">虚拟币：
              	<span class="cOrange">
+             		<%
+             		Member sessionMember = HttpUtils.getMember(request);
+             		ServletContext context = config.getServletContext();
+             		ApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(context);
+             		MemberService memberService = ac.getBean(MemberService.class);
+             		Member m = memberService.find(sessionMember.getId());
+             		pageContext.setAttribute("m", m);
+             		%>
              		<c:choose>
-             			<c:when test="${not empty sessionScope.login_user.coin }">
-             				${sessionScope.login_user.coin }
+             			<c:when test="${not empty m.coin }">
+             				${m.coin }
              			</c:when>
              			<c:otherwise>0</c:otherwise>
              		</c:choose>

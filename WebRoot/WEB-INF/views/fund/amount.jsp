@@ -41,8 +41,8 @@ function mySubmit(){
 					<div class="J_toolsBar mt20">
 						<div class="t_label fz28 cOrange">
 							<c:choose>
-		             			<c:when test="${not empty sessionScope.login_user.coin }">
-		             				${sessionScope.login_user.coin }
+		             			<c:when test="${not empty member.coin }">
+		             				${member.coin }
 		             			</c:when>
 		             			<c:otherwise>0</c:otherwise>
 		             		</c:choose>

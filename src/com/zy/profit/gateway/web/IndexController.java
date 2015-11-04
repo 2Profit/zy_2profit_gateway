@@ -12,7 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.DisabledAccountException;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +40,7 @@ import com.zy.member.service.MemberService;
 import com.zy.profit.gateway.util.HttpUtils;
 import com.zy.profit.gateway.util.SMSAPI;
 import com.zy.profit.gateway.util.SystemConfig;
+import com.zy.profit.gateway.util.WebHelper;
 import com.zy.util.Md5Util;
 import com.zy.vote.entity.VoteTopic;
 import com.zy.vote.entity.VoteTopicPost;
@@ -331,12 +334,20 @@ public class IndexController {
 			subject.login(token);
 			
 			//
-			Member member = HttpUtils.getMember(request);
+			Member member = memberService.findMemberByLogin(username);
 			member.setLastLoginDate(new Date());
 			member.setLastLoginIp(request.getRemoteAddr());
 			memberService.update(member);
 			
+			Session session = subject.getSession();
+			if(session != null){
+				session.setAttribute(WebHelper.SESSION_LOGIN_USER, member);
+			}
+			
 			ajaxResult.setSuccess(true);
+		} catch (LockedAccountException lae) {
+			lae.printStackTrace();
+			ajaxResult.setMsg(lae.getMessage());
 		} catch (DisabledAccountException dae) {
 			dae.printStackTrace();
 			ajaxResult.setMsg("账号已被删除");

@@ -5,6 +5,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -33,17 +34,7 @@ public class ShiroDBRealm extends AuthorizingRealm {
 	 */
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-		
-//		InsUser user = (InsUser) principals.fromRealm(getName()).iterator().next();
-//		
-//		Set<InsRole> roles = user.getRoles();
-//		if(roles != null && !roles.isEmpty()){
-//			SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-//			for(InsRole r : roles){
-//				info.addRole(r.getId());
-//			}
-//			return info;
-//		}
+	
 		
 		return null;
 	}
@@ -66,8 +57,23 @@ public class ShiroDBRealm extends AuthorizingRealm {
         if(member != null){
         	AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(token.getUsername(), member.getPwd(), getName());
         	
-        	Subject subject = SecurityUtils.getSubject();
-        	subject.getSession().setAttribute(WebHelper.SESSION_LOGIN_USER, member);
+        	String status = member.getStatus();
+        	if("1".equals(status)){
+        		throw new LockedAccountException("账号已经被冻结");
+        	}else if("2".equals(status)){
+        		throw new LockedAccountException("账号已经被列入黑名单");
+        	}else if("3".equals(status)){
+        		throw new LockedAccountException("账号已经被注销");
+        	}
+        	
+        	/*Subject subject = SecurityUtils.getSubject();
+        	
+        	if(subject != null && subject.isAuthenticated()){
+        		Session session = subject.getSession();
+        		if(session != null){
+        			session.setAttribute(WebHelper.SESSION_LOGIN_USER, member);
+        		}
+        	}*/
         	
         	return authcInfo;
         }else{
@@ -75,35 +81,5 @@ public class ShiroDBRealm extends AuthorizingRealm {
         }
 	}
 
-//	private Set<InsRole> getRole(InsUser user){
-//		
-//		int ut = user.getUserType().intValue();
-//		Set<InsRole> roles = user.getRoles();
-//		
-//		if(roles == null || roles.isEmpty()){
-//			InsRole r = new InsRole();
-//			if(ut == Constants.USER_TYPE_INS.key.intValue()){
-//				//机构
-//				r.setId(Constants.ROLE_ID_INS);
-//			}else if(ut == Constants.USER_TYPE_SCH.key.intValue()){
-//				//学校
-//				r.setId(Constants.ROLE_ID_SCH);
-//			}else if(ut == Constants.USER_TYPE_TEA.key.intValue()){
-//				Teacher teacher = user.getTeacher();
-//				if(teacher.getTeacherType().equals(Constants.TEACHER_TYPE_TEA.key)){
-//					//辅导老师
-//					r.setId(Constants.ROLE_ID_TEA);
-//				}else if(teacher.getTeacherType().equals(Constants.TEACHER_TYPE_CLS.key)){
-//					//班主任
-//					r.setId(Constants.ROLE_ID_CLS_TEA);
-//				}
-//			}
-//			roles = new HashSet<InsRole>();
-//			roles.add(r);
-//		}
-//		
-//		return roles;
-//	}
-	
 	
 }
