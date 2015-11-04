@@ -220,4 +220,6 @@ function checkAllClick(chk, name){
 	$('input[name="'+$(chk).attr('name')+'"]').attr('checked', chk.checked);
 }
 
-
+function headerAddClass(){
+	//$('#headrDiv').addClass('index');
+}

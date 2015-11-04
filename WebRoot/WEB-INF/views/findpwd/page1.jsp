@@ -15,6 +15,8 @@
 
 $(function(){
 	
+	headerAddClass();
+	
 	$('#myForm').validator({
 		timely : 0,
 		focusCleanup : true,

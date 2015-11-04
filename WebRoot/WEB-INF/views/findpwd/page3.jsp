@@ -15,6 +15,8 @@
 
 $(function(){
 	
+	headerAddClass();
+	
 	//表单验证
 	$('#myForm').validator({
 		timely : 0,

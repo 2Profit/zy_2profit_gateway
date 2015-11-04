@@ -56,8 +56,8 @@ public class FindPwdController {
 		String code = request.getParameter("code");
 		
 		String captchaCode = HttpUtils.getCaptchaCode(request);
-		if(StringUtils.isBlank(code) || code.equals(captchaCode)){
-			redirectAttributes.addFlashAttribute("msg", "验证码有误");
+		if(StringUtils.isBlank(code) || !code.equalsIgnoreCase(captchaCode)){
+			redirectAttributes.addAttribute("msg", "验证码有误");
 			return "redirect:/findpwd/select";
 		}
 		

@@ -15,7 +15,7 @@
 	var slider3T = 0;
 	
 	$(function () {
-		
+		headerAddClass();
 		//$("#slider").slider('option',{min: 0, max: 500});调整范围，后续加上
 		
 	    var points = 200;

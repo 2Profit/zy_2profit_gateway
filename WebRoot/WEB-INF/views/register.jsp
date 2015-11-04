@@ -15,6 +15,8 @@
 
 $(function(){
 	
+	//headerAddClass();
+	
 	if('${msg}'){
 		$('tr[data-type="msg"]').show();
 	}
@@ -76,23 +78,16 @@ function sendCode(_this){
 		return;
 	}
 	
+	if(!$('input[name="imgCode"]').isValid()){
+		return;
+	}
+	
 	//检查手机是否通过
 	$('input[name="mobile"]').isValid(function(v){
 		if(v){
 			var seconds = 59;
 			$sendBtn.removeClass('blue').addClass('gray').html("重新获取 ( 60 ) ");
 			$sendBtn.attr('data-status', 'no');
-			//调用短信接口
-			$.ajax({
-				url : '${ctx}/register/send_msg',
-				data : {
-					'mobile' : $('input[name="mobile"]').val()
-				},
-				async : false,
-				success : function(result){
-					
-				}
-			});
 			
 			codeTimer = setInterval(function(){
 				if(seconds < 0){
@@ -104,8 +99,28 @@ function sendCode(_this){
 				}
 			}, 1000); 
 			
+			//调用短信接口
+			$.ajax({
+				url : '${ctx}/register/send_msg',
+				data : {
+					'mobile' : $('input[name="mobile"]').val(),
+					'imgCode' : $('input[name="imgCode"]').val()
+				},
+				async : false,
+				success : function(result){
+					if(!result.success){
+						jc.alert(result.msg);
+						clearInterval(codeTimer);
+						$sendBtn.removeClass('gray').addClass('blue').html('获取手机验证码');
+						$sendBtn.attr('data-status', 'yes');
+					}
+				}
+			});
+			
+			
+			
 		}else{
-			jc.alert('请输入正确的手机号');
+			//jc.alert('请输入正确的手机号');
 		}
 	});
 }
@@ -175,6 +190,31 @@ function changeCode(){
                                         <td class="plr20" id="msg_mobile">
                                         </td>
                                     </tr>
+                                    
+                                    <tr>
+                                        <td class="tar">
+                                            <div class="J_toolsBar">
+                                                <div class="t_label">验证码：</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="J_toolsBar">
+                                                <div class="t_text t_regCode">
+                                                    <label>
+                                                        <input type="text" name="imgCode"/>
+                                                    </label>
+                                                </div>
+                                                <div class="t_button ml10">
+                                                	<a href="javascript:void(0);">
+                                                    	<img src="${ctx }/imageServlet" title="看不清，换一张" id="captchaCode" onclick="changeCode()" width="100" height="36"/>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="plr20" id="msg_img_code">
+                                        </td>
+                                    </tr>
+                                    
                                     <tr>
                                         <td class="tar">
                                             <div class="J_toolsBar">
@@ -248,30 +288,6 @@ function changeCode(){
                                             </div>
                                         </td>
                                         <td class="plr20" id="msg_pwd1">
-                                        </td>
-                                    </tr>
-                                    
-                                    <tr>
-                                        <td class="tar">
-                                            <div class="J_toolsBar">
-                                                <div class="t_label">验证码：</div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="J_toolsBar">
-                                                <div class="t_text t_regCode">
-                                                    <label>
-                                                        <input type="text" name="imgCode"/>
-                                                    </label>
-                                                </div>
-                                                <div class="t_button ml10">
-                                                	<a href="javascript:void(0);">
-                                                    	<img src="${ctx }/imageServlet" title="看不清，换一张" id="captchaCode" onclick="changeCode()" width="100" height="36"/>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="plr20" id="msg_img_code">
                                         </td>
                                     </tr>
                                     

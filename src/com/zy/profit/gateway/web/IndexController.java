@@ -90,7 +90,7 @@ public class IndexController {
 		
 		BrokerExtInfoDto queryDto = new BrokerExtInfoDto();
 		queryDto.setDeleteFlag(BrokerExtInfoDto.DELETE_FLAG_NORMAL);		
-		model.addAttribute("brokers", brokerExtInfoService.queryPage(queryDto, new PageModel<BrokerExtInfo>(6)).getList());
+		model.addAttribute("brokers", brokerExtInfoService.queryPage(queryDto, new PageModel<BrokerExtInfo>(4)).getList());
 		
 		return "/index";
 	}
@@ -112,6 +112,14 @@ public class IndexController {
 		AjaxResult ajaxResult = new AjaxResult();
 		ajaxResult.setSuccess(false);
 		try {
+			
+			//验证验证码
+			String imgCode = request.getParameter("imgCode");
+			if(StringUtils.isBlank(imgCode) || !imgCode.equalsIgnoreCase(HttpUtils.getCaptchaCode(request))){
+				ajaxResult.setMsg("验证码输入错误");
+				return ajaxResult;
+			}
+			
 			String mobile = request.getParameter("mobile");
 			
 			String code = BaseUtils.getNumr(4);
@@ -244,17 +252,19 @@ public class IndexController {
 	@RequestMapping("/register/save")
 	public String registerSave(Member member, RedirectAttributes redirectAttributes, HttpServletRequest request){
 		
-		//验证验证码
+		/*//验证验证码
 		String imgCode = request.getParameter("imgCode");
 		if(StringUtils.isBlank(imgCode) || !imgCode.equalsIgnoreCase(HttpUtils.getCaptchaCode(request))){
 			redirectAttributes.addAttribute("msg", "验证码输入错误");
 			return "redirect:/register";
-		}
+		}*/
 		
 		String msg = "";
 		
 		member.setMobile(member.getMobile().trim());
 		member.setNickName(member.getNickName().trim());
+		member.setAccountCategory(Member.ACCOUNT_CATEGORY_CUSTOMER);
+		member.setAccountType(Member.ACCOUNT_TYPE_TRUE);
 		
 		//判断短信验证码
 		String code = request.getParameter("code");

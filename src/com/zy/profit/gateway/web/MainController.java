@@ -33,6 +33,8 @@ import com.zy.profit.gateway.util.HttpUtils;
 import com.zy.profit.gateway.util.ImageUtil;
 import com.zy.profit.gateway.util.SystemConfig;
 import com.zy.profit.gateway.util.WebHelper;
+import com.zy.proposal.entity.ProposalMemImg;
+import com.zy.proposal.service.ProposalMemImgService;
 import com.zy.util.Md5Util;
 
 @Controller
@@ -47,6 +49,9 @@ public class MainController {
 	
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	private ProposalMemImgService proposalMemImgService;
 	
 	@RequestMapping
 	public String main(HttpServletRequest request, Model model){
@@ -229,15 +234,28 @@ public class MainController {
 				imgUrl = imgUrl.replaceAll("\\\\", "/");
 			}
 			
+			ProposalMemImg proposalMemImg = new ProposalMemImg();
+			proposalMemImg.setMember(member);
+			proposalMemImg.setPosStatus(CommonConstants.proposalStatusDefault.getIntKey());
+			proposalMemImg.setImgPath(imgUrl);
+			proposalMemImg.setCreateId(member.getId());
+			proposalMemImg.setCreateName(member.getNickName());
+			
 			if("imgIDCardA".equals(paramName)){
 				member.setImgIDCardA(imgUrl);
 				member.setImgIDCardStatus(Member.IMG_STATUS_DSH);
+				
+				proposalMemImg.setType(ProposalMemImg.TYPE_ID_CARD);
+				
 			}else if("imgBankCard".equals(paramName)){
 				member.setImgBankCard(imgUrl);
 				member.setImgBackCardStatus(Member.IMG_STATUS_DSH);
+				
+				proposalMemImg.setType(ProposalMemImg.TYPE_BANK);
+				
 			}
-			//TO DO  保存提案
-			memberService.update(member);
+			//TODO  保存提案
+			proposalMemImgService.saveProposalMemImg(proposalMemImg, member);
 			
 			ajaxResult.setSuccess(true);
 		} catch (Exception e) {

@@ -11,6 +11,16 @@
 
 <%@ include file="../common/nice-validator.jsp"%>
 
+<script type="text/javascript">
+
+$(function(){
+	
+	headerAddClass();
+	
+});
+
+</script>
+
 <body>
 
 	<%@ include file="../common/head.jsp"%>
