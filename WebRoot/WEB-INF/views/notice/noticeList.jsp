@@ -67,20 +67,33 @@ $(function(){
  				<div class="plrb20">
                     <div data-ui="newsList"  class="J_newsList">
 						<c:forEach items="${notices }" var="notice">
-	                        <div class="n_item">
-	                            <div class="i_title">
-	                                <div class="t_time"><fmt:formatDate value="${notice.startDate}" pattern="yyyy-MM-dd"/></div>
-	                                <div class="t_txt">
-	                                    <a class="alink black hover" href="#">${notice.title }<img src="${ctx }/static/images/new.gif" /></a>
-	                                </div>
-	                            </div>
-	                            <div class="i_content">${notice.content }</div>
-	                        </div>				
+							<c:choose>
+								<c:when test="${notice.id == linkNoticeId}">
+									<div class="n_item current">
+			                            <div class="i_title">
+			                                <div class="t_time"><fmt:formatDate value="${notice.startDate}" pattern="yyyy-MM-dd"/></div>
+			                                <div class="t_txt">
+			                                    <a class="alink black hover" href="#">${notice.title }<img src="${ctx }/static/images/new.gif" /></a>
+			                                </div>
+			                            </div>
+			                            <div class="i_content">${notice.content }</div>
+			                        </div>								
+								</c:when>
+								<c:otherwise>
+									<div class="n_item">
+			                            <div class="i_title">
+			                                <div class="t_time"><fmt:formatDate value="${notice.startDate}" pattern="yyyy-MM-dd"/></div>
+			                                <div class="t_txt">
+			                                    <a class="alink black hover" href="#">${notice.title }<img src="${ctx }/static/images/new.gif" /></a>
+			                                </div>
+			                            </div>
+			                            <div class="i_content">${notice.content }</div>
+			                        </div>								
+								</c:otherwise>
+							</c:choose>
 						</c:forEach>
 					</div>
 				</div>
-
-
 
 			</div>
         </div>

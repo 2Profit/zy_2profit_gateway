@@ -1,5 +1,7 @@
 package com.zy.profit.gateway.web.notice;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,9 +18,10 @@ public class NoticeController {
 	private NoticeService noticeService;
 	
 	@RequestMapping("/list")
-	public String list(Model model){
+	public String list(Model model,HttpServletRequest request){
 		
 		model.addAttribute("notices", noticeService.getAllNotice());
+		model.addAttribute("linkNoticeId",request.getParameter("id"));
 		
 		model.addAttribute("allNumb", noticeService.getActiveNoticeNumb());
 		model.addAttribute("mainNumb", noticeService.getNoticeNumbByType(Notice.NOTICETYPE_MAIN));

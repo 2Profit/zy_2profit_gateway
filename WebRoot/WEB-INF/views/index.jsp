@@ -328,7 +328,7 @@
                 <div class="J_title">
                     <div class="t_txt">公告</div>
                     <div class="t_tips"></div>
-                    <div class="t_more"><a href="#">更多公告&nbsp;&gt;</a></div>
+                    <div class="t_more"><a href="${ctx }/notice/list">更多公告&nbsp;&gt;</a></div>
                 </div>
 				<div class="J_cjzxList">
                     <div class="c_inner">

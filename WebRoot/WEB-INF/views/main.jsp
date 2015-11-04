@@ -102,7 +102,7 @@
                             	<c:forEach items="${notices }" var="notice" varStatus="loop">
                             		<c:if test="${loop.index <= 5}">
 		                            	<tr>
-		                                    <td>${notice.title }</td>
+		                                    <td><a href="${ctx }/notice/list?id=${notice.id }">${notice.title }</a></td>
 		                                    <td><fmt:formatDate value="${notice.startDate}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
 		                                </tr>
 	                                </c:if>
