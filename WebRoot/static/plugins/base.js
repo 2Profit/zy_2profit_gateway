@@ -223,3 +223,8 @@ function checkAllClick(chk, name){
 function headerAddClass(){
 	//$('#headrDiv').addClass('index');
 }
+
+function setCurrentMenu(menuName){
+	$('#headrDiv div[data-ui="menu"] div.n_item').removeClass('current');
+	$('#headrDiv div[data-ui="menu"] div.n_item[data-menu="'+menuName+'"]').addClass('current');
+}

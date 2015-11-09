@@ -17,6 +17,8 @@ $(function(){
 	
 	//headerAddClass();
 	
+	setCurrentMenu('login');
+	
 	$('#loginForm').validator({
 		fields : {
 			username : {

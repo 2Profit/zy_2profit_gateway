@@ -17,6 +17,8 @@ $(function(){
 	
 	//headerAddClass();
 	
+	setCurrentMenu('register');
+	
 	if('${msg}'){
 		$('tr[data-type="msg"]').show();
 	}

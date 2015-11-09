@@ -10,6 +10,8 @@
 var globalPostId = '';
 $(function(){
 	
+	setCurrentMenu('vote');
+	
 	//headerAddClass();
 	
 	$('a[name="doVote_href"]').bind('click',function(event){
