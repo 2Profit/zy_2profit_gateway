@@ -31,6 +31,7 @@ public class BrokerController {
 			if(queryDto.getBkName().startsWith(","))
 				queryDto.setBkName(queryDto.getBkName().substring(1));
 		}*/
+		pageModel.setPageSize(5);
 		model.addAttribute("page", brokerExtInfoService.queryPage(queryDto, pageModel));
 		model.addAttribute("queryDto", queryDto);
 		
