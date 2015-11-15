@@ -55,7 +55,7 @@
 
     <div class="bgfff">
         <div class="J_content bgfff">
-            <div class="J_router"><a href="${ctx }/index/list">首页</a><span>&gt;</span><a href="${ctx }/bk/list">经纪商</a></div>
+            <div class="J_router"><a href="${ctx }/index">首页</a><span>&gt;</span><a href="${ctx }/bk/list">经纪商</a></div>
             <div class="fl c_760">
                 <div class="J_jjsMore">
                     <div class="j_header">

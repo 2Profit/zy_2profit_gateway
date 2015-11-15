@@ -61,13 +61,13 @@
 				}
     		}
     		if($('input[name=bkName]').val()!='' && $('input[name=bkName]').val()!=','){
-    			window.location.href="${ctx }/index/list?"+params+"&bkName="+$('input[name=bkName]').val();
+    			window.location.href="${ctx }/index?"+params+"&bkName="+$('input[name=bkName]').val();
     		}
-    		window.location.href="${ctx }/index/list?"+params;
+    		window.location.href="${ctx }/index?"+params;
 	    });
 		
-		$('input[name=bkName]').bind('keypress',function(event){
-			window.location.href="${ctx }/index/list?bkName="+$('input[name=bkName]').val();
+		$('input[name=bkName]').keyup(function(event){
+			window.location.href="${ctx }/index?bkName="+$('input[name=bkName]').val();
 		});
 		
 	});
@@ -138,7 +138,7 @@
 	</div>
 
 	<!-- 经纪商 -->
-	<form action="" name="form" id="form" method="post" theme="simple">
+	<form action="index" name="form" id="form" method="post" theme="simple">
 	<div class="J_content mt-260 bgfff hasShadow" id="afterPageAnchor">
 		<div class="fl c_760">
 			<div class="pau">

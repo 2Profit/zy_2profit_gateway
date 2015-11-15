@@ -73,7 +73,7 @@ public class IndexController {
 	private NoticeService noticeService;
 	
 	
-	@RequestMapping("/index/list")
+	@RequestMapping("/index")
 	public String index(Model model, HttpServletRequest request, PageModel<BrokerExtInfo> pageModel){
 		
 		VoteTopic currentTopic = voteTopicService.getCurrentTopic();
