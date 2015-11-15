@@ -69,14 +69,19 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <td>平台</td>
-                                    <td>帐号</td>
-                                    <td>经纪商</td>
-                                    <td>状态</td>
-                                    <td>虚拟币余额</td>
+                                    <td>开户平台</td>
+                                    <td>开户邮箱</td>
+                                    <td>MT4账号</td>
                                 </tr>
                             </thead>
                             <tbody>
+                            	<c:forEach items="${memBrokerRels }" var="mbr">
+	                                <tr>
+	                                    <td>${mbr.brokerInfo.cnName }</td>
+	                                    <td>${mbr.member.email }</td>
+	                                    <td>${mbr.mt4Card }</td>
+	                                </tr>
+                            	</c:forEach>
                             </tbody>
                         </table>
                     </div>

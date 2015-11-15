@@ -145,13 +145,25 @@ function changeCode(){
             <div class="pau">
                 <div class="J_title">
                     <div class="t_txt">用户注册</div>
-                    <div class="t_tips"></div>
+                    <div class="t_tips">
+                    	<c:if test="${not empty pbd }">
+                    		<c:choose>
+                    			<c:when test="${pbd.registerStatus eq 1 }">
+                    				该返佣申请链接已经被激活
+                    			</c:when>
+                    			<c:otherwise>
+                    				返佣申请激活
+                    			</c:otherwise>
+                    		</c:choose>
+                    	</c:if>
+                    </div>
                     <div class="t_more"><a class="cDef" href="${ctx }/login">已有帐号?马上登录&nbsp;&gt;</a></div>
                 </div>
             </div>
             <div class="clearfix pb20">
             
             	<form action="${ctx }/register/save" id="registerForm" method="post">
+            	<input type="hidden" name="pbdId" value="${pbd.id }"/>
                 <div class="fl c_760 c_rightBorder">
                     <div class="pau">
                         <div class="J_form pl80 J_reg">

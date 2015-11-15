@@ -368,7 +368,7 @@ function showUploadImg(title, imgUrl){
                                 <tr>
                                     <td style="width: 100px;" class="bgf9">
                                         <div class="J_toolsBar">
-                                            <div class="t_label right">银行名称</div>
+                                            <div class="t_label right">开户银行</div>
                                         </div>
                                     </td>
                                     <td colspan="4">
@@ -382,7 +382,7 @@ function showUploadImg(title, imgUrl){
                                     </td>
                                     <td style="width: 100px;" class="bgf9">
                                         <div class="J_toolsBar">
-                                            <div class="t_label right">银行账号</div>
+                                            <div class="t_label right">银行卡号</div>
                                         </div>
                                     </td>
                                     <td colspan="4">
@@ -399,7 +399,7 @@ function showUploadImg(title, imgUrl){
 								<tr>
                                     <td style="width: 100px;" class="bgf9">
                                         <div class="J_toolsBar">
-                                            <div class="t_label right">账户持有人姓名</div>
+                                            <div class="t_label right">开户姓名</div>
                                         </div>
                                     </td>
                                     <td colspan="9">

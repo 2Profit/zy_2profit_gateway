@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <%@include file="common/common.jsp"%>
+<%@ include file="common/nice-validator.jsp" %>
 
 </head>
 
@@ -19,6 +20,22 @@
 		setCurrentMenu('index');
 		
 	});
+	
+	function dialogBackDiscount(){
+		
+		/* <c:if test="${empty loginUser }">
+			jc.alert('请先登录', function(){
+				window.location.href = '${ctx}/login';
+			});
+			return;
+		</c:if> */
+		
+		jc.dialog.get("${ctx}/dialog/back_discount",
+			function(obj){
+				obj.show();
+			}, "back_discount");
+	}
+	
 </script>
 
 <body>
@@ -171,7 +188,7 @@
 
 				<div class="J_btnList">
 					<div class="b_item big">
-						<a href="javascript:void(0)">申请返佣</a>
+						<a href="javascript:dialogBackDiscount()">申请返佣</a>
 					</div>
 					<div class="b_item">
 						<a class="i1" href="javascript:void(0)"><span></span>更多经纪商</a>

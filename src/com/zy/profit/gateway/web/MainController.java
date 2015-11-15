@@ -21,6 +21,8 @@ import com.zy.base.entity.Nationality;
 import com.zy.base.entity.Notice;
 import com.zy.base.service.NationalityService;
 import com.zy.base.service.NoticeService;
+import com.zy.broker.entity.MemBrokerRel;
+import com.zy.broker.service.MemBrokerRelService;
 import com.zy.common.util.AjaxResult;
 import com.zy.common.util.CommonConstants;
 import com.zy.common.util.ConstantEnity;
@@ -53,11 +55,20 @@ public class MainController {
 	@Autowired
 	private ProposalMemImgService proposalMemImgService;
 	
+	@Autowired
+	private MemBrokerRelService memBrokerRelService;
+	
 	@RequestMapping
 	public String main(HttpServletRequest request, Model model){
 		
+		Member member = HttpUtils.getMember(request);
+		List<MemBrokerRel> memBrokerRels = memBrokerRelService.findMemBrokerRels(member.getId());
+		
+		model.addAttribute("memBrokerRels", memBrokerRels);
+		
 		model.addAttribute("notices", noticeService.getNoticeByStatusAndType(Notice.NOTICETYPE_MAIN));
 		model.addAttribute(Constants.MENU_NAME, Constants.MENU_NAME_MAIN);
+		
 		return "/main";
 	}
 	
