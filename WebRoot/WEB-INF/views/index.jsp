@@ -197,7 +197,7 @@
 								<div class="m_item">
 									<div class="i_pic">
 										<div class="p_logo">
-											<img style="width: 140px; height: 46px;" src="${ctx }/static/tmp/j2.jpg" />
+											<img style="width: 140px; height: 46px;" src="${ctx}/${broker.imageUrl}" />
 										</div>
 										<div class="p_num">${broker.commissionLlg }美元</div>
 										<div class="p_txt">黄金返佣</div>

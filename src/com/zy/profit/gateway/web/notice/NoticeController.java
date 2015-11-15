@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.zy.base.entity.Notice;
 import com.zy.base.service.NoticeService;
+import com.zy.member.entity.Member;
+import com.zy.profit.gateway.util.HttpUtils;
 
 @Controller
 @RequestMapping("/notice")
@@ -27,6 +29,12 @@ public class NoticeController {
 		model.addAttribute("mainNumb", noticeService.getNoticeNumbByType(Notice.NOTICETYPE_MAIN));
 		model.addAttribute("breakNumb", noticeService.getNoticeNumbByType(Notice.NOTICETYPE_BREAK));
 		model.addAttribute("repairNumb", noticeService.getNoticeNumbByType(Notice.NOTICETYPE_REPAIR));
+		
+		// 未登录用户、不能查看公告详情（因目前公告详情嵌套在用户中心）
+		Member sessionMember = HttpUtils.getMember(request);
+		if(sessionMember == null){
+			return "redirect:/login";
+		}
 		
 		return "notice/noticeList";
 	}
