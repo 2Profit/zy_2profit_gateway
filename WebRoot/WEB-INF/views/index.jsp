@@ -607,6 +607,13 @@
 
 	</div>
 
+	<div class="J_cooperation mt20">
+        <div class="c_title"><span>合作伙伴</span></div>
+        <div class="c_inner">
+            <img src="${ctx }/static/tmp/cooperation.png" />
+        </div>
+    </div>
+
 	<jsp:include page="common/help.jsp" />
 
 	<jsp:include page="common/foot.jsp" />

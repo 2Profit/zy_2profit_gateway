@@ -49,7 +49,7 @@ public class MailUtils {
 		LineNumberReader lineNumberReader = null;
 		try {
 			String path = SystemConfig.getWebRoot() + SystemConfig.getMailContentUrl();
-			lineNumberReader = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(path))));
+			lineNumberReader = new LineNumberReader(new BufferedReader(new InputStreamReader(new FileInputStream(path), "utf-8")));
 			String lineString; 
             while ((lineString = lineNumberReader.readLine()) != null) {
             	sb.append(lineString);
