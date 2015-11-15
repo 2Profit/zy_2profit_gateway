@@ -71,8 +71,12 @@
 	        	 /static/** = anon
 	        	 /captcha/** = anon
 	             /index = anon
+	             /dialog/back_discount = anon
+	             /ajax/back_discount/save = anon
 	             /register/** = anon
 	             /findpwd/** = anon
+	             /bk/** = anon
+	             /vote/** = anon
 	             /dologin = anon
 	             /login = anon
 	             /imageServlet = anon

@@ -7,148 +7,43 @@
     
 <script type="text/javascript">
 
-	var slider1F = 0;
-	var slider1T = 0;
-	var slider2F = 0;
-	var slider2T = 0;
-	var slider3F = 0;
-	var slider3T = 0;
-	
+	/* var param_min_income_money = 'min_income_money,desc';
+	var param_profit_star = 'profit_star,desc';
+	var param_commission_llg = 'commission_llg,desc';
+	var param_is_recommet = 'is_recommet,desc'; */
+
 	$(function () {
 		headerAddClass();
-		//$("#slider").slider('option',{min: 0, max: 500});调整范围，后续加上
-		
-	    var points = 200;
-	    $('.slider1').slider({min: 0, max: points, animate: true, range: true, values: [0, 200]});
-	    $('.slider2').slider({min: 0, max: points, animate: true, range: true, values: [0, 300]});
-	    $('.slider3').slider({min: 0, max: points, animate: true, range: true, values: [0, 200]});
-	    
-	    $('.slider1').slider('pips', { });
-	    $('.slider2').slider('pips', { });
-	    $('.slider3').slider('pips', { });
-	    
-	    if('${queryDto.slider1F}'!='' && parseInt('${queryDto.slider1F}')!=0){
-	    	$(".slider1").slider('values',0, parseInt('${queryDto.slider1F}'));
-	    } 
-	    if('${queryDto.slider1T}'!='' && parseInt('${queryDto.slider1T}')!=0){
-	    	$(".slider1").slider('values',1, parseInt('${queryDto.slider1T}'));
-	    } 
-	    if('${queryDto.slider2F}'!='' && parseInt('${queryDto.slider2F}')!=0){
-	    	$(".slider2").slider('values',0, parseInt('${queryDto.slider2F}'));
-	    } 
-	    if('${queryDto.slider2T}'!='' && parseInt('${queryDto.slider2T}')!=0){
-	    	$(".slider2").slider('values',1, parseInt('${queryDto.slider2T}'));
-	    } 
-	    if('${queryDto.slider3F}'!='' && parseInt('${queryDto.slider3F}')!=0){
-	    	$(".slider3").slider('values',0, parseInt('${queryDto.slider3F}'));
-	    } 
-	    if('${queryDto.slider3T}'!='' && parseInt('${queryDto.slider3T}')!=0){
-	    	$(".slider3").slider('values',1, parseInt('${queryDto.slider3T}'));
-	    } 
-	    
-	    $(".slider1").slider({
-	        stop: function (event, ui) {
-	        	if($('a[name=productType].active').children().val()==''){
-	        		jc.alert('请选择产品！');return false;
-	        	}
-	        	slider1F = ui.values[0];
-	        	slider1T = ui.values[1];
-	        	query();
-	        }
-	    });
-	    $(".slider2").slider({
-	        stop: function (event, ui) {
-	        	if($('a[name=productType].active').children().val()==''){
-	        		jc.alert('请选择产品！');return false;
-	        	}
-	        	slider2F = ui.values[0];
-	        	slider2T = ui.values[1];
-	        	query();
-	        }
-	    });
-	    $(".slider3").slider({
-	        stop: function (event, ui) {
-	        	if($('a[name=productType].active').children().val()==''){
-	        		jc.alert('请选择产品！');return false;
-	        	}
-	        	slider3F = ui.values[0];
-	        	slider3T = ui.values[1];
-	        	query();
-	        }
-	    });
-	    
-	    $('a[name=companyType]').click(function(){
-	    	$('a[name=companyType]').each(function(){
-	    		$(this).attr("class", "");
-	    	});
-	    	$(this).attr("class", "active");
-	    	query();
-	    });
-	    $('a[name=productType]').click(function(){
-	    	$('a[name=productType]').each(function(){
-	    		$(this).attr("class", "");
-	    	});
-	    	$(this).attr("class", "active");
-	    	query();
-	    });
-	    $('a[name=exchangeType]').click(function(){
-	    	$('a[name=exchangeType]').each(function(){
-	    		$(this).attr("class", "");
-	    	});
-	    	$(this).attr("class", "active");
-	    	query();
-	    });
 	    
 	    $('a[name=orderBy_href]').click(function(){
-	    	$('a[name=orderBy_href]').each(function(){
-	    		$(this).closest('li').attr("class", "");
-	    	});
-	    	$(this).closest('li').attr("class", "active");
-	    	query();
-	    });
-	    
-	    
-	    $('input[name=isEaSupport]').click(function(){
-	    	query();
-	    });
-	    $('input[name=isUnionpay]').click(function(){
-	    	query();
-	    });
-	    $('input[name=isInOutFree]').click(function(){
-	    	query();
-	    });
-	    
-	    $('#search_href').click(function(event){
-	    	event.preventDefault();
-	    	query();
+	    	var params = 'orderByP=';
+	    	
+    		if($(this).attr("class")=='up'){
+    			if($(this).children("input").val()=='min_income_money'){
+    				params += 'min_income_money,desc';
+    			}else if($(this).children("input").val()=='profit_star'){
+    				params += 'profit_star,desc';
+    			}else if($(this).children("input").val()=='commission_llg'){
+    				params += 'commission_llg,desc';
+    			}else if($(this).children("input").val()=='is_recommet'){
+    				params += 'is_recommet,desc';
+    			}
+    		}else if($(this).attr("class")=='down'){
+    			if($(this).children("input").val()=='min_income_money'){
+    				params += 'min_income_money,asc';
+    			}else if($(this).children("input").val()=='profit_star'){
+    				params += 'profit_star,asc';
+    			}else if($(this).children("input").val()=='commission_llg'){
+    				params += 'commission_llg,asc';
+    			}else if($(this).children("input").val()=='is_recommet'){
+    				params += 'is_recommet,asc';
+    			}
+    		}
+    		
+    		//var params = 'orderByP='+ param_min_income_money +'~'+ param_profit_star +'~'+ param_commission_llg +'~'+ param_is_recommet;
+	    	window.location.href="${ctx }/bk/list?"+params;
 	    });
 	});
-	
-	function query(){
-		
-		var params = "companyType="+$('a[name=companyType].active').children().val();
-		
-		if($('input[name=bkName]').val()!='' && $('input[name=bkName]').val()!=','){
-			params += "&bkName="+$('input[name=bkName]').val();
-		}
-		
-		params += "&productType="+$('a[name=productType].active').children().val();
-		params += "&exTypeP="+$('a[name=exchangeType].active').children().val();
-		params += "&orderP="+$('li[name=orderBy_li].active').children('a').children('input').val();
-		
-		if($('input[name=isEaSupport]').is(':checked'))
-			params += "&isEaSupport=1";
-		if($('input[name=isUnionpay]').is(':checked'))
-			params += "&isUnionpay=1";
-		if($('input[name=isInOutFree]').is(':checked'))
-			params += "&isInOutFree=1";
-		
-		params += "&slider1F="+slider1F+"&slider1T="+slider1T;
-		params += "&slider2F="+slider2F+"&slider2T="+slider2T;
-		params += "&slider3F="+slider3F+"&slider3T="+slider3T;
-		
-    	window.location.href="${ctx }/bk/list?"+params;
-	}
 	
 </script>
 
@@ -158,200 +53,281 @@
     <form action="" name="form" id="form" method="post" theme="simple">
     <%@ include file="../common/head.jsp" %>
 
-	<div data-ui="indexMask" class="J_indexMask mini"></div>
-
     <div class="bgfff">
-        <div class="J_content">
-
-            <div class="J_jjsSearch clearfix">
-                <div class="j_left">
-                    <input placeholder="经纪商 名称（中文/英文）" type="text" name="bkName" value="${queryDto.bkName }"/>
-                </div>
-                <div class="j_right">
-                    <a class="abtn green" id="search_href" href=''>搜索</a>
-                </div>
-            </div>
-
+        <div class="J_content bgfff">
             <div class="J_router"><a href="${ctx }/index">首页</a><span>&gt;</span><a href="${ctx }/bk/list">经纪商</a></div>
-            <div class="J_jjsFilter clearfix">
-                <div class="j_left">
-                    <div class="l_item clearfix">
-                        <div class="i_left">类型：</div>
+            <div class="fl c_760">
+                <div class="J_jjsMore">
+                    <div class="j_header">
+                        <a  <c:choose>
+                           		<c:when test="${queryDto.arrow_min_income_money == 'desc'}">class='down'</c:when>
+                           		<c:when test="${queryDto.arrow_min_income_money == 'asc'}">class='up'</c:when>
+                           		<c:otherwise>class='down'</c:otherwise>
+                           	</c:choose>
+                           	name='orderBy_href' href="#">最低入金<input type="hidden" value="min_income_money"><span></span></a>
+                        <a  <c:choose>
+                           		<c:when test="${queryDto.arrow_profit_star == 'desc'}">class='down'</c:when>
+                           		<c:when test="${queryDto.arrow_profit_star == 'asc'}">class='up'</c:when>
+                           		<c:otherwise>class='down'</c:otherwise>
+                           	</c:choose>
+                        	name='orderBy_href' href="#">安全评级<input type="hidden" value="profit_star"><span></span></a>
+                        <a  <c:choose>
+                           		<c:when test="${queryDto.arrow_commission_llg == 'desc'}">class='down'</c:when>
+                           		<c:when test="${queryDto.arrow_commission_llg == 'asc'}">class='up'</c:when>
+                           		<c:otherwise>class='down'</c:otherwise>
+                           	</c:choose>
+                        	name='orderBy_href' href="#">返佣比例<input type="hidden" value="commission_llg"><span></span></a>
+                        <a  <c:choose>
+                           		<c:when test="${queryDto.arrow_is_recommet == 'desc'}">class='down'</c:when>
+                           		<c:when test="${queryDto.arrow_is_recommet == 'asc'}">class='up'</c:when>
+                           		<c:otherwise>class='down'</c:otherwise>
+                           	</c:choose>
+                        	name='orderBy_href' href="#">至盈推荐<input type="hidden" value="is_recommet"><span></span></a>
+                    </div>
+                    <div class="j_main">
+                    
+                    <c:forEach items="${page.list }" var="broker">
+                    
+                        <div class="m_item">
+                            <table class="i_parent">
+                                <tbody>
+                                    <tr>
+                                        <td class="p10 tac">
+                                            <div class="p_logo">
+                                                <img style="width:140px; height:46px;" src="${ctx}/${broker.imageUrl}" />
+                                            </div>
+                                            <div class="p_txt mt10">所属地：
+												<c:choose>
+				                            		<c:when test="${broker.companyArea == '0'}">香港</c:when>
+				                            		<c:when test="${broker.companyArea == '1'}">中国</c:when>
+				                            		<c:when test="${broker.companyArea == '2'}">台湾</c:when>
+				                            		<c:when test="${broker.companyArea == '3'}">其他</c:when>
+				                            		<c:otherwise>&nbsp;</c:otherwise>
+				                            	</c:choose>                                            
+                                            </div>
+                                            <div class="p_txt mt10">
+                                                <a class="abtn orange" href="${ctx}/bk/detail?id=${broker.id}">了解详情 &gt;&gt;</a>
+                                            </div>
+                                        </td>
+                                        <td class="p10 lh30" style="width:500px;">
+                                            <div class="p_txt"><span class="cOrange">公司简介：</span>${broker.introduction }</div>
+                                            <div class="p_txt"><span class="cOrange">监管机构：</span>
+                                            	<c:if test="${broker.exchangeNo1!=null && broker.exchangeNo1!='' }">金银业贸易场(${broker.exchangeNo1})、</c:if>
+												<c:if test="${broker.exchangeNo2!=null && broker.exchangeNo2!='' }">证监会(${broker.exchangeNo2})、</c:if>
+		                                    	<c:if test="${broker.exchangeNo3!=null && broker.exchangeNo3!='' }">英国FCA(${broker.exchangeNo3})、</c:if>
+		                                    	<c:if test="${broker.exchangeNo4!=null && broker.exchangeNo4!='' }">日本FSA(${broker.exchangeNo4})</c:if>                                            
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tac">黄金返佣：<b class="fz24 cOrange">${broker.commissionLlg }$</b></td>
+                                        <td class="p10">
+                                            <table class="i_inner">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>黄金点差</td>
+                                                        <td>最低入金</td>
+                                                        <td>支持银联</td>
+                                                        <td>至盈评级</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>${broker.pointDiffMinLlg }美金</td>
+                                                        <td>${broker.minIncomeMoney }</td>
+                                                        <td>
+															<c:choose>
+							                            		<c:when test="${broker.isUnionpay == '0'}">不支持</c:when>
+							                            		<c:when test="${broker.isUnionpay == '1'}">支持</c:when>
+							                            		<c:otherwise>&nbsp;</c:otherwise>
+							                            	</c:choose>                                                        
+                                                        </td>
+                                                        <td>
+															<c:choose>
+							                            		<c:when test="${broker.profitStar == 1}">
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            		</c:when>
+							                            		<c:when test="${broker.profitStar == 2}">
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            		</c:when>
+							                            		<c:when test="${broker.profitStar == 3}">
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            		</c:when>
+							                            		<c:when test="${broker.profitStar == 4}">
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            		</c:when>
+							                            		<c:when test="${broker.profitStar == 5}">
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            		</c:when>
+							                            		<c:when test="${broker.profitStar == 6}">
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            		</c:when>
+							                            		<c:otherwise>&nbsp;</c:otherwise>
+							                            	</c:choose>                                                        
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        </c:forEach>
+                        
+                    </div>
+
+                    <div class="j_page">
+	                	<tr><td colspan="50" style="text-align:center;"><%@ include file="../common/pager.jsp"%></td></tr>
+	                </div>
+                    
+                </div>
+
+            </div>
+            <div class="fr c_430">
+
+                <div class="J_titleGray">
+                    <div class="t_txt">金融资讯热点</div>
+                </div>
+
+                <div class="J_hotNews">
+                    <div class="h_item"><a href="#">这一个非常非常非常非常非常非常长的标题</a></div>
+                    <div class="h_item"><a href="#">这一个非常非常非常非常非常非常长的标题</a></div>
+                    <div class="h_item"><a href="#">这一个非常非常非常非常非常非常长的标题</a></div>
+                    <div class="h_item"><a href="#">这一个非常非常非常非常非常非常长的标题</a></div>
+                    <div class="h_item"><a href="#">这一个非常非常非常非常非常非常长的标题</a></div>
+                    <div class="h_item"><a href="#">这一个非常非常非常非常非常非常长的标题</a></div>
+                    <div class="h_item"><a href="#">这一个非常非常非常非常非常非常长的标题</a></div>
+
+                </div>
+
+
+                <div class="J_titleGray mt20">
+                    <div class="t_txt">返佣流程</div>
+                </div>
+                <div class="J_step">
+                    <div class="s_item">
+                        <div class="i_left">
+                            <div class="l_icon">1</div>
+                        </div>
                         <div class="i_right">
-                            <a name="companyType" <c:if test="${queryDto.companyType==null || queryDto.companyType=='' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="">不限</a>
-                            <a name="companyType" <c:if test="${queryDto.companyType == '0' }">class="active"</c:if> href='#'>
-                            	<input type="hidden" value="0">黄金</a>
-                            <a name="companyType" <c:if test="${queryDto.companyType == '1' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="1">外汇</a>
-                            <a name="companyType" <c:if test="${queryDto.companyType == '2' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="2">二元期权</a>
-                            <a name="companyType" <c:if test="${queryDto.companyType == '3' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="3">国际现货金银</a>
-                            <a name="companyType" <c:if test="${queryDto.companyType == '4' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="4">混合</a>
+                            <div class="r_title">注册会员开户</div>
+                            <div class="r_info">于至盈网注册登记成为会员</div>
                         </div>
                     </div>
-                    <div class="l_item clearfix">
-                        <div class="i_left">产品：</div>
+
+                    <div class="s_item">
+                        <div class="i_left">
+                            <div class="l_icon">2</div>
+                        </div>
                         <div class="i_right">
-                            <a name="productType" <c:if test="${queryDto.productType==null || queryDto.productType=='' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="">不限</a>
-                            <a name="productType" <c:if test="${queryDto.productType == '0' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="0">国际现货金</a>
-                            <a name="productType" <c:if test="${queryDto.productType == '1' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="1">国际现货银</a>
-                            <a name="productType" <c:if test="${queryDto.productType == '2' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="2">港金</a>
-                            <a name="productType" <c:if test="${queryDto.productType == '3' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="3">人民币公斤条</a>
-                            <a name="productType" <c:if test="${queryDto.productType == '4' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="4">外汇</a>
-                            <a name="productType" <c:if test="${queryDto.productType == '5' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="5">原油</a>
+                            <div class="r_title">选择经纪商</div>
+                            <div class="r_info">选择适合您的经纪商</div>
                         </div>
                     </div>
-                    <div class="l_item clearfix">
-                        <div class="i_left">会员/监管机构：</div>
+
+                    <div class="s_item">
+                        <div class="i_left">
+                            <div class="l_icon">3</div>
+                        </div>
                         <div class="i_right">
-                            <a name="exchangeType" <c:if test="${queryDto.exTypeP==null || queryDto.exTypeP=='' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="">不限</a>
-                            <a name="exchangeType" <c:if test="${queryDto.exTypeP == '0' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="0">香港金银业贸易场</a>
-                            <a name="exchangeType" <c:if test="${queryDto.exTypeP == '1' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="1">香港证监会</a>
-                            <a name="exchangeType" <c:if test="${queryDto.exTypeP == '2' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="2">英国FCA</a>
-                            <a name="exchangeType" <c:if test="${queryDto.exTypeP == '3' }">class="active"</c:if> href="#">
-                            	<input type="hidden" value="3">日本FSA</a>
+                            <div class="r_title">在2Profit开户</div>
+                            <div class="r_info">在2Profit进行开户，只有在本站开户才能获得返佣。</div>
                         </div>
                     </div>
-                    <div class="l_input">
-                       <label><input type="checkbox" <c:if test="${queryDto.isEaSupport == '1' }">checked</c:if> name="isEaSupport" value="1"> 支持EA</label>
-                       <label><input type="checkbox" <c:if test="${queryDto.isUnionpay == '1' }">checked</c:if> name="isUnionpay" value="1"> 银联入金</label>
-                       <label><input type="checkbox" <c:if test="${queryDto.isInOutFree == '1' }">checked</c:if> name="isInOutFree" value="1"> 出入金免手续费</label>
+                    <div class="s_item">
+                        <div class="i_left">
+                            <div class="l_icon">4</div>
+                        </div>
+                        <div class="i_right">
+                            <div class="r_title">申请返佣</div>
+                            <div class="r_info">开户完成后，请您点击“申请返佣” 进行信息登记。</div>
+                        </div>
+                    </div>
+                    <div class="s_item">
+                        <div class="i_left">
+                            <div class="l_icon">5</div>
+                        </div>
+                        <div class="i_right">
+                            <div class="r_title">最终确认</div>
+                            <div class="r_info">工作人员会在1个工作日内通知申请结果。</div>
+                        </div>
                     </div>
                 </div>
-                <div class="j_right">
 
-                    <div class="c_title">最低产品点差</div>
-                    <div class="c_tips">0 - 200</div>
-                    <div class="wrapper"><div class="slider1"></div></div>
 
-                    <div class="c_title">杠杆比列</div>
-                    <div class="c_tips">1:1 - 200:1</div>
-                    <div class="wrapper"><div class="slider2"></div></div>
 
-                    <div class="c_title">开仓保证金</div>
-                    <div class="c_tips">0 - 200</div>
-                    <div class="wrapper"><div class="slider3"></div></div>
+
+                <div class="J_titleGray mt20">
+                    <div class="t_txt clearfix">
+                        <div class="fl">开户记录</div>
+                        <div class="fr"><span class="fz12">已开户 </span><b class="fz12 cRed">1230</b><span class="fz12"> 人</span></div>
+                    </div>
+                </div>
+
+
+                <div class="J_newUser">
+                    <div class="n_item">
+                        <div class="i_title"><span>一天前</span> 客户 <span class="cBlue">137*****763</span></div>
+                        <div class="i_info">
+                            <div class="i_txt">成功开通 <span class="cOrange">至盈网</span> 帐号</div>
+                            <div class="i_token1"></div>
+                            <div class="i_token2"></div>
+                        </div>
+                    </div>
+                    <div class="n_item">
+                        <div class="i_title"><span>一天前</span> 客户 <span class="cBlue">137*****763</span></div>
+                        <div class="i_info">
+                            <div class="i_txt">成功开通 <span class="cOrange">至盈网</span> 帐号</div>
+                            <div class="i_token1"></div>
+                            <div class="i_token2"></div>
+                        </div>
+                    </div>
+                    <div class="n_item">
+                        <div class="i_title"><span>一天前</span> 客户 <span class="cBlue">137*****763</span></div>
+                        <div class="i_info">
+                            <div class="i_txt">成功开通 <span class="cOrange">至盈网</span> 帐号</div>
+                            <div class="i_token1"></div>
+                            <div class="i_token2"></div>
+                        </div>
+                    </div>
+                    <div class="n_item">
+                        <div class="i_title"><span>一天前</span> 客户 <span class="cBlue">137*****763</span></div>
+                        <div class="i_info">
+                            <div class="i_txt">成功开通 <span class="cOrange">至盈网</span> 帐号</div>
+                            <div class="i_token1"></div>
+                            <div class="i_token2"></div>
+                        </div>
+                    </div>
 
                 </div>
             </div>
-
-
-            <div class="J_jjsList mt20">
-                <div class="j_filter clearfix">
-                    <div class="f_txt">经纪商筛选结果 共 <span class="cOrange">${page.totalCount}</span> 个</div>
-                    <div class="f_btn">
-                        <ul class="clearfix">
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP==null || queryDto.orderP == 'company_index' }">class='active'</c:if>>
-                            	<a name='orderBy_href' href="#">综合推荐<input type="hidden" value="company_index"> <i class="icon">󰄓</i></a>
-                            </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_llg'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">黄金返佣推荐 <input type="hidden" value="commission_llg"><i class="icon">󰄓</i></a>
-                            </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_lls'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">白银返佣 <input type="hidden" value="commission_lls"><i class="icon">󰄓</i></a>
-                            </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_hkg'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">港金返佣<input type="hidden" value="commission_hkg"><i class="icon">󰄓</i></a>
-                            </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_lkg'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">人民币公斤返佣 <input type="hidden" value="commission_lkg"><i class="icon">󰄓</i></a>
-                            </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_wh'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">外汇返佣 <input type="hidden" value="commission_wh"><i class="icon">󰄓</i></a>
-                            </li>
-                            <li name='orderBy_li' <c:if test="${queryDto.orderP == 'commission_yy'}">class="active"</c:if>>
-                            	<a name='orderBy_href' href="#">原油返佣 <input type="hidden" value="commission_yy"><i class="icon">󰄓</i></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="j_list">
-                
-                	<c:forEach items="${page.list }" var="broker">
-                	
-						<div class="j_item <c:if test='${broker.isRecommet==1 }'>good</c:if> clearfix">
-	                        <div class="i_left">
-	                            <img style="width: 120px; height: 57px;" src="${ctx}/${broker.imageUrl}" />
-	                        </div>
-	                        <div class="i_center">
-	                            <div class="c_list">
-	                                <div class="l_item">
-	                                    <div class="i_title">经纪商名称:</div>
-	                                    <div class="i_content">${broker.cnName }</div>
-	                                </div>
-	                                <div class="l_item">
-	                                    <div class="i_title">点差:</div>
-	                                    <div class="i_content">黃金點差:<span class="cDeepRed">${broker.pointDiffMinLlg }</span> /
-	                                    					白銀點差:<span class="cDeepRed">${broker.pointDiffMinLls }</span> /
-	                                    					港金:<span class="cDeepRed">${broker.pointDiffMinHkg }</span> /
-	                                    					人民币公斤条:<span class="cDeepRed">${broker.pointDiffMinLkg }</span></div>
-	                                </div>
-	                                <div class="l_item">
-	                                    <div class="i_title">开仓保证金:</div>
-	                                    <div class="i_content">黃金點差:<span class="cDeepRed">${broker.openMoneyLlg }</span> /
-	                                    					白銀點差: <span class="cDeepRed">${broker.openMoneyLls }</span> / 
-	                                    					港金: <span class="cDeepRed">${broker.openMoneyHkg }</span> /
-	                                    					人民币公斤条: <span class="cDeepRed">${broker.openMoneyLkg }</span></div>
-	                                </div>
-	                                <div class="l_item">
-	                                    <div class="i_title">会员/监管机构:</div>
-	                                    <div class="i_content">
-	                                    	<c:if test="${broker.exchangeNo1!=null && broker.exchangeNo1!='' }">金银业贸易场(${broker.exchangeNo1}) /</c:if>
-	                                    	<c:if test="${broker.exchangeNo2!=null && broker.exchangeNo2!='' }">证监会(${broker.exchangeNo2}) /</c:if>
-	                                    	<c:if test="${broker.exchangeNo3!=null && broker.exchangeNo3!='' }">英国FCA(${broker.exchangeNo3}) /</c:if>
-	                                    	<c:if test="${broker.exchangeNo4!=null && broker.exchangeNo4!='' }">日本FSA(${broker.exchangeNo4}) /</c:if>
-	                                    </div>
-	                                </div>
-	                            </div>
-	                        </div>
-	                        <div class="i_right">
-	                            <div class="t_ctrl">
-	                                <div class="r_logo">
-	                                    <img src="${ctx }/static/images/logo_2.png" />
-	                                </div>
-	                                <div class="r_btns">
-	                                    <a class="abtn orange" target="_blank" href="http://${broker.commissionUrl}">马上开户</a>
-	                                    <a class="abtn blue" href="${ctx}/bk/detail?id=${broker.id}">详细信息</a>
-	                                </div>
-	                            </div>
-	                        </div>
-	                    </div>                	
-                	
-                	</c:forEach>
-                
-                </div>
-                
-                
-                <div class="j_page">
-                	<tr><td colspan="50" style="text-align:center;"><%@ include file="../common/pager.jsp"%></td></tr>
-                </div>
-            </div>
-
-
         </div>
+
     </div>
 
 
 
-    <div class="J_cooperation">
-        <div class="c_title"><span>合作伙伴</span></div>
-        <div class="c_inner">
-            <img src="../static/tmp/cooperation.png" />
+    <div class="J_follow">
+        <div class="f_txt">
+            <div class="t_center">为何选择<span>至盈网</span>？
+            </div>
+        </div>
+        <div class="f_pic">
+            <img src="${ctx }/static/images/follow.png" />
         </div>
     </div>
 
