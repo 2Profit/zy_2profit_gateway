@@ -20,9 +20,11 @@
 		var arrow3 = '${queryDto.arrow_commission_llg}';
 		var arrow4 = '${queryDto.arrow_is_recommet}';
 		var arrow5 = '${queryDto.arrow_lever_rate}';
-		var page = '${page.totalPage}';
+		var bkName = '${queryDto.bkName}';
+		var currentPage = '${page.currentPage}';
 		
-		if(arrow1!='' || arrow2!='' || arrow3!='' || arrow4!='' || arrow5!='' || page!=0){
+		if(arrow1!='' || arrow2!='' || arrow3!='' || arrow4!='' || arrow5!='' 
+				|| currentPage!=1 || bkName!=''){
 			document.location.href="#afterPageAnchor";
 		}
 		
@@ -58,22 +60,17 @@
 					params = 'orderByP=lever_rate,asc';
 				}
     		}
-    		query(params);
+    		if($('input[name=bkName]').val()!='' && $('input[name=bkName]').val()!=','){
+    			window.location.href="${ctx }/index/list?"+params+"&bkName="+$('input[name=bkName]').val();
+    		}
+    		window.location.href="${ctx }/index/list?"+params;
 	    });
 		
-		$('#search_href').click(function(event){
-	    	event.preventDefault();
-	    	query(params);
-	    });
+		$('input[name=bkName]').bind('keypress',function(event){
+			window.location.href="${ctx }/index/list?bkName="+$('input[name=bkName]').val();
+		});
 		
 	});
-	
-	function query(params){
-		if($('input[name=bkName]').val()!='' && $('input[name=bkName]').val()!=','){
-			window.location.href="${ctx }/index/list?"+params+"&bkName="+$('input[name=bkName]').val();
-		}
-		window.location.href="${ctx }/index/list?"+params;
-	}
 	
 </script>
 
@@ -274,7 +271,7 @@
 						<a href="javascript:void(0)">申请返佣</a>
 					</div>
 					<div class="b_item">
-						<a class="i1" href="javascript:void(0)"><span></span>更多经纪商</a>
+						<a class="i1" href="${ctx }/bk/list"><span></span>更多经纪商</a>
 					</div>
 					<div class="b_item">
 						<a class="i2" href="javascript:void(0)"><span></span>赠金优惠</a>
@@ -563,7 +560,7 @@
 							<c:forEach items="${notices }" var="notice">
 	                        	<div class="m_item">
 	                                <div class="i_info">
-	                                    <div class="i_name"><a href="#">${notice.title }</a></div>
+	                                    <div class="i_name"><a href="${ctx }/notice/list?id=${notice.id }">${notice.title }</a></div>
 	                                    <div class="i_txt"><i class="icon">󰃄</i>
 	                                    	<span><fmt:formatDate value="${notice.startDate }"
 														type="both" pattern="yyyy-MM-dd HH:mm:ss" /></span>
