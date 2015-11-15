@@ -28,19 +28,28 @@ import com.zy.base.entity.Notice;
 import com.zy.base.service.NoticeService;
 import com.zy.broker.dto.BrokerExtInfoDto;
 import com.zy.broker.entity.BrokerExtInfo;
+import com.zy.broker.entity.BrokerInfo;
+import com.zy.broker.entity.MemBrokerRel;
 import com.zy.broker.service.BrokerExtInfoService;
+import com.zy.broker.service.BrokerInfoService;
+import com.zy.broker.service.MemBrokerRelService;
 import com.zy.common.entity.BaseEntity;
 import com.zy.common.entity.PageModel;
 import com.zy.common.util.AjaxResult;
 import com.zy.common.util.BaseUtils;
+import com.zy.common.util.CommonConstants;
 import com.zy.member.entity.Member;
 import com.zy.member.entity.MemberCode;
 import com.zy.member.service.MemberCodeService;
 import com.zy.member.service.MemberService;
+import com.zy.personal.entity.MemBankInfo;
+import com.zy.personal.service.MemBankInfoService;
 import com.zy.profit.gateway.util.HttpUtils;
 import com.zy.profit.gateway.util.SMSAPI;
 import com.zy.profit.gateway.util.SystemConfig;
 import com.zy.profit.gateway.util.WebHelper;
+import com.zy.proposal.entity.ProposalBackDiscount;
+import com.zy.proposal.service.ProposalBackDiscountService;
 import com.zy.util.Md5Util;
 import com.zy.vote.entity.VoteTopic;
 import com.zy.vote.entity.VoteTopicPost;
@@ -70,6 +79,17 @@ public class IndexController {
 	@Autowired
 	private NoticeService noticeService;
 	
+	@Autowired
+	private BrokerInfoService brokerInfoService;
+	
+	@Autowired
+	private ProposalBackDiscountService proposalBackDiscountService;
+	
+	@Autowired
+	private MemBankInfoService memBankInfoService;
+	
+	@Autowired
+	private MemBrokerRelService memBrokerRelService;
 	
 	@RequestMapping("/index")
 	public String index(Model model){
@@ -101,6 +121,13 @@ public class IndexController {
 	@RequestMapping("/register")
 	public String register(HttpServletRequest request, Model model){
 		model.addAttribute("msg", request.getParameter("msg"));
+		
+		String pbdId = request.getParameter("pbdId");
+		if(StringUtils.isNotBlank(pbdId)){
+			ProposalBackDiscount proposalBackDiscount = proposalBackDiscountService.find(pbdId);
+			model.addAttribute("pbd", proposalBackDiscount);
+		}
+		
 		return "/register";
 	}
 	
@@ -262,6 +289,67 @@ public class IndexController {
 			return "redirect:/register";
 		}*/
 		
+		String pbdId = request.getParameter("pbdId");
+		ProposalBackDiscount proposalBackDiscount = null;
+		
+		if(StringUtils.isNotBlank(pbdId)){
+			redirectAttributes.addAttribute("pbdId", pbdId);
+			proposalBackDiscount = proposalBackDiscountService.find(pbdId);
+			
+			if(proposalBackDiscount == null){
+				redirectAttributes.addAttribute("msg", "返佣申请激活链接有误");
+				return "redirect:/register";
+			}
+			
+			if(proposalBackDiscount.getPosStatus() != CommonConstants.proposalStatusPass.getIntKey()){
+				redirectAttributes.addAttribute("msg", "返佣申请未通过");
+				return "redirect:/register";
+			}
+			
+			if(proposalBackDiscount.getRegisterStatus() != null && proposalBackDiscount.getRegisterStatus() == 1){
+				redirectAttributes.addAttribute("msg", "返佣申请激活链接已经被激活");
+				return "redirect:/register";
+			}
+			
+			String email = proposalBackDiscount.getEmail();
+			
+			//邮箱已经被注册
+			Member m2 = memberService.findMemberByEmail(email);
+			if(m2 != null){
+				//更新银行资料
+				MemBankInfo memBankInfo = member.getMemBankInfo();
+				if(memBankInfo == null){
+					memBankInfo = new MemBankInfo();
+				}
+				memBankInfo.setBankAccount(proposalBackDiscount.getBankName());
+				memBankInfo.setBankCardNum(proposalBackDiscount.getBankCard());
+				memBankInfo.setBankAddress(proposalBackDiscount.getName());
+				if(StringUtils.isNotBlank(memBankInfo.getId())){
+					memBankInfoService.update(memBankInfo);
+				}else{
+					memBankInfoService.save(memBankInfo);
+					member.setMemBankInfo(memBankInfo);
+					memberService.update(m2);
+				}
+				
+				//用户与经纪商关系
+				MemBrokerRel memBrokerRel = new MemBrokerRel();
+				memBrokerRel.setBrokerInfo(proposalBackDiscount.getBrokerInfo());
+				memBrokerRel.setMember(m2);
+				memBrokerRel.setMt4Card(proposalBackDiscount.getMt4Card());
+				memBrokerRelService.save(memBrokerRel);
+				
+				proposalBackDiscount.setRegisterStatus(1);
+				proposalBackDiscount.setMember(m2);
+				
+				proposalBackDiscountService.update(proposalBackDiscount);
+				
+				redirectAttributes.addAttribute("msg", "激活成功，马上登陆");
+				return "redirect:/login";
+			}
+			
+		}
+		
 		String msg = "";
 		
 		member.setMobile(member.getMobile().trim());
@@ -292,8 +380,14 @@ public class IndexController {
 		
 		member.setPwd(Md5Util.generatePassword(member.getPwd().trim()));
 		MemberCode memberCode = (MemberCode) map.get("memberCode");
-		memberService.saveMember(member, memberCode);
-		redirectAttributes.addAttribute("msg", "注册成功，马上登陆");
+		memberService.saveMember(member, memberCode, proposalBackDiscount);
+		
+		if(proposalBackDiscount != null){
+			redirectAttributes.addAttribute("msg", "激活成功，马上登陆");
+		}else{
+			redirectAttributes.addAttribute("msg", "注册成功，马上登陆");
+		}
+		
 		
 		return "redirect:/login";
 	}
@@ -373,4 +467,53 @@ public class IndexController {
 		
 		return "redirect:/login";
 	}
+	
+	/**
+	 * 返佣
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/dialog/back_discount")
+	public String dialogBackDiscount(HttpServletRequest request, Model model){
+		
+		List<BrokerInfo> brokerInfos = brokerInfoService.findAllBrokerInfo(BrokerInfo.DELETE_FLAG_NORMAL);
+		model.addAttribute("brokerInfos", brokerInfos);
+		
+		return "/dialog/back_discount";
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param proposalBackDiscount
+	 * @return
+	 */
+	@RequestMapping("/ajax/back_discount/save")
+	@ResponseBody
+	public AjaxResult ajaxSaveBackDiscount(HttpServletRequest request, ProposalBackDiscount proposalBackDiscount){
+		AjaxResult ajaxResult = new AjaxResult();
+		
+		ajaxResult.setSuccess(false);
+		
+		try {
+			
+			String brokerInfoId = request.getParameter("brokerInfoId");
+			
+			BrokerInfo brokerInfo = new BrokerInfo();
+			brokerInfo.setId(brokerInfoId);
+			
+			proposalBackDiscount.setPosStatus(CommonConstants.proposalStatusDefault.getIntKey());
+			proposalBackDiscount.setBrokerInfo(brokerInfo);
+			
+			proposalBackDiscountService.save(proposalBackDiscount);
+			
+			ajaxResult.setSuccess(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ajaxResult.setMsg("提交失败");
+		}
+		
+		return ajaxResult;
+	}
+	
 }
