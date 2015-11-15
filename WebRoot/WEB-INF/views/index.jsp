@@ -10,15 +10,71 @@
 </head>
 
 <script type="text/javascript">
+
+	var params = '';
+	
 	$(function() {
 
+		var arrow1 = '${queryDto.arrow_min_income_money}';
+		var arrow2 = '${queryDto.arrow_is_in_out_free}';
+		var arrow3 = '${queryDto.arrow_commission_llg}';
+		var arrow4 = '${queryDto.arrow_is_recommet}';
+		var arrow5 = '${queryDto.arrow_lever_rate}';
+		var page = '${page.totalPage}';
+		
+		if(arrow1!='' || arrow2!='' || arrow3!='' || arrow4!='' || arrow5!='' || page!=0){
+			document.location.href="#afterPageAnchor";
+		}
+		
 		headerAddClass();
 
 		$('div[data-ui="header"]').addClass('index');
 		
 		setCurrentMenu('index');
 		
+		$('a[name=orderBy_href]').click(function(){
+    		if($(this).attr("class")=='up'){
+    			if($(this).children("input").val()=='min_income_money'){
+    				params = 'orderByP=min_income_money,desc';
+    			}else if($(this).children("input").val()=='is_in_out_free'){
+    				params = 'orderByP=is_in_out_free,desc';
+    			}else if($(this).children("input").val()=='commission_llg'){
+    				params = 'orderByP=commission_llg,desc';
+    			}else if($(this).children("input").val()=='is_recommet'){
+    				params = 'orderByP=is_recommet,desc';
+    			}else if($(this).children("input").val()=='lever_rate'){
+    				params = 'orderByP=lever_rate,desc';
+    			}
+    		}else if($(this).attr("class")=='down'){
+    			if($(this).children("input").val()=='min_income_money'){
+    				params = 'orderByP=min_income_money,asc';
+    			}else if($(this).children("input").val()=='is_in_out_free'){
+    				params = 'orderByP=is_in_out_free,asc';
+    			}else if($(this).children("input").val()=='commission_llg'){
+    				params = 'orderByP=commission_llg,asc';
+    			}else if($(this).children("input").val()=='is_recommet'){
+    				params = 'orderByP=is_recommet,asc';
+	    		}else if($(this).children("input").val()=='lever_rate'){
+					params = 'orderByP=lever_rate,asc';
+				}
+    		}
+    		query(params);
+	    });
+		
+		$('#search_href').click(function(event){
+	    	event.preventDefault();
+	    	query(params);
+	    });
+		
 	});
+	
+	function query(params){
+		if($('input[name=bkName]').val()!='' && $('input[name=bkName]').val()!=','){
+			window.location.href="${ctx }/index/list?"+params+"&bkName="+$('input[name=bkName]').val();
+		}
+		window.location.href="${ctx }/index/list?"+params;
+	}
+	
 </script>
 
 <body>
@@ -85,7 +141,8 @@
 	</div>
 
 	<!-- 经纪商 -->
-	<div class="J_content mt-260 bgfff hasShadow">
+	<form action="" name="form" id="form" method="post" theme="simple">
+	<div class="J_content mt-260 bgfff hasShadow" id="afterPageAnchor">
 		<div class="fl c_760">
 			<div class="pau">
 
@@ -94,17 +151,42 @@
 					<div class="j_right">
 						<div class="r_top clearfix">
 							<div class="t_left">
-								<input placeholder="输入关键字进行搜索" type="text" />
+								<input placeholder="经纪商 （中文/英文）" type="text" name="bkName" value="${queryDto.bkName }"/>
 							</div>
 							<div class="t_right">
-								<a class="up" href="javascript:;">至盈推荐<span></span></a>
+							<a 	<c:choose>
+	                           		<c:when test="${queryDto.arrow_is_recommet == 'desc'}">class='down'</c:when>
+	                           		<c:when test="${queryDto.arrow_is_recommet == 'asc'}">class='up'</c:when>
+	                           		<c:otherwise>class='down'</c:otherwise>
+                           		</c:choose>
+								name='orderBy_href' href="#">至盈推荐<input type="hidden" value="is_recommet"><span></span></a>
 							</div>
 						</div>
 						<div class="r_bottom clearfix">
-							<a class="up" href="javascript:;">黄金返佣<span></span></a> <a
-								class="down" href="javascript:;">最低开户入金<span></span></a> <a
-								href="javascript:;">出入金免手续费<span></span></a> <a
-								href="javascript:;">最大的杠杆<span></span></a>
+							<a 	<c:choose>
+	                           		<c:when test="${queryDto.arrow_commission_llg == 'desc'}">class='down'</c:when>
+	                           		<c:when test="${queryDto.arrow_commission_llg == 'asc'}">class='up'</c:when>
+	                           		<c:otherwise>class='down'</c:otherwise>
+                           		</c:choose>
+								name='orderBy_href' href="#">黄金返佣<input type="hidden" value="commission_llg"><span></span></a> 
+							<a 	<c:choose>
+	                           		<c:when test="${queryDto.arrow_min_income_money == 'desc'}">class='down'</c:when>
+	                           		<c:when test="${queryDto.arrow_min_income_money == 'asc'}">class='up'</c:when>
+	                           		<c:otherwise>class='down'</c:otherwise>
+                           		</c:choose>
+								name='orderBy_href' href="#">最低开户入金<input type="hidden" value="min_income_money"><span></span></a> 
+							<a 	<c:choose>
+	                           		<c:when test="${queryDto.arrow_is_in_out_free == 'desc'}">class='down'</c:when>
+	                           		<c:when test="${queryDto.arrow_is_in_out_free == 'asc'}">class='up'</c:when>
+	                           		<c:otherwise>class='down'</c:otherwise>
+                           		</c:choose>
+								name='orderBy_href' href="#">出入金免手续费<input type="hidden" value="is_in_out_free"><span></span></a> 
+							<a 	<c:choose>
+	                           		<c:when test="${queryDto.arrow_lever_rate == 'desc'}">class='down'</c:when>
+	                           		<c:when test="${queryDto.arrow_lever_rate == 'asc'}">class='up'</c:when>
+	                           		<c:otherwise>class='down'</c:otherwise>
+                           		</c:choose>
+								name='orderBy_href' href="#">最大的杠杆<input type="hidden" value="lever_rate"><span></span></a>
 						</div>
 					</div>
 				</div>
@@ -112,57 +194,75 @@
 
 				<div class="J_jjsList">
 					<div class="j_inner">
-						<div class="i_main">
+						<div class="i_main" id="append_div">
 							
-							<div class="m_item">
-								<div class="i_pic">
-									<div class="p_logo">
-										<img style="width: 140px; height: 46px;" src="${ctx }/static/tmp/j2.jpg" />
-									</div>
-									<div class="p_num">20美元</div>
-									<div class="p_txt">黄金返佣</div>
-									<div class="p_over">
-										<i class="icon">󰅖</i><span>2020</span>已申请
-									</div>
-									<div class="p_btn">
-										<a href="#"><img src="${ctx }/static/images/mskh_btn_bg.png" /></a>
-									</div>
-								</div>
-								<div class="i_info clearfix">
-									<div class="i_left">
-										<div class="l_name">金道環球投資有限公司</div>
-										<div class="l_txt">
-											<span class="cRed">优势</span>：NDD模式 上市子公司
+							<c:forEach items="${page.list }" var="broker">
+								<div class="m_item">
+									<div class="i_pic">
+										<div class="p_logo">
+											<img style="width: 140px; height: 46px;" src="${ctx }/static/tmp/j2.jpg" />
 										</div>
-										<div class="l_txt">点差：黄金4.5</div>
-										<div class="l_txt">最少入金：5</div>
-										<div class="l_txt">最小交易：0.01</div>
-										<div class="l_txt">最小开户：500</div>
-										<div class="l_txt">最大杠杆：1:400</div>
-									</div>
-									<div class="i_right">
-										<div class="r_txt">
-											<span>至盈推荐</span>
-											<img src="${ctx }/static/images/good_orange.png" />
-											<img src="${ctx }/static/images/good_orange.png" />
-											<img src="${ctx }/static/images/good_orange.png" />
+										<div class="p_num">${broker.commissionLlg }美元</div>
+										<div class="p_txt">黄金返佣</div>
+										<div class="p_over">
+											<i class="icon">󰅖</i><span>2020</span>已申请
 										</div>
-										<div class="r_btn">
-											<a class="abtn green" href="#">优惠活动</a>
-										</div>
-										<div class="r_btn">
-											<a class="abtn orange" href="#">了解详情</a>
+										<div class="p_btn">
+											<a href="${ctx }/register"><img src="${ctx }/static/images/mskh_btn_bg.png" /></a>
 										</div>
 									</div>
-								</div>
-							</div>
+									<div class="i_info clearfix">
+										<div class="i_left">
+											<div class="l_name">${broker.cnName }</div>
+											<div class="l_txt">
+												<span class="cRed">优势</span>：
+												<c:choose>
+													<c:when test="${broker.exchangeNo1!=null && broker.exchangeNo1!='' }">金银业贸易场(${broker.exchangeNo1}) </c:when>
+													<c:when test="${broker.exchangeNo2!=null && broker.exchangeNo2!='' }">证监会(${broker.exchangeNo2}) </c:when>
+													<c:when test="${broker.exchangeNo3!=null && broker.exchangeNo3!='' }">英国FCA(${broker.exchangeNo3}) </c:when>
+													<c:when test="${broker.exchangeNo4!=null && broker.exchangeNo4!='' }">日本FSA(${broker.exchangeNo4}) </c:when>
+													<c:otherwise>&nbsp;</c:otherwise>
+												</c:choose>
+											</div>
+											<div class="l_txt">点差：黄金${broker.pointDiffMinLlg }</div>
+											<div class="l_txt">最少入金：${broker.minIncomeMoney }</div>
+											<div class="l_txt">最小交易：${broker.minTradeNumLlg }</div>
+											<div class="l_txt">最小开户：${broker.openMoneyLlg }</div>
+											<div class="l_txt">
+												<c:choose>
+													<c:when test="${broker.leverRate!=null && broker.leverRate!=0}">最大杠杆：1:${broker.leverRate}</c:when>
+													<c:otherwise>&nbsp;</c:otherwise>
+												</c:choose>
+											</div>
+										</div>
+										<div class="i_right">
+											<div class="r_txt">
+												<c:choose>
+				                            		<c:when test="${broker.isRecommet == 1}">
+				                            			<span>至盈推荐</span>
+														<img src="${ctx }/static/images/good_orange.png" />
+				                            		</c:when>
+				                            		<c:otherwise><span></span></c:otherwise>
+				                            	</c:choose>												
+											</div>
+											<div class="r_btn">
+												<a class="abtn green" href="#">优惠活动</a>
+											</div>
+											<div class="r_btn">
+												<a class="abtn orange" href="${ctx}/bk/detail?id=${broker.id}">了解详情</a>
+											</div>
+										</div>
+									</div>
+								</div>							
+							</c:forEach>
 							
 						</div>
 					</div>
 				</div>
-				
-				<div class="J_page mt20">这里分页</div>
-				
+                
+                <div class="j_page">
+                	<tr><td colspan="50" style="text-align:center;"><%@ include file="common/pager.jsp"%></td></tr>
+                </div>			
 
 			</div>
 		</div>
@@ -330,7 +430,7 @@
 
 		</div>
 	</div>
-
+	</form>
 
 	<div class="J_content mt20 bgfff hasShadow">
 		<div class="fl c_760">
@@ -479,15 +579,6 @@
 
 		</div>
 	</div>
-
-	<!--
-    <div class="J_cooperation mt20">
-        <div class="c_title"><span>合作伙伴</span></div>
-        <div class="c_inner">
-            <img src="../tmp/cooperation.png" />
-        </div>
-    </div>
-    -->
 
 	<div class="J_follow mt20">
 		<div class="f_txt">

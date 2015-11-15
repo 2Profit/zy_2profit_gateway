@@ -7,32 +7,40 @@
     
 <script type="text/javascript">
 
+	/* var param_min_income_money = 'min_income_money,desc';
+	var param_profit_star = 'profit_star,desc';
+	var param_commission_llg = 'commission_llg,desc';
+	var param_is_recommet = 'is_recommet,desc'; */
+
 	$(function () {
 		headerAddClass();
 	    
 	    $('a[name=orderBy_href]').click(function(){
-	    	
-	    	var param_min_income_money = ' min_income_money ';
-	    	var param_profit_star = ' profit_star ';
-	    	var param_commission_llg = ' commission_llg ';
-	    	var param_is_recommet = ' is_recommet ';
+	    	var params = 'orderByP=';
 	    	
     		if($(this).attr("class")=='up'){
-    			if($(this).closest('input').val()=='min_income_money'){
-    				param_min_income_money += ' desc';
-    			}else if($(this).closest('input').val()=='profit_star'){
-    				param_profit_star += ' desc';
-    			}else if($(this).closest('input').val()=='commission_llg'){
-    				param_commission_llg += ' desc';
-    			}else if($(this).closest('input').val()=='is_recommet'){
-    				param_is_recommet += ' desc';
+    			if($(this).children("input").val()=='min_income_money'){
+    				params += 'min_income_money,desc';
+    			}else if($(this).children("input").val()=='profit_star'){
+    				params += 'profit_star,desc';
+    			}else if($(this).children("input").val()=='commission_llg'){
+    				params += 'commission_llg,desc';
+    			}else if($(this).children("input").val()=='is_recommet'){
+    				params += 'is_recommet,desc';
     			}
-    			$(this).attr("class", "down");
     		}else if($(this).attr("class")=='down'){
-    			$(this).attr("class", "up");
+    			if($(this).children("input").val()=='min_income_money'){
+    				params += 'min_income_money,asc';
+    			}else if($(this).children("input").val()=='profit_star'){
+    				params += 'profit_star,asc';
+    			}else if($(this).children("input").val()=='commission_llg'){
+    				params += 'commission_llg,asc';
+    			}else if($(this).children("input").val()=='is_recommet'){
+    				params += 'is_recommet,asc';
+    			}
     		}
     		
-    		params += 'orderByP=' + param_min_income_money +','+ param_profit_star +','+ param_commission_llg +','+ param_is_recommet;
+    		//var params = 'orderByP='+ param_min_income_money +'~'+ param_profit_star +'~'+ param_commission_llg +'~'+ param_is_recommet;
 	    	window.location.href="${ctx }/bk/list?"+params;
 	    });
 	});
@@ -47,14 +55,34 @@
 
     <div class="bgfff">
         <div class="J_content bgfff">
-            <div class="J_router"><a href="${ctx }/index">首页</a><span>&gt;</span><a href="${ctx }/bk/list">经纪商</a></div>
+            <div class="J_router"><a href="${ctx }/index/list">首页</a><span>&gt;</span><a href="${ctx }/bk/list">经纪商</a></div>
             <div class="fl c_760">
                 <div class="J_jjsMore">
                     <div class="j_header">
-                        <a class="down" name='orderBy_href' href="#">最低入金<input type="hidden" value="min_income_money"><span></span></a>
-                        <a class="down" name='orderBy_href' href="#">安全评级<input type="hidden" value="profit_star"><span></span></a>
-                        <a class="down" name='orderBy_href' href="#">返佣比例<input type="hidden" value="commission_llg"><span></span></a>
-                        <a class="down" name='orderBy_href' href="#">至盈推荐<input type="hidden" value="is_recommet"><span></span></a>
+                        <a  <c:choose>
+                           		<c:when test="${queryDto.arrow_min_income_money == 'desc'}">class='down'</c:when>
+                           		<c:when test="${queryDto.arrow_min_income_money == 'asc'}">class='up'</c:when>
+                           		<c:otherwise>class='down'</c:otherwise>
+                           	</c:choose>
+                           	name='orderBy_href' href="#">最低入金<input type="hidden" value="min_income_money"><span></span></a>
+                        <a  <c:choose>
+                           		<c:when test="${queryDto.arrow_profit_star == 'desc'}">class='down'</c:when>
+                           		<c:when test="${queryDto.arrow_profit_star == 'asc'}">class='up'</c:when>
+                           		<c:otherwise>class='down'</c:otherwise>
+                           	</c:choose>
+                        	name='orderBy_href' href="#">安全评级<input type="hidden" value="profit_star"><span></span></a>
+                        <a  <c:choose>
+                           		<c:when test="${queryDto.arrow_commission_llg == 'desc'}">class='down'</c:when>
+                           		<c:when test="${queryDto.arrow_commission_llg == 'asc'}">class='up'</c:when>
+                           		<c:otherwise>class='down'</c:otherwise>
+                           	</c:choose>
+                        	name='orderBy_href' href="#">返佣比例<input type="hidden" value="commission_llg"><span></span></a>
+                        <a  <c:choose>
+                           		<c:when test="${queryDto.arrow_is_recommet == 'desc'}">class='down'</c:when>
+                           		<c:when test="${queryDto.arrow_is_recommet == 'asc'}">class='up'</c:when>
+                           		<c:otherwise>class='down'</c:otherwise>
+                           	</c:choose>
+                        	name='orderBy_href' href="#">至盈推荐<input type="hidden" value="is_recommet"><span></span></a>
                     </div>
                     <div class="j_main">
                     
@@ -115,37 +143,37 @@
                                                         <td>
 															<c:choose>
 							                            		<c:when test="${broker.profitStar == 1}">
-							                            			<img src="${ctx }/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
 							                            		</c:when>
 							                            		<c:when test="${broker.profitStar == 2}">
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
 							                            		</c:when>
 							                            		<c:when test="${broker.profitStar == 3}">
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
 							                            		</c:when>
 							                            		<c:when test="${broker.profitStar == 4}">
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
 							                            		</c:when>
 							                            		<c:when test="${broker.profitStar == 5}">
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
 							                            		</c:when>
 							                            		<c:when test="${broker.profitStar == 6}">
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
-							                            			<img src="${ctx }/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
+							                            			<img src="${ctx }/static/images/icon_star.png" />
 							                            		</c:when>
 							                            		<c:otherwise>&nbsp;</c:otherwise>
 							                            	</c:choose>                                                        

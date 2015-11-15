@@ -59,7 +59,7 @@
 		<div class="i_nav" data-ui="menu">
 			<div class="n_item" data-menu="index">
 				<div class="i_default">
-					<a href="${ctx }/index">首页</a>
+					<a href="${ctx }/index/list">首页</a>
 				</div>
 				<div class="i_menu"></div>
 			</div>

@@ -1,5 +1,6 @@
 package com.zy.profit.gateway.web;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +32,7 @@ import com.zy.broker.entity.BrokerExtInfo;
 import com.zy.broker.service.BrokerExtInfoService;
 import com.zy.common.entity.BaseEntity;
 import com.zy.common.entity.PageModel;
+import com.zy.common.entity.ResultDto;
 import com.zy.common.util.AjaxResult;
 import com.zy.common.util.BaseUtils;
 import com.zy.member.entity.Member;
@@ -71,8 +73,8 @@ public class IndexController {
 	private NoticeService noticeService;
 	
 	
-	@RequestMapping("/index")
-	public String index(Model model){
+	@RequestMapping("/index/list")
+	public String index(Model model, HttpServletRequest request, PageModel<BrokerExtInfo> pageModel){
 		
 		VoteTopic currentTopic = voteTopicService.getCurrentTopic();
 		List<VoteTopicPost> voteTopicPosts = voteTopicPostService.queryMostPraisePost(currentTopic.getId());
@@ -92,11 +94,52 @@ public class IndexController {
 		model.addAttribute("currentTopic", currentTopic);
 		
 		BrokerExtInfoDto queryDto = new BrokerExtInfoDto();
-		queryDto.setDeleteFlag(BrokerExtInfoDto.DELETE_FLAG_NORMAL);		
-		model.addAttribute("brokers", brokerExtInfoService.queryPage(queryDto, new PageModel<BrokerExtInfo>(4)).getList());
+		String params = (String)request.getParameter("orderByP");
+		parseOrderByParam(queryDto, params);
+		pageModel.setPageSize(6);
+		queryDto.setBkName(request.getParameter("bkName"));
+		
+		model.addAttribute("page", brokerExtInfoService.queryPage(queryDto, pageModel));
+		model.addAttribute("queryDto", queryDto);
 		
 		return "/index";
 	}
+	
+	/**
+	 * 拼装排序字段、保存页面排序字段指向
+	 * @param queryDto
+	 * @param params
+	 */
+	private void parseOrderByParam(BrokerExtInfoDto queryDto, String params) {
+		if(StringUtils.isNotBlank(params) && Arrays.asList(params.split("~")).size()>0){
+			for(String param : Arrays.asList(params.split("~"))){
+				if(param.split(",").length == 2){
+					//设置排序参数
+					queryDto.getOrderByParamMap().put(param.split(",")[0], param.split(",")[1]);
+					//用于保存页面箭头指向
+					if("min_income_money".equals(param.split(",")[0])){//最低入金
+						queryDto.setArrow_min_income_money(param.split(",")[1]);
+						
+					}else if("profit_star".equals(param.split(",")[0])){//安全评级
+						queryDto.setArrow_profit_star(param.split(",")[1]);
+						
+					}else if("commission_llg".equals(param.split(",")[0])){//返佣比例(黄金返佣)
+						queryDto.setArrow_commission_llg(param.split(",")[1]);
+						
+					}else if("is_recommet".equals(param.split(",")[0])){//至盈推荐
+						queryDto.setArrow_is_recommet(param.split(",")[1]);
+						
+					}else if("is_in_out_free".equals(param.split(",")[0])){//出入金免手续费
+						queryDto.setArrow_is_in_out_free(param.split(",")[1]);
+						
+					}else if("lever_rate".equals(param.split(",")[0])){//最大杠杆 
+						queryDto.setArrow_lever_rate(param.split(",")[1]);
+					}
+				}
+			}
+		}
+	}
+	
 	
 	@RequestMapping("/register")
 	public String register(HttpServletRequest request, Model model){
