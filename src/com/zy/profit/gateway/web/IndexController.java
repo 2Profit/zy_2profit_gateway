@@ -125,6 +125,25 @@ public class IndexController {
 		return "/index";
 	}
 	
+	@RequestMapping("/brokers")
+	@ResponseBody
+	public ResultDto<BrokerExtInfoDto> queryBrokerList(HttpServletRequest request,PageModel<BrokerExtInfo> pageModel){
+		ResultDto<BrokerExtInfoDto> result = new ResultDto<BrokerExtInfoDto>();
+		try {
+			BrokerExtInfoDto queryDto = new BrokerExtInfoDto();
+			String params = (String)request.getParameter("orderByP");
+			parseOrderByParam(queryDto, params);
+			pageModel.setPageSize(6);
+			queryDto.setBkName(request.getParameter("bkName"));
+			result.setPageModel(brokerExtInfoService.queryPage(queryDto, pageModel));
+			result.setModel(queryDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.setSuccess(false);
+		}
+		return result;
+	}
+	
 	/**
 	 * 拼装排序字段、保存页面排序字段指向
 	 * @param queryDto

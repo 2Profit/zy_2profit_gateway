@@ -16,6 +16,7 @@
 <link href="${ctx }/static/css/desktop.css" rel="stylesheet" />
 <link href="${ctx }/static/css/jquery-ui.min.css" rel="stylesheet" />
 <link href="${ctx }/static/css/jquery-ui-silder.css" rel="stylesheet" />
+<link href="${ctx }/static/js/pagination/pagination.css" rel="stylesheet" type="text/css" />
 
 <script src="${ctx }/static/js/jquery-1.8.3.min.js" type="text/javascript"></script>
 <script src="${ctx }/static/js/jquery-ui.min.js" type="text/javascript"></script>
@@ -27,6 +28,8 @@
 <script src="${ctx }/static/plugins/base.js"></script>
 <script type="text/javascript" src="${ctx }/static/plugins/My97DatePicker/WdatePicker.js"></script>
 <script type="text/javascript" src="${ctx }/static/plugins/layer/layer.js"></script>
+
+<script src="${ctx }/static/js/pagination/jquery.pagination.js" type="text/javascript"></script>
 
 <script type="text/javascript">
 var ctx = '${ctx}';

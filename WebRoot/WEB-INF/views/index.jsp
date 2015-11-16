@@ -13,66 +13,200 @@
 <script type="text/javascript">
 
 	var params = '';
+	var currentPage = 1;
+	var totalSize = 10;
+	
 	
 	$(function() {
 
-		var arrow1 = '${queryDto.arrow_min_income_money}';
-		var arrow2 = '${queryDto.arrow_is_in_out_free}';
-		var arrow3 = '${queryDto.arrow_commission_llg}';
-		var arrow4 = '${queryDto.arrow_is_recommet}';
-		var arrow5 = '${queryDto.arrow_lever_rate}';
-		var bkName = '${queryDto.bkName}';
-		var currentPage = '${page.currentPage}';
-		
-		if(arrow1!='' || arrow2!='' || arrow3!='' || arrow4!='' || arrow5!='' 
-				|| currentPage!=1 || bkName!=''){
-			document.location.href="#afterPageAnchor";
-		}
-		
 		headerAddClass();
 
 		$('div[data-ui="header"]').addClass('index');
 		
 		setCurrentMenu('index');
 		
-		$('a[name=orderBy_href]').click(function(){
+		brokerHtml(currentPage);
+		
+		$('a[name=orderBy_href]').click(function(e){
+			e.preventDefault();
+			
     		if($(this).attr("class")=='up'){
     			if($(this).children("input").val()=='min_income_money'){
-    				params = 'orderByP=min_income_money,desc';
+    				params = 'min_income_money,desc';
     			}else if($(this).children("input").val()=='is_in_out_free'){
-    				params = 'orderByP=is_in_out_free,desc';
+    				params = 'is_in_out_free,desc';
     			}else if($(this).children("input").val()=='commission_llg'){
-    				params = 'orderByP=commission_llg,desc';
+    				params = 'commission_llg,desc';
     			}else if($(this).children("input").val()=='is_recommet'){
-    				params = 'orderByP=is_recommet,desc';
+    				params = 'is_recommet,desc';
     			}else if($(this).children("input").val()=='lever_rate'){
-    				params = 'orderByP=lever_rate,desc';
+    				params = 'lever_rate,desc';
     			}
     		}else if($(this).attr("class")=='down'){
     			if($(this).children("input").val()=='min_income_money'){
-    				params = 'orderByP=min_income_money,asc';
+    				params = 'min_income_money,asc';
     			}else if($(this).children("input").val()=='is_in_out_free'){
-    				params = 'orderByP=is_in_out_free,asc';
+    				params = 'is_in_out_free,asc';
     			}else if($(this).children("input").val()=='commission_llg'){
-    				params = 'orderByP=commission_llg,asc';
+    				params = 'commission_llg,asc';
     			}else if($(this).children("input").val()=='is_recommet'){
-    				params = 'orderByP=is_recommet,asc';
+    				params = 'is_recommet,asc';
 	    		}else if($(this).children("input").val()=='lever_rate'){
-					params = 'orderByP=lever_rate,asc';
+					params = 'lever_rate,asc';
 				}
     		}
-    		if($('input[name=bkName]').val()!='' && $('input[name=bkName]').val()!=','){
-    			window.location.href="${ctx }/index?"+params+"&bkName="+$('input[name=bkName]').val();
-    		}
-    		window.location.href="${ctx }/index?"+params;
+    		brokerHtml(currentPage);
 	    });
 		
-		$('input[name=bkName]').keyup(function(event){
-			window.location.href="${ctx }/index?bkName="+$('input[name=bkName]').val();
+		$('input[name=bkName]').keyup(function(e){
+			e.preventDefault();
+			brokerHtml(currentPage);
 		});
 		
 	});
 	
+	function brokerHtml(currentPage){
+		
+		$.ajax({
+   			url:'${ctx}/brokers',
+   			type:'GET',
+   			async:false,
+   			data:{
+   				'orderByP':params,
+   				'bkName':$('input[name=bkName]').val(),
+   				"currentPage":currentPage
+   			},
+   			success:function(json){
+   				if(json.success){
+   					var html = '';
+   		   			var pageModel = json.pageModel;
+   		   			var model = json.model;
+   		   			currentPage = json.pageModel.currentPage;
+   		   			totalSize = json.pageModel.totalCount;
+   		   			
+   		   			//修改排序箭头指向
+   		   			if(model.arrow_min_income_money=='desc'){
+   		   				$('#arrow_min_income_money').attr('class','down');
+   		   			}else if(model.arrow_min_income_money=='asc'){
+   		   				$('#arrow_min_income_money').attr('class','up');
+   		   			}
+   		   			if(model.arrow_profit_star=='desc'){
+   		   				$('#arrow_profit_star').attr('class','down');
+   		   			}else if(model.arrow_profit_star=='asc'){
+   		   				$('#arrow_profit_star').attr('class','up');
+   		   			}
+   		   			if(model.arrow_commission_llg=='desc'){
+   		   				$('#arrow_commission_llg').attr('class','down');
+   		   			}else if(model.arrow_commission_llg=='asc'){
+   		   				$('#arrow_commission_llg').attr('class','up');
+   		   			}
+   		   			if(model.arrow_is_recommet=='desc'){
+   		   				$('#arrow_is_recommet').attr('class','down');
+   		   			}else if(model.arrow_is_recommet=='asc'){
+   		   				$('#arrow_is_recommet').attr('class','up');
+   		   			}
+   		   			if(model.arrow_is_in_out_free=='desc'){
+   		   				$('#arrow_is_in_out_free').attr('class','down');
+   		   			}else if(model.arrow_is_in_out_free=='asc'){
+   		   				$('#arrow_is_in_out_free').attr('class','up');
+   		   			}
+   		   			if(model.arrow_lever_rate=='desc'){
+   		   				$('#arrow_lever_rate').attr('class','down');
+   		   			}else if(model.arrow_lever_rate=='asc'){
+   		   				$('#arrow_lever_rate').attr('class','up');
+   		   			}
+   		   			
+   		   			for(var i=0; i<pageModel.list.length; i++){
+   		   				var broker = pageModel.list[i];
+   		   				
+   		   				var exchangeInfo = '';
+   		   				if(broker.exchangeNo1!=''){
+   		   					exchangeInfo = '金银业贸易场('+ broker.exchangeNo1+ ') ';
+   		   				}else if(broker.exchangeNo2!=''){
+   		   					exchangeInfo = '证监会('+ broker.exchangeNo2+ ') ';
+   		   				}else if(broker.exchangeNo3!=''){
+   		   					exchangeInfo = '英国FCA('+ broker.exchangeNo3+ ') ';
+   		   				}else if(broker.exchangeNo4!=''){
+   		   					exchangeInfo = '日本FSA('+ broker.exchangeNo4+ ') ';
+   		   				}
+   		   				
+   		   				var leverRate = '&nbsp;';
+   		   				if(broker.leverRate!=null && broker.leverRate!=0){
+   		   					leverRate = '最大杠杆：1:'+ broker.leverRate;
+   		   				}
+   		   				
+   		   				var isRecommet = '<span></span>';
+   		   				if(broker.isRecommet == 1){
+   		   					isRecommet = '<span>至盈推荐</span><img src="${ctx }/static/images/good_orange.png" />';
+   		   				}
+   		   				
+   			   			html += '<div class="m_item">'+
+   									'<div class="i_pic">'+
+   										'<div class="p_logo">'+
+   											'<img style="width: 140px; height: 46px;" src="${ctx}/'+broker.imageUrl+'" />'+
+   										'</div>'+
+   										'<div class="p_num">'+broker.commissionLlg +'美元</div>'+
+   										'<div class="p_txt">黄金返佣</div>'+
+   										'<div class="p_over">'+
+   											'<i class="icon">󰅖</i><span>2020</span>已申请'+
+   										'</div>'+
+   										'<div class="p_btn">'+
+   											'<a href="${ctx }/register"><img src="${ctx }/static/images/mskh_btn_bg.png" /></a>'+
+   										'</div>'+
+   									'</div>'+
+   									'<div class="i_info clearfix">'+
+   										'<div class="i_left">'+
+   											'<div class="l_name">'+ broker.cnName +'</div>'+
+   											'<div class="l_txt">'+
+   												'<span class="cRed">优势</span>：'+ exchangeInfo +
+   											'</div>'+
+   											'<div class="l_txt">点差：黄金'+ broker.pointDiffMinLlg +'</div>'+
+   											'<div class="l_txt">最少入金：'+ broker.minIncomeMoney +'</div>'+
+   											'<div class="l_txt">最小交易：'+ broker.minTradeNumLlg +'</div>'+
+   											'<div class="l_txt">最小开户：'+ broker.openMoneyLlg +'</div>'+
+   											'<div class="l_txt">'+ leverRate +'</div>'+
+   										'</div>'+
+   										'<div class="i_right">'+
+   											'<div class="r_txt">'+ isRecommet +'</div>'+
+   											'<div class="r_btn">'+
+   												'<a class="abtn green" href="#">优惠活动</a>'+
+   											'</div>'+
+   											'<div class="r_btn">'+
+   												'<a class="abtn orange" href="${ctx}/bk/detail?id='+ broker.id +'">了解详情</a>'+
+   											'</div>'+
+   										'</div>'+
+   									'</div>'+
+   								'</div>';
+   		   			}//for
+   		   			$("#append_div").empty();
+	   				$('#append_div').append(html);
+	   				
+	   				if(currentPage>=1){
+						currentPage=currentPage-1;
+					}
+	   				
+				 	if(totalSize > 0){
+					 	$("#pagination").pagination(totalSize,{
+							items_per_page : 6,
+							num_display_entries : 5,
+							current_page : currentPage,
+							num_edge_entries : 0,
+							link_to : "javaScript:void(0);",
+							prev_text : "前一页",
+							next_text : "下一页",
+							ellipse_text : "...",
+							prev_show_always : true,
+							next_show_always : true,
+							callback : function(index) {
+								currentPage = index+1;
+								brokerHtml((index+1));
+							}
+						});
+				  	}
+   				}//json.success
+   			}//success function			
+		});
+	}
 
 	function dialogBackDiscount(){
 		
@@ -174,7 +308,7 @@
 	                           		<c:when test="${queryDto.arrow_is_recommet == 'asc'}">class='up'</c:when>
 	                           		<c:otherwise>class='down'</c:otherwise>
                            		</c:choose>
-								name='orderBy_href' href="#">至盈推荐<input type="hidden" value="is_recommet"><span></span></a>
+								id='arrow_is_recommet' name='orderBy_href' href="#">至盈推荐<input type="hidden" value="is_recommet"><span></span></a>
 							</div>
 						</div>
 						<div class="r_bottom clearfix">
@@ -183,25 +317,25 @@
 	                           		<c:when test="${queryDto.arrow_commission_llg == 'asc'}">class='up'</c:when>
 	                           		<c:otherwise>class='down'</c:otherwise>
                            		</c:choose>
-								name='orderBy_href' href="#">黄金返佣<input type="hidden" value="commission_llg"><span></span></a> 
+								id='arrow_commission_llg' name='orderBy_href' href="#">黄金返佣<input type="hidden" value="commission_llg"><span></span></a> 
 							<a 	<c:choose>
 	                           		<c:when test="${queryDto.arrow_min_income_money == 'desc'}">class='down'</c:when>
 	                           		<c:when test="${queryDto.arrow_min_income_money == 'asc'}">class='up'</c:when>
 	                           		<c:otherwise>class='down'</c:otherwise>
                            		</c:choose>
-								name='orderBy_href' href="#">最低开户入金<input type="hidden" value="min_income_money"><span></span></a> 
+								id='arrow_min_income_money' name='orderBy_href' href="#">最低开户入金<input type="hidden" value="min_income_money"><span></span></a> 
 							<a 	<c:choose>
 	                           		<c:when test="${queryDto.arrow_is_in_out_free == 'desc'}">class='down'</c:when>
 	                           		<c:when test="${queryDto.arrow_is_in_out_free == 'asc'}">class='up'</c:when>
 	                           		<c:otherwise>class='down'</c:otherwise>
                            		</c:choose>
-								name='orderBy_href' href="#">出入金免手续费<input type="hidden" value="is_in_out_free"><span></span></a> 
+								id='arrow_is_in_out_free' name='orderBy_href' href="#">出入金免手续费<input type="hidden" value="is_in_out_free"><span></span></a> 
 							<a 	<c:choose>
 	                           		<c:when test="${queryDto.arrow_lever_rate == 'desc'}">class='down'</c:when>
 	                           		<c:when test="${queryDto.arrow_lever_rate == 'asc'}">class='up'</c:when>
 	                           		<c:otherwise>class='down'</c:otherwise>
                            		</c:choose>
-								name='orderBy_href' href="#">最大的杠杆<input type="hidden" value="lever_rate"><span></span></a>
+								id='arrow_lever_rate' name='orderBy_href' href="#">最大的杠杆<input type="hidden" value="lever_rate"><span></span></a>
 						</div>
 					</div>
 				</div>
@@ -211,7 +345,7 @@
 					<div class="j_inner">
 						<div class="i_main" id="append_div">
 							
-							<c:forEach items="${page.list }" var="broker">
+							<%-- <c:forEach items="${page.list }" var="broker">
 								<div class="m_item">
 									<div class="i_pic">
 										<div class="p_logo">
@@ -269,15 +403,17 @@
 										</div>
 									</div>
 								</div>							
-							</c:forEach>
+							</c:forEach> --%>
 							
 						</div>
 					</div>
 				</div>
                 
-                <div class="j_page">
+                <%-- <div class="j_page">
                 	<tr><td colspan="50" style="text-align:center;"><%@ include file="common/pager.jsp"%></td></tr>
-                </div>			
+                </div> --%>
+                
+                <div class="J_page" id="pagination"></div>			
 
 			</div>
 		</div>
