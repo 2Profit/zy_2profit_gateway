@@ -11,39 +11,223 @@
 	var param_profit_star = 'profit_star,desc';
 	var param_commission_llg = 'commission_llg,desc';
 	var param_is_recommet = 'is_recommet,desc'; */
-
+	var params = '';
+	var currentPage = 1;
+	var totalSize = 10;
+	
 	$(function () {
 		headerAddClass();
+		
+		brokerHtml(currentPage);
 	    
 	    $('a[name=orderBy_href]').click(function(){
-	    	var params = 'orderByP=';
-	    	
     		if($(this).attr("class")=='up'){
     			if($(this).children("input").val()=='min_income_money'){
-    				params += 'min_income_money,desc';
+    				params = 'min_income_money,desc';
     			}else if($(this).children("input").val()=='profit_star'){
-    				params += 'profit_star,desc';
+    				params = 'profit_star,desc';
     			}else if($(this).children("input").val()=='commission_llg'){
-    				params += 'commission_llg,desc';
+    				params = 'commission_llg,desc';
     			}else if($(this).children("input").val()=='is_recommet'){
-    				params += 'is_recommet,desc';
+    				params = 'is_recommet,desc';
     			}
     		}else if($(this).attr("class")=='down'){
     			if($(this).children("input").val()=='min_income_money'){
-    				params += 'min_income_money,asc';
+    				params = 'min_income_money,asc';
     			}else if($(this).children("input").val()=='profit_star'){
-    				params += 'profit_star,asc';
+    				params = 'profit_star,asc';
     			}else if($(this).children("input").val()=='commission_llg'){
-    				params += 'commission_llg,asc';
+    				params = 'commission_llg,asc';
     			}else if($(this).children("input").val()=='is_recommet'){
-    				params += 'is_recommet,asc';
+    				params = 'is_recommet,asc';
     			}
     		}
     		
     		//var params = 'orderByP='+ param_min_income_money +'~'+ param_profit_star +'~'+ param_commission_llg +'~'+ param_is_recommet;
-	    	window.location.href="${ctx }/bk/list?"+params;
+	    	//window.location.href="${ctx }/bk/list?"+params;
+	    	brokerHtml(currentPage);
 	    });
 	});
+	
+	function brokerHtml(currentPage){
+		
+		$.ajax({
+   			url:'${ctx}/brokers',
+   			type:'GET',
+   			async:false,
+   			data:{
+   				'orderByP':params,
+   				"currentPage":currentPage
+   			},
+   			success:function(json){
+   				if(json.success){
+   					var html = '';
+   		   			var pageModel = json.pageModel;
+   		   			var model = json.model;
+   		   			currentPage = json.pageModel.currentPage;
+   		   			totalSize = json.pageModel.totalCount;
+   		   			
+   		   			//修改排序箭头指向
+   		   			if(model.arrow_min_income_money=='desc'){
+   		   				$('#arrow_min_income_money').attr('class','down');
+   		   			}else if(model.arrow_min_income_money=='asc'){
+   		   				$('#arrow_min_income_money').attr('class','up');
+   		   			}
+   		   			if(model.arrow_profit_star=='desc'){
+   		   				$('#arrow_profit_star').attr('class','down');
+   		   			}else if(model.arrow_profit_star=='asc'){
+   		   				$('#arrow_profit_star').attr('class','up');
+   		   			}
+   		   			if(model.arrow_commission_llg=='desc'){
+   		   				$('#arrow_commission_llg').attr('class','down');
+   		   			}else if(model.arrow_commission_llg=='asc'){
+   		   				$('#arrow_commission_llg').attr('class','up');
+   		   			}
+   		   			if(model.arrow_is_recommet=='desc'){
+   		   				$('#arrow_is_recommet').attr('class','down');
+   		   			}else if(model.arrow_is_recommet=='asc'){
+   		   				$('#arrow_is_recommet').attr('class','up');
+   		   			}
+   		   			
+   		   			for(var i=0; i<pageModel.list.length; i++){
+   		   				var broker = pageModel.list[i];
+   		   				
+   		   				var nation = '&nbsp;';
+   		   				if(broker.companyArea == '0'){
+   		   					nation = '香港'; 
+   		   				}else if(broker.companyArea == '1'){
+   		   					nation = '中国';
+   		   				}else if(broker.companyArea == '2'){
+   		   					nation = '台湾';
+   		   				}else if(broker.companyArea == '3'){
+   		   					nation = '其他';
+   		   				}
+   		   				
+   		   				var exchangeInfo = '';
+   		   				if(broker.exchangeNo1!=''){
+   		   					exchangeInfo += '金银业贸易场('+ broker.exchangeNo1+ ')、';
+   		   				}else if(broker.exchangeNo2!=''){
+   		   					exchangeInfo += '证监会('+ broker.exchangeNo2+ ')、';
+   		   				}else if(broker.exchangeNo3!=''){
+   		   					exchangeInfo += '英国FCA('+ broker.exchangeNo3+ ')、';
+   		   				}else if(broker.exchangeNo4!=''){
+   		   					exchangeInfo += '日本FSA('+ broker.exchangeNo4+ ')、';
+   		   				}
+   		   				
+   		   				var isUnionpay = '&nbsp;';
+   		   				if(broker.isUnionpay == '0'){
+   		   					isUnionpay = '不支持';
+   		   				}else if(broker.isUnionpay == '1'){
+   		   					isUnionpay = '支持';
+   		   				}
+   		   				
+   		   				var profitStar = '';
+   		   				if(broker.profitStar == 1){
+   		   					profitStar = '<img src="${ctx }/static/images/icon_star.png" />';
+   		   				}else if(broker.profitStar == 2){
+   		   					profitStar = '<img src="${ctx }/static/images/icon_star.png" />'+
+							 			'<img src="${ctx }/static/images/icon_star.png" />';
+   		   				}else if(broker.profitStar == 3){
+   		   					profitStar = '<img src="${ctx }/static/images/icon_star.png" />'+
+   		   								'<img src="${ctx }/static/images/icon_star.png" />'+
+							 			'<img src="${ctx }/static/images/icon_star.png" />';
+  		   				}else if(broker.profitStar == 4){
+   		   					profitStar = '<img src="${ctx }/static/images/icon_star.png" />'+
+   		   								'<img src="${ctx }/static/images/icon_star.png" />'+
+   		   								'<img src="${ctx }/static/images/icon_star.png" />'+
+							 			'<img src="${ctx }/static/images/icon_star.png" />';
+   		   				}else if(broker.profitStar == 5){
+   		   					profitStar = '<img src="${ctx }/static/images/icon_star.png" />'+
+   		   								'<img src="${ctx }/static/images/icon_star.png" />'+
+   		   								'<img src="${ctx }/static/images/icon_star.png" />'+
+   		   								'<img src="${ctx }/static/images/icon_star.png" />'+
+							 			'<img src="${ctx }/static/images/icon_star.png" />';
+  		   				}else if(broker.profitStar == 6){
+   		   					profitStar = '<img src="${ctx }/static/images/icon_star.png" />'+
+   		   								'<img src="${ctx }/static/images/icon_star.png" />'+
+   		   								'<img src="${ctx }/static/images/icon_star.png" />'+
+										'<img src="${ctx }/static/images/icon_star.png" />'+
+										'<img src="${ctx }/static/images/icon_star.png" />'+
+							 			'<img src="${ctx }/static/images/icon_star.png" />';
+  		   				}
+   		   				
+   			   			html +=  '<div class="m_item">'+
+				   			   	   '<table class="i_parent">'+
+					   			        '<tbody>'+
+					   			            '<tr>'+
+					   			                '<td class="p10 tac">'+
+					   			                    '<div class="p_logo">'+
+					   			                        '<img style="width:140px; height:46px;" src="${ctx}/'+ broker.imageUrl + '" />'+
+					   			                    '</div>'+
+					   			                    '<div class="p_txt mt10">所属地：'+ nation +'</div>'+
+					   			                    '<div class="p_txt mt10">'+
+					   			                        '<a class="abtn orange" href="${ctx}/bk/detail?id='+ broker.id + '">了解详情 &gt;&gt;</a>'+
+					   			                    '</div>'+
+					   			                '</td>'+
+					   			                '<td class="p10 lh30" style="width:500px;">'+
+					   			                    '<div class="p_txt"><span class="cOrange">公司简介：</span>'+ broker.introduction +'</div>'+
+					   			                    '<div class="p_txt"><span class="cOrange">监管机构：</span>'+exchangeInfo +'</div>'+
+					   			                '</td>'+
+					   			            '</tr>'+
+					   			            '<tr>'+
+					   			                '<td class="tac">黄金返佣：<b class="fz24 cOrange">'+ broker.commissionLlg + '</b></td>'+
+					   			                '<td class="p10">'+
+					   			                    '<table class="i_inner">'+
+					   			                        '<tbody>'+
+					   			                            '<tr>'+
+					   			                                '<td>黄金点差</td>'+
+					   			                                '<td>最低入金</td>'+
+					   			                                '<td>支持银联</td>'+
+					   			                                '<td>至盈评级</td>'+
+					   			                            '</tr>'+
+					   			                            '<tr>'+
+					   			                                '<td>'+ broker.pointDiffMinLlg +'美金</td>'+
+					   			                                '<td>'+ broker.minIncomeMoney +'</td>'+
+					   			                                '<td>'+ isUnionpay +'</td>'+
+					   			                                '<td>'+ profitStar +'</td>'+
+			   					                            '</tr>'+
+			   					                        '</tbody>'+
+			   					                    '</table>'+
+			   					                '</td>'+
+			   					            '</tr>'+
+			   					        '</tbody>'+
+			   					    '</table>'+
+			   					'</div>';
+   		   			}//for
+   		   			$("#append_div").empty();
+	   				$('#append_div').append(html);
+	   				
+	   				if(currentPage>=1){
+						currentPage=currentPage-1;
+					}
+	   				
+				 	if(totalSize > 0){
+					 	$("#pagination").pagination(totalSize,{
+							items_per_page : 5,
+							num_display_entries : 5,
+							current_page : currentPage,
+							num_edge_entries : 0,
+							link_to : "javaScript:void(0);",
+							prev_text : "前一页",
+							next_text : "下一页",
+							ellipse_text : "...",
+							prev_show_always : true,
+							next_show_always : true,
+							callback : function(index) {
+								currentPage = index+1;
+								brokerHtml((index+1));
+							}
+						});
+				  	}
+   				}
+   			}		
+		});
+	}
+	
+	
+
+	
+	
 	
 </script>
 
@@ -64,136 +248,36 @@
                            		<c:when test="${queryDto.arrow_min_income_money == 'asc'}">class='up'</c:when>
                            		<c:otherwise>class='down'</c:otherwise>
                            	</c:choose>
-                           	name='orderBy_href' href="#">最低入金<input type="hidden" value="min_income_money"><span></span></a>
+                           	id='arrow_min_income_money' name='orderBy_href' href="#">最低入金<input type="hidden" value="min_income_money"><span></span></a>
                         <a  <c:choose>
                            		<c:when test="${queryDto.arrow_profit_star == 'desc'}">class='down'</c:when>
                            		<c:when test="${queryDto.arrow_profit_star == 'asc'}">class='up'</c:when>
                            		<c:otherwise>class='down'</c:otherwise>
                            	</c:choose>
-                        	name='orderBy_href' href="#">安全评级<input type="hidden" value="profit_star"><span></span></a>
+                        	id='arrow_profit_star' name='orderBy_href' href="#">安全评级<input type="hidden" value="profit_star"><span></span></a>
                         <a  <c:choose>
                            		<c:when test="${queryDto.arrow_commission_llg == 'desc'}">class='down'</c:when>
                            		<c:when test="${queryDto.arrow_commission_llg == 'asc'}">class='up'</c:when>
                            		<c:otherwise>class='down'</c:otherwise>
                            	</c:choose>
-                        	name='orderBy_href' href="#">返佣比例<input type="hidden" value="commission_llg"><span></span></a>
+                        	id='arrow_commission_llg' name='orderBy_href' href="#">返佣比例<input type="hidden" value="commission_llg"><span></span></a>
                         <a  <c:choose>
                            		<c:when test="${queryDto.arrow_is_recommet == 'desc'}">class='down'</c:when>
                            		<c:when test="${queryDto.arrow_is_recommet == 'asc'}">class='up'</c:when>
                            		<c:otherwise>class='down'</c:otherwise>
                            	</c:choose>
-                        	name='orderBy_href' href="#">至盈推荐<input type="hidden" value="is_recommet"><span></span></a>
+                        	id='arrow_is_recommet' name='orderBy_href' href="#">至盈推荐<input type="hidden" value="is_recommet"><span></span></a>
                     </div>
-                    <div class="j_main">
-                    
-                    <c:forEach items="${page.list }" var="broker">
-                    
-                        <div class="m_item">
-                            <table class="i_parent">
-                                <tbody>
-                                    <tr>
-                                        <td class="p10 tac">
-                                            <div class="p_logo">
-                                                <img style="width:140px; height:46px;" src="${ctx}/${broker.imageUrl}" />
-                                            </div>
-                                            <div class="p_txt mt10">所属地：
-												<c:choose>
-				                            		<c:when test="${broker.companyArea == '0'}">香港</c:when>
-				                            		<c:when test="${broker.companyArea == '1'}">中国</c:when>
-				                            		<c:when test="${broker.companyArea == '2'}">台湾</c:when>
-				                            		<c:when test="${broker.companyArea == '3'}">其他</c:when>
-				                            		<c:otherwise>&nbsp;</c:otherwise>
-				                            	</c:choose>                                            
-                                            </div>
-                                            <div class="p_txt mt10">
-                                                <a class="abtn orange" href="${ctx}/bk/detail?id=${broker.id}">了解详情 &gt;&gt;</a>
-                                            </div>
-                                        </td>
-                                        <td class="p10 lh30" style="width:500px;">
-                                            <div class="p_txt"><span class="cOrange">公司简介：</span>${broker.introduction }</div>
-                                            <div class="p_txt"><span class="cOrange">监管机构：</span>
-                                            	<c:if test="${broker.exchangeNo1!=null && broker.exchangeNo1!='' }">金银业贸易场(${broker.exchangeNo1})、</c:if>
-												<c:if test="${broker.exchangeNo2!=null && broker.exchangeNo2!='' }">证监会(${broker.exchangeNo2})、</c:if>
-		                                    	<c:if test="${broker.exchangeNo3!=null && broker.exchangeNo3!='' }">英国FCA(${broker.exchangeNo3})、</c:if>
-		                                    	<c:if test="${broker.exchangeNo4!=null && broker.exchangeNo4!='' }">日本FSA(${broker.exchangeNo4})</c:if>                                            
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tac">黄金返佣：<b class="fz24 cOrange">${broker.commissionLlg }$</b></td>
-                                        <td class="p10">
-                                            <table class="i_inner">
-                                                <tbody>
-                                                    <tr>
-                                                        <td>黄金点差</td>
-                                                        <td>最低入金</td>
-                                                        <td>支持银联</td>
-                                                        <td>至盈评级</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>${broker.pointDiffMinLlg }美金</td>
-                                                        <td>${broker.minIncomeMoney }</td>
-                                                        <td>
-															<c:choose>
-							                            		<c:when test="${broker.isUnionpay == '0'}">不支持</c:when>
-							                            		<c:when test="${broker.isUnionpay == '1'}">支持</c:when>
-							                            		<c:otherwise>&nbsp;</c:otherwise>
-							                            	</c:choose>                                                        
-                                                        </td>
-                                                        <td>
-															<c:choose>
-							                            		<c:when test="${broker.profitStar == 1}">
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            		</c:when>
-							                            		<c:when test="${broker.profitStar == 2}">
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            		</c:when>
-							                            		<c:when test="${broker.profitStar == 3}">
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            		</c:when>
-							                            		<c:when test="${broker.profitStar == 4}">
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            		</c:when>
-							                            		<c:when test="${broker.profitStar == 5}">
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            		</c:when>
-							                            		<c:when test="${broker.profitStar == 6}">
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            			<img src="${ctx }/static/images/icon_star.png" />
-							                            		</c:when>
-							                            		<c:otherwise>&nbsp;</c:otherwise>
-							                            	</c:choose>                                                        
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        </c:forEach>
-                        
+                    <div class="j_main" id='append_div'>
                     </div>
 
-                    <div class="j_page">
+                    <%-- <div class="j_page">
 	                	<tr><td colspan="50" style="text-align:center;"><%@ include file="../common/pager.jsp"%></td></tr>
-	                </div>
+	                </div> --%>
                     
+                    <br/>
+                    <div class="J_page" id="pagination"></div>
+                    <br/>
                 </div>
 
             </div>

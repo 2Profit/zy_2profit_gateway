@@ -1050,3 +1050,14 @@ J_vote.J_sdList .s_inner .i_main .m_item .i_pic img { vertical-align: top; }
     .J_confirm .a_txt { padding: 16px 0; font-size: 16px; text-align: center; }
     .J_confirm .a_btn { height: 40px; text-align: center; }
         .J_confirm .a_btn a { display: inline-block; *zoom: 1; *display: inline; margin: 0 10px; padding: 0 20px; height: 30px; line-height: 30px; border-radius: 3px; font-size: 14px; color: #fff; }
+
+/* 分页样式 */
+.J_page { text-align: center; font-size: 12px; }
+    .J_page span.disabled { cursor: not-allowed; }
+    .J_page span.current { border-color: #40BB8A; color: #40BB8A; }
+
+        .J_page span.current.prev { border-color: #ddd; color: #666; }
+        .J_page span.current.next { border-color: #ddd; color: #666; }
+    .J_page span { display: inline-block; *zoom: 1; *display: inline; margin: 0 6px; padding: 6px 16px; border: 1px solid #ddd; color: #666; }
+    .J_page a { display: inline-block; *zoom: 1; *display: inline; margin: 0 6px; padding: 6px 16px; border: 1px solid #ddd; color: #666; }
+        .J_page a:hover { border-color: #40BB8A; color: #40BB8A; }        

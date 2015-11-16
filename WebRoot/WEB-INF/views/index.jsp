@@ -345,66 +345,6 @@
 					<div class="j_inner">
 						<div class="i_main" id="append_div">
 							
-							<%-- <c:forEach items="${page.list }" var="broker">
-								<div class="m_item">
-									<div class="i_pic">
-										<div class="p_logo">
-											<img style="width: 140px; height: 46px;" src="${ctx}/${broker.imageUrl}" />
-										</div>
-										<div class="p_num">${broker.commissionLlg }美元</div>
-										<div class="p_txt">黄金返佣</div>
-										<div class="p_over">
-											<i class="icon">󰅖</i><span>2020</span>已申请
-										</div>
-										<div class="p_btn">
-											<a href="${ctx }/register"><img src="${ctx }/static/images/mskh_btn_bg.png" /></a>
-										</div>
-									</div>
-									<div class="i_info clearfix">
-										<div class="i_left">
-											<div class="l_name">${broker.cnName }</div>
-											<div class="l_txt">
-												<span class="cRed">优势</span>：
-												<c:choose>
-													<c:when test="${broker.exchangeNo1!=null && broker.exchangeNo1!='' }">金银业贸易场(${broker.exchangeNo1}) </c:when>
-													<c:when test="${broker.exchangeNo2!=null && broker.exchangeNo2!='' }">证监会(${broker.exchangeNo2}) </c:when>
-													<c:when test="${broker.exchangeNo3!=null && broker.exchangeNo3!='' }">英国FCA(${broker.exchangeNo3}) </c:when>
-													<c:when test="${broker.exchangeNo4!=null && broker.exchangeNo4!='' }">日本FSA(${broker.exchangeNo4}) </c:when>
-													<c:otherwise>&nbsp;</c:otherwise>
-												</c:choose>
-											</div>
-											<div class="l_txt">点差：黄金${broker.pointDiffMinLlg }</div>
-											<div class="l_txt">最少入金：${broker.minIncomeMoney }</div>
-											<div class="l_txt">最小交易：${broker.minTradeNumLlg }</div>
-											<div class="l_txt">最小开户：${broker.openMoneyLlg }</div>
-											<div class="l_txt">
-												<c:choose>
-													<c:when test="${broker.leverRate!=null && broker.leverRate!=0}">最大杠杆：1:${broker.leverRate}</c:when>
-													<c:otherwise>&nbsp;</c:otherwise>
-												</c:choose>
-											</div>
-										</div>
-										<div class="i_right">
-											<div class="r_txt">
-												<c:choose>
-				                            		<c:when test="${broker.isRecommet == 1}">
-				                            			<span>至盈推荐</span>
-														<img src="${ctx }/static/images/good_orange.png" />
-				                            		</c:when>
-				                            		<c:otherwise><span></span></c:otherwise>
-				                            	</c:choose>												
-											</div>
-											<div class="r_btn">
-												<a class="abtn green" href="#">优惠活动</a>
-											</div>
-											<div class="r_btn">
-												<a class="abtn orange" href="${ctx}/bk/detail?id=${broker.id}">了解详情</a>
-											</div>
-										</div>
-									</div>
-								</div>							
-							</c:forEach> --%>
-							
 						</div>
 					</div>
 				</div>
@@ -413,6 +353,7 @@
                 	<tr><td colspan="50" style="text-align:center;"><%@ include file="common/pager.jsp"%></td></tr>
                 </div> --%>
                 
+                <br/>
                 <div class="J_page" id="pagination"></div>			
 
 			</div>
