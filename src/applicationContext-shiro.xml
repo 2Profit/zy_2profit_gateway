@@ -69,6 +69,7 @@
 	    <property name="filterChainDefinitions">  
 	        <value>
 	        	 /static/** = anon
+	        	 /brokers = anon
 	        	 /captcha/** = anon
 	             /index = anon
 	             /dialog/back_discount = anon
