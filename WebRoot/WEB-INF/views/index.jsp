@@ -151,7 +151,7 @@
    											'<i class="icon">󰅖</i><span>2020</span>已申请'+
    										'</div>'+
    										'<div class="p_btn">'+
-   											'<a href="${ctx }/register"><img src="${ctx }/static/images/mskh_btn_bg.png" /></a>'+
+   											'<a href="${ctx }/main/person"><img src="${ctx }/static/images/mskh_btn_bg.png" /></a>'+
    										'</div>'+
    									'</div>'+
    									'<div class="i_info clearfix">'+

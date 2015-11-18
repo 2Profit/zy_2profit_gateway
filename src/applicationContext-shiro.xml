@@ -81,6 +81,7 @@
 	             /login = anon
 	             /imageServlet = anon
 	             /** = rememberAuthFilter
+	        	 /main/person = user
 	        </value>  
 	    </property>
 	</bean>  
